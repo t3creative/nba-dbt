@@ -2,6 +2,8 @@
 target/
 dbt_packages/
 logs/
+backup/
+docs/
 
 # Ignore CSV files in the root directory
 *.csv
@@ -10,3 +12,5 @@ logs/
 *.sql
 
 FUTURE_FEATURES.md
+
+.env
