@@ -1,0 +1,110 @@
+version: 2
+
+models:
+
+ - name: stg__player_matchups_bxsc
+   description: "Player matchup statistics detailing offensive and defensive interactions between players"
+   columns:
+      - name: player_matchup_key
+        description: "Unique identifier for player matchup combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+      - name: team_city
+        description: "Team's city"
+      - name: team_name
+        description: "Team's name"
+      - name: team_tricode
+        description: "Team's three-letter code"
+      - name: team_slug
+        description: "Team's URL slug"
+      - name: off_first_name
+        description: "Offensive player's first name"
+      - name: off_family_name
+        description: "Offensive player's family name"
+      - name: off_name_initial
+        description: "Offensive player's initial"
+      - name: off_player_slug
+        description: "Offensive player's URL slug"
+      - name: off_position
+        description: "Offensive player's position"
+      - name: off_comment
+        description: "Offensive player status/availability notes"
+      - name: off_jersey_num
+        description: "Offensive player's jersey number"
+      - name: def_first_name
+        description: "Defensive player's first name"
+      - name: def_family_name
+        description: "Defensive player's family name"
+      - name: def_name_initial
+        description: "Defensive player's initial"
+      - name: def_player_slug
+        description: "Defensive player's URL slug"
+      - name: def_jersey_num
+        description: "Defender's jersey number"
+      - name: matchup_min
+        description: "Direct matchup minutes between offensive and defensive players"
+        tests:
+          - not_null
+      - name: matchup_min_sort
+        description: "Matchup minutes for sorting"
+      - name: partial_poss
+        description: "Partial possessions in matchup"
+      - name: def_time_pct
+        description: "Percentage of defender's total time"
+      - name: off_time_pct
+        description: "Percentage of offensive player's total time"
+      - name: both_on_time_pct
+        description: "Percentage of time both players were on court"
+      - name: switches_on
+        description: "Number of defensive switches onto this matchup"
+      - name: off_player_pts
+        description: "Points scored by offensive player"
+      - name: off_team_pts
+        description: "Team points during matchup"
+      - name: off_matchup_ast
+        description: "Assists by offensive player"
+      - name: off_matchup_pot_ast
+        description: "Potential assists by offensive player"
+      - name: off_matchup_tov
+        description: "Turnovers by offensive player"
+      - name: off_matchup_fgm
+        description: "Field goals made by offensive player"
+      - name: off_matchup_fga
+        description: "Field goals attempted by offensive player"
+      - name: off_matchup_fg_pct
+        description: "Field goal percentage by offensive player"
+      - name: off_matchup_fg3m
+        description: "Three pointers made by offensive player"
+      - name: off_matchup_fg3a
+        description: "Three pointers attempted by offensive player"
+      - name: off_matchup_fg3_pct
+        description: "Three point percentage by offensive player"
+      - name: off_matchup_ftm
+        description: "Free throws made by offensive player"
+      - name: off_matchup_fta
+        description: "Free throws attempted by offensive player"
+      - name: def_matchup_blk
+        description: "Blocks by defensive player"
+      - name: def_help_blk
+        description: "Help blocks by defensive player"
+      - name: def_help_fgm
+        description: "Field goals made against help defense"
+      - name: def_help_fga
+        description: "Field goals attempted against help defense"
+      - name: def_help_fg_pct
+        description: "FG% allowed when defender provided help defense"
+      - name: def_shooting_fouls
+        description: "Shooting fouls by defensive player"
+      - name: created_at
+        description: "Timestamp when record was created"
+      - name: updated_at
+        description: "Timestamp when record was last updated"

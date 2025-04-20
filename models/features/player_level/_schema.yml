@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: player_game_interior_scoring_deviations
+    description: "Calculates deviations in a player's game-level scoring profile (paint reliance, rim efficiency, rim attempts) compared to their season averages. Useful for identifying performance shifts against specific opponents."
+    config:
+      tags: ["features", "player_level", "scoring_profile"]
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination."
+        tests:
+          - unique
+          - not_null
+
+      - name: player_id
+        description: "Unique identifier for the player."
+        tests:
+          - not_null
+
+      - name: game_id
+        description: "Unique identifier for the game."
+        tests:
+          - not_null
+
+      - name: season_year
+        description: "The season year (e.g., '2023')."
+        tests:
+          - not_null
+
+      - name: game_date
+        description: "Date the game was played."
+        tests:
+          - not_null
+
+      - name: opponent_id
+        description: "Unique identifier for the opposing team."
+        tests:
+          - not_null
+
+      - name: pct_pts_paint
+        description: "Raw percentage of points scored in the paint for this game."
+
+      - name: def_at_rim_fg_pct
+        description: "Raw FG% when defended at the rim for this game."
+
+      - name: def_at_rim_fga_rate
+        description: "Raw rate of defended FGAs at the rim per minute played for this game."
+
+      - name: paint_scoring_reliance_deviation
+        description: "Deviation of game pct_pts_paint from player's season average pct_pts_paint."
+
+      - name: rim_finishing_efficiency_deviation
+        description: "Deviation of game def_at_rim_fg_pct from player's season average def_at_rim_fg_pct."
+
+      - name: rim_attempt_rate_deviation
+        description: "Deviation of game def_at_rim_fga_rate (per minute) from player's season average rate." 

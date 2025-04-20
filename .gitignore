@@ -1,0 +1,12 @@
+
+target/
+dbt_packages/
+logs/
+
+# Ignore CSV files in the root directory
+*.csv
+
+# Ignore SQL files in the root directory
+*.sql
+
+FUTURE_FEATURES.md

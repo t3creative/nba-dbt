@@ -1,0 +1,142 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# NBA Data Model dbt Project Rules
+
+## Project Structure
+
+### Schema Organization
+- **raw**: Contains raw data from external sources without modifications
+- **staging**: Initial processing of raw data with minimal transformations
+- **intermediate**: Enriched data models with business logic applied
+- **features**: Final output models optimized for analytics and ML use cases
+
+### Naming Conventions
+- Staging models: `stg_<source>__<entity>_<type>`
+- Intermediate models: `int_<source>__<entity>_<type>`
+- Feature models: `<entity>_<level>_features`
+- File structure must align with model naming (consistent directories)
+
+### File Organization
+- Each model layer should have appropriate subdirectories by domain/entity
+- Source definitions (`_sources.yml`) placed alongside related staging models
+- Schema definitions (`_schema.yml`) must be present in all directories
+
+## Code Style
+
+### SQL Structure
+- Use CTE-based approach for all models
+- CTEs should be logically ordered and well-named
+- Always include a `final` CTE that selects from the previous transformations
+- Add explanatory comments for complex logic or calculations
+
+### PostgreSQL Specifics
+- Use PostgreSQL-specific syntax and functions only, not generic SQL
+- Leverage PostgreSQL window functions for performance (e.g., `row_number()`, `lag()`, `lead()`)
+- Use PostgreSQL-specific data types (`jsonb` over `json`, `timestamptz` over `timestamp`)
+- Utilize PostgreSQL array functions (`unnest`, `array_agg`) when appropriate
+- For date operations, use PostgreSQL-specific date functions (`date_trunc`, `extract`)
+- Implement proper indexing with PostgreSQL-specific index types (B-tree, GIN, BRIN)
+- Leverage PostgreSQL-specific operators (`@@`, `->>`, `#>`) for JSON operations
+- Use `WITH ORDINALITY` for enumerated array unpacking
+
+### SQL Formatting
+- Use lowercase for SQL keywords
+- Use snake_case for all field names
+- Indent SELECT statements and conditions consistently
+- Use clear aliases for all references in JOINs
+- Break complex queries into multiple lines for readability
+
+### dbt Configuration
+- Always include explicit configurations in each model
+- Specify appropriate materialization type:
+  - Staging: views (unless extremely large)
+  - Intermediate: incremental
+  - Features: incremental/table
+- Include relevant tags for documentation and selection
+- Define primary/unique keys for data integrity
+- Configure indexes for performance optimization on key fields
+
+## Testing and Documentation
+
+### Testing Requirements
+- All primary/unique keys must have uniqueness tests
+- Foreign keys must have referential integrity tests
+- Columns with constraints (not null, valid values) must have appropriate tests
+- Use dbt_expectations for value validation and data quality checks
+
+### Documentation Standards
+- All models must have descriptions in schema.yml files
+- Critical columns must have descriptions
+- Source-to-target field mappings should be documented
+- Include business definitions where appropriate
+
+## Development Workflow
+
+### Model Development Process
+1. Start with minimal staging model with clean field definitions
+2. Write intermediate models with appropriate transformations
+3. Test each layer before proceeding to the next
+4. Ensure proper compilation at each step
+
+### Feature Development
+- Feature models should build upon intermediate models
+- Document methodology for derived features
+- Include appropriate tests for feature validity
+- Consider performance implications with large datasets
+
+## Macros and Packages
+
+### Package Usage
+- Leverage dbt_utils for common functionality
+- Use dbt_expectations for data quality validation
+- Utilize dbt_date for date-related transformations
+
+### Custom Macros
+- Place all custom macros in the macros directory
+- Document macro purpose and parameters
+- Follow functional programming principles
+- Test macros independently before using in models
+
+## Performance Considerations
+
+### Query Efficiency
+- Use appropriate materializations based on model size and refresh frequency
+- Implement partitioning on date fields for large tables
+- Create indexes on commonly filtered/joined columns
+- Use clustering keys for frequently accessed columns
+- Prefer PostgreSQL-specific optimization techniques over generic SQL approaches
+
+### Incremental Models
+- Define clear incremental logic with appropriate unique keys
+- Handle schema changes with sync_all_columns strategy
+- Ensure proper backfilling capabilities
+
+## Debugging and Troubleshooting
+
+### Common Issues
+- Check for valid PostgreSQL syntax before committing
+- Verify source data availability and schema
+- Test joins to avoid cartesian products
+- Validate primary key uniqueness
+
+### Best Practices
+- Use dbt compile to check syntax before running
+- Test models incrementally while developing
+- Review generated SQL for potential issues
+- Check execution plans for performance bottlenecks
+
+## Data Governance
+
+### Data Quality
+- Implement appropriate tests for data quality validation
+- Document known data quality issues
+- Use descriptions to explain business rules and calculations
+- Track data lineage through source definitions
+
+### Access Control
+- Schema permissions should follow least privilege principle
+- Document sensitive data elements
+- Consider PII implications in model design 

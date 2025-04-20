@@ -1,0 +1,124 @@
+version: 2
+
+models:
+  - name: int__player_matchups_bxsc
+    description: "Player-to-player matchup statistics showing how offensive players performed when matched against specific defenders"
+    tests:
+      - dbt_expectations.expect_table_row_count_to_be_between:
+          min_value: 1
+    columns:
+      - name: player_matchup_key
+        description: "Unique identifier for each player matchup record"
+        tests:
+          - unique
+          - not_null
+      
+      # Identity and Context
+      - name: season_year
+        description: "Season year"
+      - name: off_first_name
+        description: "Offensive player's first name"
+      - name: off_family_name
+        description: "Offensive player's family name"
+      - name: off_player_name
+        description: "Offensive player's full name"
+      - name: def_first_name
+        description: "Defensive player's first name"
+      - name: def_family_name
+        description: "Defensive player's family name"
+      - name: def_player_name
+        description: "Defensive player's full name"
+      - name: team_tricode
+        description: "Three-letter team code of the offensive player"
+      - name: game_date
+        description: "Date of the game"
+        tests:
+          - not_null
+      - name: home_away
+        description: "Indicator if the team was playing at home or away (HOME/AWAY)"
+      - name: opponent
+        description: "Opponent team in the matchup"
+      
+      # Matchup Time Stats
+      - name: matchup_min
+        description: "Minutes the offensive and defensive players were matched up"
+      - name: matchup_min_sort
+        description: "Minutes matched up (used for sorting)"
+      - name: partial_poss
+        description: "Partial possessions in the matchup"
+      - name: def_time_pct
+        description: "Percentage of defender's total time spent guarding this offensive player"
+      - name: off_time_pct
+        description: "Percentage of offensive player's total time being guarded by this defender"
+      - name: both_on_time_pct
+        description: "Percentage of total time both players were on the court together"
+      - name: switches_on
+        description: "Number of defensive switches onto this offensive player"
+      
+      # Offensive Production
+      - name: off_player_pts
+        description: "Points scored by the offensive player in the matchup"
+      - name: off_team_pts
+        description: "Team points scored while this matchup was occurring"
+      - name: off_matchup_ast
+        description: "Assists by the offensive player in the matchup"
+      - name: off_matchup_pot_ast
+        description: "Potential assists by the offensive player in the matchup"
+      - name: off_matchup_tov
+        description: "Turnovers by the offensive player in the matchup"
+      
+      # Offensive Shooting
+      - name: off_matchup_fgm
+        description: "Field goals made by the offensive player against this defender"
+      - name: off_matchup_fga
+        description: "Field goals attempted by the offensive player against this defender"
+      - name: off_matchup_fg_pct
+        description: "Field goal percentage by the offensive player against this defender"
+      - name: off_matchup_fg3m
+        description: "Three-point field goals made by the offensive player against this defender"
+      - name: off_matchup_fg3a
+        description: "Three-point field goals attempted by the offensive player against this defender"
+      - name: off_matchup_fg3_pct
+        description: "Three-point field goal percentage by the offensive player against this defender"
+      - name: off_matchup_ftm
+        description: "Free throws made by the offensive player when fouled by this defender"
+      - name: off_matchup_fta
+        description: "Free throws attempted by the offensive player when fouled by this defender"
+      
+      # Defensive Stats
+      - name: def_matchup_blk
+        description: "Blocks by the defender on the offensive player"
+      - name: def_help_blk
+        description: "Help blocks by the defender when not primarily guarding the offensive player"
+      - name: def_help_fgm
+        description: "Field goals made with the defender providing help defense"
+      - name: def_help_fga
+        description: "Field goals attempted with the defender providing help defense"
+      - name: def_help_fg_pct
+        description: "Field goal percentage allowed when defender is providing help defense"
+      - name: def_shooting_fouls
+        description: "Shooting fouls committed by the defender against the offensive player"
+      
+      # IDs and Metadata
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: off_player_id
+        description: "Unique identifier for the offensive player"
+        tests:
+          - not_null
+      - name: def_player_id
+        description: "Unique identifier for the defensive player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the offensive player's team"
+        tests:
+          - not_null
+      - name: season_id
+        description: "Unique identifier for the season"
+      - name: created_at
+        description: "Record creation timestamp"
+      - name: updated_at
+        description: "Record update timestamp"

@@ -1,0 +1,667 @@
+version: 2
+
+models:
+  - name: int__game_opponents
+    description: "Maps each game to the participating teams and identifies the opponent for each team. Unpivots schedule data to create one row per team per game (home/away perspectives). Serves as a central lookup for opponent IDs."
+    config:
+      tags: ["intermediate", "core", "game_mapping"]
+    columns:
+      - name: game_team_key
+        description: "Surrogate key uniquely identifying a team's participation in a specific game."
+        tests:
+          - unique
+          - not_null
+
+      - name: game_id
+        description: "Unique identifier for the game."
+        tests:
+          - not_null
+
+      - name: season_year
+        description: "The year the season took place (e.g., '2023')."
+        tests:
+          - not_null
+
+      - name: game_date
+        description: "The date the game was played."
+        tests:
+          - not_null
+
+      - name: team_id
+        description: "The unique identifier for the team from this row's perspective."
+        tests:
+          - not_null
+          # - relationships:
+          #     to: ref('dim_teams') # Placeholder if/when a dim_teams exists
+          #     field: team_id
+
+      - name: opponent_id
+        description: "The unique identifier for the opposing team in this game."
+        tests:
+          - not_null
+          # - relationships:
+          #     to: ref('dim_teams') # Placeholder if/when a dim_teams exists
+          #     field: team_id
+
+      - name: home_away
+        description: "Indicates if the 'team_id' team was 'HOME' or 'AWAY' for this game."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['HOME', 'AWAY']
+
+  - name: int__team_boxscores
+    description: "Unified view of all team boxscore statistics (traditional, advanced, misc, hustle, scoring) joined together."
+    config:
+      materialized: incremental
+      unique_key: team_game_key
+      incremental_strategy: delete+insert
+      tags: ['intermediate', 'core', 'boxscore']
+      indexes:
+        - columns: ['team_game_key']
+          unique: True
+        - columns: ['game_id']
+        - columns: ['team_id']
+        - columns: ['opponent_id']
+        - columns: ['game_date']
+        - columns: ['season_year']
+    columns:
+      # Primary Key
+      - name: team_game_key
+        description: "Unique identifier for team-game combination"
+        tests:
+          - unique
+          - not_null
+
+      # Identifiers & Metadata
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: opponent_id
+        description: "Unique identifier for the opposing team in this game."
+        tests:
+          - not_null
+      - name: game_date
+        description: "Date of the game"
+      - name: season_year
+        description: "Season year"
+      - name: home_away
+        description: "Indicates if the 'team_id' team was 'HOME' or 'AWAY' for this game."
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['HOME', 'AWAY']
+      - name: team_city
+        description: "City name of the team"
+      - name: team_name
+        description: "Name of the team"
+      - name: team_tricode
+        description: "Three-letter team code"
+
+      # Traditional Boxscore Stats
+      - name: min
+        description: "Minutes played"
+      - name: fgm
+        description: "Field goals made"
+      - name: fga
+        description: "Field goals attempted"
+      - name: fg_pct
+        description: "Field goal percentage"
+      - name: fg3m
+        description: "Three-point field goals made"
+      - name: fg3a
+        description: "Three-point field goals attempted"
+      - name: fg3_pct
+        description: "Three-point field goal percentage"
+      - name: ftm
+        description: "Free throws made"
+      - name: fta
+        description: "Free throws attempted"
+      - name: ft_pct
+        description: "Free throw percentage"
+      - name: off_reb
+        description: "Offensive rebounds"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: reb
+        description: "Total rebounds"
+      - name: ast
+        description: "Assists"
+      - name: stl
+        description: "Steals"
+      - name: blk
+        description: "Blocks"
+      - name: tov
+        description: "Turnovers"
+      - name: pf
+        description: "Personal fouls"
+      - name: pts
+        description: "Total points scored"
+        tests:
+          - not_null
+      - name: plus_minus
+        description: "Plus-minus statistic"
+
+      # Advanced Boxscore Stats
+      - name: est_off_rating
+        description: "Estimated offensive rating"
+      - name: off_rating
+        description: "Offensive rating"
+      - name: est_def_rating
+        description: "Estimated defensive rating"
+      - name: def_rating
+        description: "Defensive rating"
+      - name: est_net_rating
+        description: "Estimated net rating"
+      - name: net_rating
+        description: "Net rating"
+      - name: ast_pct
+        description: "Assist percentage"
+      - name: ast_to_tov_ratio
+        description: "Assist to turnover ratio"
+      - name: ast_ratio
+        description: "Assist ratio"
+      - name: off_reb_pct
+        description: "Offensive rebound percentage"
+      - name: def_reb_pct
+        description: "Defensive rebound percentage"
+      - name: reb_pct
+        description: "Total rebound percentage"
+      - name: est_team_tov_pct
+        description: "Estimated team turnover percentage"
+      - name: tov_ratio
+        description: "Turnover ratio"
+      - name: eff_fg_pct
+        description: "Effective field goal percentage"
+      - name: ts_pct
+        description: "True shooting percentage"
+      - name: usage_pct
+        description: "Usage percentage"
+      - name: est_usage_pct
+        description: "Estimated usage percentage"
+      - name: est_pace
+        description: "Estimated pace"
+      - name: pace
+        description: "Pace"
+      - name: pace_per_40
+        description: "Pace per 40 minutes"
+      - name: possessions
+        description: "Number of possessions"
+      - name: pie
+        description: "Player impact estimate"
+
+      # Hustle Boxscore Stats
+      - name: cont_shots
+        description: "Contested shots"
+      - name: cont_2pt
+        description: "Contested 2-point shots"
+      - name: cont_3pt
+        description: "Contested 3-point shots"
+      - name: deflections
+        description: "Number of deflections"
+      - name: charges_drawn
+        description: "Charges drawn"
+      - name: screen_ast
+        description: "Screen assists"
+      - name: screen_ast_pts
+        description: "Points from screen assists"
+      - name: off_loose_balls_rec
+        description: "Loose balls recovered on offense"
+      - name: def_loose_balls_rec
+        description: "Loose balls recovered on defense"
+      - name: tot_loose_balls_rec
+        description: "Total loose balls recovered"
+      - name: off_box_outs
+        description: "Offensive box outs"
+      - name: def_box_outs
+        description: "Defensive box outs"
+      - name: box_out_team_reb
+        description: "Box outs leading to team rebounds"
+      - name: box_out_player_reb
+        description: "Box outs leading to player rebounds"
+      - name: tot_box_outs
+        description: "Total box outs"
+
+      # Misc Boxscore Stats
+      - name: pts_off_tov
+        description: "Points scored off turnovers"
+      - name: pts_2nd_chance
+        description: "Points scored on second chance opportunities"
+      - name: pts_fastbreak
+        description: "Points scored on fast breaks"
+      - name: pts_paint
+        description: "Points scored in the paint"
+      - name: opp_pts_off_tov
+        description: "Opponent points scored off turnovers"
+      - name: opp_pts_2nd_chance
+        description: "Opponent points scored on second chance opportunities"
+      - name: opp_pts_fastbreak
+        description: "Opponent points scored on fast breaks"
+      - name: opp_pts_paint
+        description: "Opponent points scored in the paint"
+
+      # Scoring Boxscore Stats
+      - name: pct_fg_2pt
+        description: "Percentage of field goals made that were 2-pointers"
+      - name: pct_fg_3pt
+        description: "Percentage of field goals made that were 3-pointers"
+      - name: pct_pts_2pt
+        description: "Percentage of total points scored from 2-pointers"
+      - name: pct_pts_2pt_mr
+        description: "Percentage of total points scored from mid-range 2-pointers"
+      - name: pct_pts_3pt
+        description: "Percentage of total points scored from 3-pointers"
+      - name: pct_pts_fastbreak
+        description: "Percentage of total points scored from fast breaks"
+      - name: pct_pts_ft
+        description: "Percentage of total points scored from free throws"
+      - name: pct_pts_off_tov
+        description: "Percentage of total points scored off turnovers"
+      - name: pct_pts_paint
+        description: "Percentage of total points scored in the paint"
+      - name: pct_ast_2pm
+        description: "Percentage of 2-point field goals made that were assisted"
+      - name: pct_unast_2pm
+        description: "Percentage of 2-point field goals made that were unassisted"
+      - name: pct_ast_3pm
+        description: "Percentage of 3-point field goals made that were assisted"
+      - name: pct_unast_3pm
+        description: "Percentage of 3-point field goals made that were unassisted"
+      - name: pct_ast_fgm
+        description: "Percentage of all field goals made that were assisted"
+      - name: pct_unast_fgm
+        description: "Percentage of all field goals made that were unassisted"
+
+      # Timestamps
+      - name: created_at
+        description: "Record creation timestamp (latest from source models)"
+      - name: updated_at
+        description: "Record update timestamp (latest from source models)"
+
+  - name: int__player_boxscores
+    description: "Unified view of all player boxscore statistics (traditional, advanced, misc, hustle, scoring, tracking, usage, defensive) joined together."
+    config:
+      materialized: incremental
+      unique_key: player_game_key
+      incremental_strategy: delete+insert
+      tags: ['intermediate', 'core', 'boxscore']
+      indexes:
+        - columns: ['player_game_key']
+          unique: True
+        - columns: ['game_id']
+        - columns: ['player_id']
+        - columns: ['team_id']
+        - columns: ['opponent_id']
+        - columns: ['game_date']
+        - columns: ['season_year']
+    columns:
+      # Primary Key
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+
+      # Identifiers & Metadata
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: opponent_id
+        description: "Unique identifier for the opposing team in this game."
+        tests:
+          - not_null
+      - name: game_date
+        description: "Date of the game"
+      - name: season_year
+        description: "Season year"
+      - name: season_id
+        description: "Unique identifier for the season"
+      - name: home_away
+        description: "Indicator if the team was playing at home or away"
+      - name: first_name
+        description: "Player first name"
+      - name: family_name
+        description: "Player family name"
+      - name: player_name
+        description: "Combined player name"
+      - name: team_tricode
+        description: "Three-letter team code"
+
+      # Traditional Boxscore Stats (Source: traditional)
+      - name: min
+        description: "Minutes played"
+      - name: pts
+        description: "Total points scored"
+        tests:
+          - not_null
+      - name: fgm
+        description: "Field goals made"
+      - name: fga
+        description: "Field goals attempted"
+      - name: fg_pct
+        description: "Field goal percentage"
+      - name: fg3m
+        description: "Three-point field goals made"
+      - name: fg3a
+        description: "Three-point field goals attempted"
+      - name: fg3_pct
+        description: "Three-point field goal percentage"
+      - name: ftm
+        description: "Free throws made"
+      - name: fta
+        description: "Free throws attempted"
+      - name: ft_pct
+        description: "Free throw percentage"
+      - name: reb # Renamed from tot_reb
+        description: "Total rebounds"
+      - name: off_reb
+        description: "Offensive rebounds"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: ast
+        description: "Assists"
+      - name: stl
+        description: "Steals"
+      - name: blk
+        description: "Blocks"
+      - name: tov
+        description: "Turnovers"
+      - name: pf
+        description: "Personal fouls"
+      - name: plus_minus
+        description: "Plus-minus statistic"
+
+      # Advanced Boxscore Stats (Source: advanced)
+      - name: est_off_rating
+        description: "Estimated offensive rating"
+      - name: off_rating
+        description: "Offensive rating"
+      - name: est_def_rating
+        description: "Estimated defensive rating"
+      - name: def_rating
+        description: "Defensive rating"
+      - name: est_net_rating
+        description: "Estimated net rating"
+      - name: net_rating
+        description: "Net rating"
+      - name: ast_pct
+        description: "Assist percentage"
+      - name: ast_to_tov_ratio
+        description: "Assist to turnover ratio"
+      - name: ast_ratio
+        description: "Assist ratio"
+      - name: off_reb_pct
+        description: "Offensive rebound percentage"
+      - name: def_reb_pct
+        description: "Defensive rebound percentage"
+      - name: reb_pct # Renamed from tot_reb_pct
+        description: "Total rebound percentage"
+      - name: tov_ratio # Was adv_tov_ratio
+        description: "Turnover ratio"
+      - name: eff_fg_pct
+        description: "Effective field goal percentage"
+      - name: ts_pct
+        description: "True shooting percentage"
+      - name: usage_pct # Was adv_usage_pct
+        description: "Usage percentage"
+      - name: est_usage_pct
+        description: "Estimated usage percentage"
+      - name: est_pace
+        description: "Estimated pace"
+      - name: pace
+        description: "Pace"
+      - name: pace_per_40
+        description: "Pace per 40 minutes"
+      - name: possessions
+        description: "Number of possessions"
+      - name: pie
+        description: "Player impact estimate"
+
+      # Hustle Boxscore Stats (Source: hustle)
+      - name: cont_shots
+        description: "Contested shots"
+      - name: cont_2pt
+        description: "Contested 2-point shots"
+      - name: cont_3pt
+        description: "Contested 3-point shots"
+      - name: deflections
+        description: "Number of deflections"
+      - name: charges_drawn
+        description: "Charges drawn"
+      - name: screen_ast
+        description: "Screen assists"
+      - name: screen_ast_pts
+        description: "Points from screen assists"
+      - name: off_loose_balls_rec
+        description: "Loose balls recovered on offense"
+      - name: def_loose_balls_rec
+        description: "Loose balls recovered on defense"
+      - name: tot_loose_balls_rec
+        description: "Total loose balls recovered"
+      - name: off_box_outs
+        description: "Offensive box outs"
+      - name: def_box_outs
+        description: "Defensive box outs"
+      - name: box_out_player_rec_pct
+        description: "Percentage of rebounds the player secured after boxing out"
+      - name: pct_box_outs_off
+        description: "Percentage of team's offensive box outs performed by the player"
+      - name: pct_box_outs_def
+        description: "Percentage of team's defensive box outs performed by the player"
+      - name: pct_tot_box_outs
+        description: "Percentage of team's total box outs performed by the player"
+      - name: tot_box_outs
+        description: "Total box outs"
+
+      # Misc Boxscore Stats (Source: misc)
+      - name: pts_off_tov
+        description: "Points scored off turnovers"
+      - name: second_chance_pts # Renamed from pts_2nd_chance
+        description: "Points scored on second chance opportunities"
+      - name: fastbreak_pts # Renamed from pts_fastbreak
+        description: "Points scored on fast breaks"
+      - name: pts_in_paint # Renamed from pts_paint
+        description: "Points scored in the paint"
+      - name: opp_pts_off_tov_while_on # Renamed from opp_pts_off_tov
+        description: "Opponent points scored off turnovers while player was on court"
+      - name: opp_second_chance_pts_while_on # Renamed from opp_pts_2nd_chance
+        description: "Opponent second chance points scored while player was on court"
+      - name: opp_fastbreak_pts_while_on # Renamed from opp_pts_fastbreak
+        description: "Opponent fast break points scored while player was on court"
+      - name: opp_pts_in_paint_while_on # Renamed from opp_pts_paint
+        description: "Opponent points scored in the paint while player was on court"
+      - name: blk_against # Added
+        description: "Number of times player's shot was blocked"
+      - name: fouls_drawn # Added
+        description: "Number of fouls drawn by the player"
+
+      # Scoring Boxscore Stats (Source: scoring)
+      - name: pct_fga_2pt
+        description: "Percentage of field goal attempts that are two-pointers"
+      - name: pct_fga_3pt
+        description: "Percentage of field goal attempts that are three-pointers"
+      - name: pct_pts_2pt
+        description: "Percentage of points from two-pointers"
+      - name: pct_pts_midrange_2pt
+        description: "Percentage of points from mid-range two-pointers"
+      - name: pct_pts_3pt
+        description: "Percentage of points from three-pointers"
+      - name: pct_pts_fastbreak
+        description: "Percentage of points from fastbreaks"
+      - name: pct_pts_ft
+        description: "Percentage of points from free throws"
+      - name: pct_pts_off_tov
+        description: "Percentage of points off turnovers"
+      - name: pct_pts_paint
+        description: "Percentage of points in the paint"
+      - name: pct_assisted_2pt
+        description: "Percentage of two-pointers that were assisted"
+      - name: pct_unassisted_2pt
+        description: "Percentage of two-pointers that were unassisted"
+      - name: pct_assisted_3pt
+        description: "Percentage of three-pointers that were assisted"
+      - name: pct_unassisted_3pt
+        description: "Percentage of three-pointers that were unassisted"
+      - name: pct_assisted_fgm
+        description: "Percentage of field goals that were assisted"
+      - name: pct_unassisted_fgm
+        description: "Percentage of field goals that were unassisted"
+
+      # Tracking Boxscore Stats (Source: tracking)
+      - name: distance # Renamed from dist
+        description: "Distance traveled on court (in miles)"
+      - name: speed # Renamed from spd
+        description: "Average speed on court (in MPH)"
+      - name: touches
+        description: "Total number of times player possessed the ball"
+      # Removed front_ct_touches
+      - name: time_of_poss
+        description: "Total time player possessed the ball (in minutes)"
+      - name: avg_sec_per_touch
+        description: "Average duration of each touch (in seconds)"
+      # Removed avg_drib_per_touch
+      # Removed pts_per_touch
+      # Removed elbow_touches
+      # Removed post_touches
+      # Removed paint_touches
+      # Removed pts_per_elbow_touch
+      # Removed pts_per_post_touch
+      # Removed pts_per_paint_touch
+      - name: potential_ast
+        description: "Passes leading to a shot attempt"
+      - name: ast_pts_created
+        description: "Points created from assists"
+      # Removed ast_adj
+      # Removed ast_to_pass_pct
+      # Removed ast_to_pass_pct_adj
+      - name: off_reb_chances # Added
+        description: "Offensive rebound opportunities"
+      - name: def_reb_chances # Added
+        description: "Defensive rebound opportunities"
+      - name: reb_chances
+        description: "Total number of rebound opportunities"
+      # Removed adj_reb_chance
+      - name: reb_chances_pct # Renamed from tot_reb_chances_pct
+        description: "Overall rebound conversion percentage"
+      # Removed cont_reb
+      # Removed uncont_reb
+      # Removed cont_reb_pct
+      # Removed adj_off_reb_chance
+      # Removed off_reb_chance_pct
+      # Removed cont_off_reb
+      # Removed uncont_off_reb
+      # Removed cont_off_reb_pct
+      # Removed tot_off_reb_chances_pct
+      # Removed adj_def_reb_chance
+      # Removed def_reb_chance_pct
+      # Removed cont_def_reb
+      # Removed uncont_def_reb
+      # Removed cont_def_reb_pct
+      # Removed tot_def_reb_chances_pct
+      - name: passes_made
+        description: "Total number of passes made"
+      - name: passes_rec
+        description: "Total number of passes received"
+      - name: cont_fgm # Added
+        description: "Contested field goals made"
+      - name: cont_fga # Added
+        description: "Contested field goals attempted"
+      - name: cont_fg_pct
+        description: "Contested field goal percentage"
+      - name: uncont_fgm # Added
+        description: "Uncontested field goals made"
+      - name: uncont_fga # Added
+        description: "Uncontested field goals attempted"
+      - name: uncont_fg_pct
+        description: "Uncontested field goal percentage"
+      # Removed tr_fg_pct
+      - name: def_at_rim_fgm # Added (replaces dfgm?)
+        description: "Field goals made against player's defense at the rim"
+      - name: def_at_rim_fga # Added (replaces dfga?)
+        description: "Field goals attempted against player's defense at the rim"
+      - name: def_at_rim_fg_pct # Added (replaces dfg_pct?)
+        description: "Opponent field goal percentage against player's defense at the rim"
+
+      # Usage Boxscore Stats (Source: usage)
+      # Note: Many columns renamed from pct_* to pct_of_team_*
+      - name: pct_of_team_fgm # Renamed from pct_fgm
+        description: "Percentage of team's field goals made by player"
+      - name: pct_of_team_fga # Renamed from pct_fga
+        description: "Percentage of team's field goals attempted by player"
+      - name: pct_of_team_fg3m # Renamed from pct_fg3m
+        description: "Percentage of team's 3-pointers made by player"
+      - name: pct_of_team_fg3a # Renamed from pct_fg3a
+        description: "Percentage of team's 3-pointers attempted by player"
+      - name: pct_of_team_ftm # Renamed from pct_ftm
+        description: "Percentage of team's free throws made by player"
+      - name: pct_of_team_fta # Renamed from pct_fta
+        description: "Percentage of team's free throws attempted by player"
+      - name: pct_of_team_oreb # Renamed from pct_off_reb
+        description: "Percentage of team's offensive rebounds by player"
+      - name: pct_of_team_dreb # Renamed from pct_def_reb
+        description: "Percentage of team's defensive rebounds by player"
+      - name: pct_of_team_reb # Renamed from pct_reb
+        description: "Percentage of team's total rebounds by player"
+      - name: pct_of_team_ast # Renamed from pct_ast
+        description: "Percentage of team's assists by player"
+      - name: pct_of_team_tov # Renamed from pct_tov
+        description: "Percentage of team's turnovers by player"
+      - name: pct_of_team_stl # Renamed from pct_stl
+        description: "Percentage of team's steals by player"
+      - name: pct_of_team_blk # Renamed from pct_blk
+        description: "Percentage of team's blocks by player"
+      - name: pct_of_team_blk_allowed # Renamed from pct_blka
+        description: "Percentage of team's blocked shots allowed by player"
+      - name: pct_of_team_pf # Renamed from pct_pf
+        description: "Percentage of team's personal fouls by player"
+      - name: pct_of_team_pfd # Renamed from pct_pfd
+        description: "Percentage of team's personal fouls drawn by player"
+      - name: pct_of_team_pts # Renamed from pct_pts
+        description: "Percentage of team's points scored by player"
+
+      # Defensive Boxscore Stats (Source: defensive)
+      # Note: Complete change from previous defensive stats
+      - name: matchup_min # Added
+        description: "Minutes spent matched up against specific opponents (if available)"
+      - name: partial_poss # Added
+        description: "Partial possessions played on defense"
+      - name: def_switches # Added
+        description: "Number of defensive switches"
+      - name: pts_allowed # Added
+        description: "Points allowed while player was primary defender"
+      - name: ast_allowed # Added
+        description: "Assists allowed while player was primary defender"
+      - name: tov_forced # Added
+        description: "Turnovers forced while player was primary defender"
+      - name: matchup_fgm # Added
+        description: "Opponent field goals made while player was primary defender"
+      - name: matchup_fga # Added
+        description: "Opponent field goals attempted while player was primary defender"
+      - name: matchup_fg_pct # Added
+        description: "Opponent field goal percentage while player was primary defender"
+      - name: matchup_fg3m # Added
+        description: "Opponent 3pt field goals made while player was primary defender"
+      - name: matchup_fg3a # Added
+        description: "Opponent 3pt field goals attempted while player was primary defender"
+      - name: matchup_fg3_pct # Added
+        description: "Opponent 3pt field goal percentage while player was primary defender"
+
+      # Timestamps
+      - name: created_at
+        description: "Record creation timestamp (latest from source models)"
+      - name: updated_at
+        description: "Record update timestamp (latest from source models)" 

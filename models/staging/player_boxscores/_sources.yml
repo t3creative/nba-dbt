@@ -1,0 +1,705 @@
+version: 2
+
+sources:
+  - name: nba_api
+    database: nba_data
+    schema: raw
+    tables:
+      # Traditional Box Score
+      - name: player_boxscore_traditional_v3
+        description: "Raw player traditional box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+            tests:
+              - not_null
+          - name: jerseyNum
+            description: "Player jersey number"
+            tests:
+              - not_null
+          - name: minutes
+            description: "Minutes played"
+            tests:
+              - not_null
+          - name: fieldGoalsMade
+            description: "Field goals made"
+          - name: fieldGoalsAttempted
+            description: "Field goals attempted"
+          - name: fieldGoalsPercentage
+            description: "Field goal percentage"
+          - name: threePointersMade
+            description: "Three pointers made"
+          - name: threePointersAttempted
+            description: "Three pointers attempted"
+          - name: threePointersPercentage
+            description: "Three point percentage"
+          - name: freeThrowsMade
+            description: "Free throws made"
+          - name: freeThrowsAttempted
+            description: "Free throws attempted"
+          - name: freeThrowsPercentage
+            description: "Free throw percentage"
+          - name: reboundsOffensive
+            description: "Offensive rebounds"
+          - name: reboundsDefensive
+            description: "Defensive rebounds"
+          - name: reboundsTotal
+            description: "Total rebounds"
+          - name: assists
+            description: "Assists"
+          - name: steals
+            description: "Steals"
+          - name: blocks
+            description: "Blocks"
+          - name: turnovers
+            description: "Turnovers"
+          - name: foulsPersonal
+            description: "Personal fouls"
+          - name: points
+            description: "Points scored"
+            tests:
+              - not_null
+          - name: plusMinusPoints
+            description: "Plus/minus rating"
+            tests:
+              - not_null
+
+      # Advanced Box Score
+      - name: player_boxscore_advanced_v3
+        description: "Raw player advanced box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player status/injury information"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: minutes
+            description: "Minutes played"
+            tests:
+              - not_null
+          - name: estimatedOffensiveRating
+            description: "Estimated offensive rating"
+          - name: offensiveRating
+            description: "Offensive rating"
+          - name: estimatedDefensiveRating
+            description: "Estimated defensive rating"
+          - name: defensiveRating
+            description: "Defensive rating"
+          - name: estimatedNetRating
+            description: "Estimated net rating"
+          - name: netRating
+            description: "Net rating"
+          - name: assistPercentage
+            description: "Assist percentage"
+          - name: assistToTurnover
+            description: "Assist to turnover ratio"
+          - name: assistRatio
+            description: "Assist ratio"
+          - name: offensiveReboundPercentage
+            description: "Offensive rebound percentage"
+          - name: defensiveReboundPercentage
+            description: "Defensive rebound percentage"
+          - name: reboundPercentage
+            description: "Total rebound percentage"
+          - name: turnoverRatio
+            description: "Turnover ratio"
+          - name: effectiveFieldGoalPercentage
+            description: "Effective field goal percentage"
+          - name: trueShootingPercentage
+            description: "True shooting percentage"
+          - name: usagePercentage
+            description: "Usage percentage"
+          - name: estimatedUsagePercentage
+            description: "Estimated usage percentage"
+          - name: estimatedPace
+            description: "Estimated pace"
+          - name: pace
+            description: "Pace"
+          - name: pacePer40
+            description: "Pace per 40 minutes"
+          - name: possessions
+            description: "Possessions"
+          - name: PIE
+            description: "Player Impact Estimate metric (0-100 scale)"
+            tests:
+              - not_null
+
+      # Misc Box Score
+      - name: player_boxscore_misc_v3
+        description: "Raw player miscellaneous box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: minutes
+            description: "Total minutes played"
+            tests:
+              - not_null
+          - name: pointsOffTurnovers
+            description: "Points off turnovers"
+          - name: pointsSecondChance
+            description: "Second chance points"
+          - name: pointsFastBreak
+            description: "Fast break points"
+          - name: pointsPaint
+            description: "Points in the paint"
+          - name: oppPointsOffTurnovers
+            description: "Opponent points off turnovers"
+          - name: oppPointsSecondChance
+            description: "Opponent second chance points"
+          - name: oppPointsFastBreak
+            description: "Opponent fast break points"
+          - name: oppPointsPaint
+            description: "Opponent points in the paint"
+          - name: blocks
+            description: "Total blocks recorded"
+            tests:
+              - not_null
+          - name: blocksAgainst
+            description: "Blocks against"
+          - name: foulsPersonal
+            description: "Personal fouls committed"
+            tests:
+              - not_null
+          - name: foulsDrawn
+            description: "Fouls drawn"
+
+      # Hustle Box Score
+      - name: player_boxscore_hustle_v2
+        description: "Raw player hustle box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: minutes
+            description: "Minutes played"
+            tests:
+              - not_null
+          - name: points
+            description: "Points scored"
+          - name: contestedShots
+            description: "Contested shots"
+          - name: contestedShots2pt
+            description: "2-point shots contested by the player"
+          - name: contestedShots3pt
+            description: "3-point shots contested by the player"
+          - name: deflections
+            description: "Deflections"
+          - name: chargesDrawn
+            description: "Charges drawn"
+          - name: screenAssists
+            description: "Screen assists"
+          - name: screenAssistPoints
+            description: "Screen assist points"
+          - name: looseBallsRecoveredOffensive
+            description: "Offensive loose balls recovered"
+          - name: looseBallsRecoveredDefensive
+            description: "Defensive loose balls recovered"
+          - name: looseBallsRecoveredTotal
+            description: "Total loose balls recovered"
+          - name: offensiveBoxOuts
+            description: "Team rebounds resulting from player's box outs"
+          - name: defensiveBoxOuts
+            description: "Defensive box outs"
+          - name: boxOutPlayerTeamRebounds
+            description: "Team rebounds resulting from player's box outs"
+          - name: boxOutPlayerRebounds
+            description: "Rebounds secured by player from their own box outs"
+          - name: boxOuts
+            description: "Total box outs"
+
+      # Matchups Box Score
+      - name: player_boxscore_matchups_v3
+        description: "Raw player matchups box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personIdOff
+            description: "Offensive player identifier"
+            tests:
+              - not_null
+          - name: firstNameOff
+            description: "Offensive player first name"
+          - name: familyNameOff
+            description: "Offensive player family name"
+          - name: nameIOff
+            description: "Offensive player name initial"
+          - name: playerSlugOff
+            description: "Offensive player URL slug"
+          - name: positionOff
+            description: "Offensive player position"
+          - name: commentOff
+            description: "Offensive player status/availability notes"
+          - name: jerseyNumOff
+            description: "Offensive player jersey number"
+          - name: personIdDef
+            description: "Defensive player identifier"
+            tests:
+              - not_null
+          - name: firstNameDef
+            description: "Defensive player first name"
+          - name: familyNameDef
+            description: "Defensive player family name"
+          - name: nameIDef
+            description: "Defensive player name initial"
+          - name: playerSlugDef
+            description: "Defensive player URL slug"
+          - name: jerseyNumDef
+            description: "Defender's jersey number"
+          - name: matchupMinutes
+            description: "Minutes offensive and defensive players were directly matched"
+            tests:
+              - not_null
+          - name: matchupMinutesSort
+            description: "Matchup minutes for sorting purposes"
+          - name: partialPossessions
+            description: "Partial possessions in matchup"
+          - name: percentageDefenderTotalTime
+            description: "Percentage of defender's total time spent guarding this offensive player"
+          - name: percentageOffensiveTotalTime
+            description: "Percentage of offensive player's total time spent being guarded by this defender"
+          - name: percentageTotalTimeBothOn
+            description: "Percentage of total time both players were on court together"
+          - name: switchesOn
+            description: "Number of defensive switches onto this matchup"
+          - name: playerPoints
+            description: "Points scored by the offensive player while being guarded by this defender"
+          - name: teamPoints
+            description: "Team points scored during this matchup"
+          - name: matchupAssists
+            description: "Assists by offensive player while being guarded by this defender"
+          - name: matchupPotentialAssists
+            description: "Potential assists by offensive player while being guarded by this defender"
+          - name: matchupTurnovers
+            description: "Turnovers by offensive player while being guarded by this defender"
+          - name: matchupBlocks
+            description: "Blocks by defensive player against this offensive player"
+          - name: matchupFieldGoalsMade
+            description: "Field goals made by offensive player while being guarded by this defender"
+          - name: matchupFieldGoalsAttempted
+            description: "Field goals attempted by offensive player while being guarded by this defender"
+          - name: matchupFieldGoalsPercentage
+            description: "Field goal percentage by offensive player while being guarded by this defender"
+          - name: matchupThreePointersMade
+            description: "Three pointers made by offensive player while being guarded by this defender"
+          - name: matchupThreePointersAttempted
+            description: "Three pointers attempted by offensive player while being guarded by this defender"
+          - name: matchupThreePointersPercentage
+            description: "Three point percentage by offensive player while being guarded by this defender"
+          - name: matchupFreeThrowsMade
+            description: "Free throws made by offensive player resulting from fouls by this defender"
+          - name: matchupFreeThrowsAttempted
+            description: "Free throws attempted by offensive player resulting from fouls by this defender"
+          - name: helpBlocks
+            description: "Blocks made by defensive player when helping against other offensive players"
+          - name: helpFieldGoalsMade
+            description: "Field goals made by other offensive players when this defender provided help defense"
+          - name: helpFieldGoalsAttempted
+            description: "Field goals attempted by other offensive players when this defender provided help defense"
+          - name: helpFieldGoalsPercentage
+            description: "Field goal percentage allowed by this defender when providing help defense"
+          - name: shootingFouls
+            description: "Shooting fouls committed by defender in this matchup"
+
+      # Defensive Box Score
+      - name: player_boxscore_defensive_v2
+        description: "Raw player defensive box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+            tests:
+              - not_null
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: matchupMinutes
+            description: "Minutes spent in direct defensive matchups"
+            tests:
+              - not_null
+          - name: partialPossessions
+            description: "Partial possessions"
+            tests:
+              - not_null
+          - name: switchesOn
+            description: "Number of defensive switches"
+          - name: playerPoints
+            description: "Points allowed"
+          - name: defensiveRebounds
+            description: "Defensive rebounds"
+          - name: matchupAssists
+            description: "Assists allowed"
+          - name: matchupTurnovers
+            description: "Turnovers forced"
+          - name: steals
+            description: "Total steals recorded"
+            tests:
+              - not_null
+          - name: blocks
+            description: "Total blocks recorded"
+            tests:
+              - not_null
+          - name: matchupFieldGoalsMade
+            description: "Field goals made against"
+          - name: matchupFieldGoalsAttempted
+            description: "Field goals attempted against"
+          - name: matchupFieldGoalPercentage
+            description: "Field goal percentage against"
+          - name: matchupThreePointersMade
+            description: "Three pointers made against"
+          - name: matchupThreePointersAttempted
+            description: "Three pointers attempted against"
+          - name: matchupThreePointerPercentage
+            description: "3P% allowed in primary matchups"
+
+      # Player Tracking Box Score
+      - name: player_boxscore_player_track_v3
+        description: "Raw player tracking box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: minutes
+            description: "Minutes played"
+            tests:
+              - not_null
+          - name: speed
+            description: "Average speed in miles per hour"
+            tests:
+              - not_null
+          - name: distance
+            description: "Total distance covered in miles"
+            tests:
+              - not_null
+          - name: reboundChancesTotal
+            description: "Total rebounding opportunities in player's vicinity"
+          - name: touches
+            description: "Number of touches"
+          - name: secondaryAssists
+            description: "Secondary assists"
+          - name: freeThrowAssists
+            description: "Free throw assists"
+          - name: passes
+            description: "Total passes made"
+            tests:
+              - not_null
+          - name: assists
+            description: "Assists"
+          - name: contestedFieldGoalsMade
+            description: "Contested field goals made"
+          - name: contestedFieldGoalsAttempted
+            description: "Contested field goals attempted"
+          - name: contestedFieldGoalPercentage
+            description: "Contested field goal percentage"
+          - name: uncontestedFieldGoalsMade
+            description: "Uncontested field goals made"
+          - name: uncontestedFieldGoalsAttempted
+            description: "Uncontested field goals attempted"
+          - name: uncontestedFieldGoalsPercentage
+            description: "Uncontested field goal percentage"
+          - name: fieldGoalPercentage
+            description: "Overall field goal percentage"
+          - name: defendedAtRimFieldGoalsMade
+            description: "Field goals made when defending rim"
+          - name: defendedAtRimFieldGoalsAttempted
+            description: "Field goals attempted when defending rim"
+          - name: defendedAtRimFieldGoalPercentage
+            description: "Field goal percentage when defending rim"
+
+      # Scoring Box Score
+      - name: player_boxscore_scoring_v3
+        description: "Raw player scoring box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+            tests:
+              - not_null
+          - name: teamCity
+            description: "Team city name"
+          - name: teamName
+            description: "Team name"
+          - name: teamTricode
+            description: "Team three-letter code"
+          - name: teamSlug
+            description: "Team URL slug"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: firstName
+            description: "Player first name"
+          - name: familyName
+            description: "Player family name"
+          - name: nameI
+            description: "Player name initial"
+          - name: playerSlug
+            description: "Player URL slug"
+          - name: position
+            description: "Player position"
+          - name: comment
+            description: "Player availability/participation status"
+          - name: jerseyNum
+            description: "Player jersey number"
+          - name: minutes
+            description: "Minutes played"
+            tests:
+              - not_null
+          - name: percentageFieldGoalsAttempted2pt
+            description: "Percentage of field goals attempted that were 2-pointers"
+          - name: percentageFieldGoalsAttempted3pt
+            description: "Percentage of field goals attempted that were 3-pointers"
+          - name: percentagePoints2pt
+            description: "Percentage of points from 2-pointers"
+          - name: percentagePointsMidrange2pt
+            description: "% of points from mid-range shots (10ft-3pt line)"
+          - name: percentagePoints3pt
+            description: "Percentage of points from 3-pointers"
+          - name: percentagePointsFastBreak
+            description: "Percentage of points from fast breaks"
+          - name: percentagePointsFreeThrow
+            description: "Percentage of points from free throws"
+          - name: percentagePointsOffTurnovers
+            description: "Percentage of points off turnovers"
+          - name: percentagePointsPaint
+            description: "Percentage of points in the paint"
+          - name: percentageAssisted2pt
+            description: "Percentage of made 2-pointers that were assisted"
+          - name: percentageUnassisted2pt
+            description: "Percentage of made 2-pointers that were unassisted"
+          - name: percentageAssisted3pt
+            description: "Percentage of made 3-pointers that were assisted"
+          - name: percentageUnassisted3pt
+            description: "Percentage of made 3-pointers that were unassisted"
+          - name: percentageAssistedFGM
+            description: "Percentage of all made field goals that were assisted"
+          - name: percentageUnassistedFGM
+            description: "Percentage of all made field goals that were unassisted"
+
+      # Usage Box Score
+      - name: player_boxscore_usage_v3
+        description: "Raw player usage box score statistics"
+        columns:
+          - name: gameId
+            description: "Unique identifier for each game"
+            tests:
+              - not_null
+          - name: teamId
+            description: "Team identifier"
+          - name: personId
+            description: "Player identifier"
+            tests:
+              - not_null
+          - name: usagePercentage
+            description: "Percentage of team plays used by player"
+          - name: percentageFieldGoalsMade
+            description: "Percentage of team's FGM accounted for by player"
+          - name: percentageFieldGoalsAttempted
+            description: "Percentage of team's FGA accounted for by player"
+          - name: percentageThreePointersMade
+            description: "Percentage of team's 3PM accounted for by player"
+          - name: percentageThreePointersAttempted
+            description: "Percentage of team's 3PA accounted for by player"
+          - name: percentageFreeThrowsMade
+            description: "Percentage of team's FTM accounted for by player"
+          - name: percentageFreeThrowsAttempted
+            description: "Percentage of team's FTA accounted for by player"
+          - name: percentageReboundsOffensive
+            description: "Percentage of team's offensive rebounds"
+          - name: percentageReboundsDefensive
+            description: "Percentage of team's defensive rebounds"
+          - name: percentageReboundsTotal
+            description: "Percentage of team's total rebounds"
+          - name: percentageAssists
+            description: "Percentage of team's assists"
+          - name: percentageTurnovers
+            description: "Percentage of team's turnovers"
+          - name: percentageSteals
+            description: "Percentage of team's steals"
+          - name: percentageBlocks
+            description: "Percentage of team's blocks"
+          - name: percentagePoints
+            description: "Percentage of team's points"

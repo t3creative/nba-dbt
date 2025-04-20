@@ -1,0 +1,278 @@
+---
+description: 
+globs: models/staging/**/*.sql
+alwaysApply: false
+---
+# NBA dbt Project - Staging Models Rules
+
+This document defines the standards and principles to follow when creating, refactoring, or interacting with staging models in the NBA dbt project. These rules ensure consistency, maintainability, and reliability across the staging layer.
+
+## Model Naming Conventions
+
+1. **Standard Pattern**: Use `stg_` prefix for all staging models
+   - Example: `stg__league_dash_player_bio.sql`, `stg__schedules.sql`
+   - Note: Existing models may use `stg__` with double underscore; maintain consistency within directories
+
+2. **Entity-First Pattern**: Put the entity name first, followed by the attribute type
+   - Example: `stg_team_advanced_bxsc.sql` (team is entity, advanced is attribute type)
+   - Example: `stg_player_game_logs.sql` (player is entity, game_logs is attribute type)
+
+3. **File Extensions**: Always use `.sql` for model files and `.yml` for schema/source files
+
+## SQL Structure
+
+1. **Configuration Block**: Always include at the top of the file
+   ```sql
+   {{
+       config(
+           schema='staging',
+           materialized='view'
+       )
+   }}
+   ```
+
+2. **Model Identifier Comment**: Include a comment with the model name immediately after the config block
+   ```sql
+   -- stg__schedules.sql
+   ```
+
+3. **CTE Structure**: Always use CTEs with the following pattern:
+   ```sql
+   with source as (
+       select * from {{ source('schema_name', 'table_name') }}
+   ),
+
+   final as (
+       select
+           -- Transformed columns with type casting
+       from source
+   )
+
+   select * from final
+   ```
+
+4. **Complex Transformations**: For models requiring more complex logic, use intermediate CTEs with descriptive names
+   ```sql
+   with source as (...),
+   
+   name_extraction as (...),
+   
+   player_with_row_number as (...),
+   
+   latest_player_data as (...),
+   
+   select * from latest_player_data
+   ```
+
+## Field Organization
+
+1. **Field Grouping**: Group related fields with clear section comments
+   ```sql
+   -- Surrogate Key
+   {{ dbt_utils.generate_surrogate_key(['"gameId"', '"gameDate"', '"seasonYear"']) }} as game_date_season_id,
+   
+   -- Game Information
+   "gameId"::varchar as game_id,
+   "leagueId"::varchar as league_id,
+   ```
+
+2. **Standard Field Order**:
+   - Surrogate/primary keys first
+   - Entity identifiers second (game_id, team_id, player_id)
+   - Date/time fields third
+   - Descriptive attributes fourth
+   - Metrics/measurements fifth
+   - Metadata fields (created_at, updated_at) last
+
+## Field Naming Conventions
+
+1. **Snake Case**: All field names must use snake_case
+   - Example: `home_team_id`, `points_leader_player_id`
+
+2. **Consistent Abbreviations**: Use consistent abbreviations across models
+   - Use `pct` for percentages (not `percentage` or `percent`)
+   - Use `fg` for field goal (not `field_goal`)
+   - Use `ast` for assists (not `assist`)
+
+3. **Field Renaming**: Always rename source fields to follow project conventions
+   - Convert camelCase to snake_case
+   - Convert `"ColumnName"` format to `column_name`
+   - Example: `"homeTeam_teamId"::integer as home_team_id`
+
+## Type Handling
+
+1. **Explicit Type Casting**: Always explicitly cast all fields to appropriate types
+   ```sql
+   "gameId"::varchar as game_id,
+   "homeTeam_teamId"::integer as home_team_id,
+   to_date("gameDate", 'MM/DD/YYYY HH24:MI:SS') as game_date,
+   ```
+
+2. **Numeric Type Specification**: For numeric types, include precision and scale
+   ```sql
+   "FG_PCT"::decimal(5,3) as fg_pct,
+   regexp_replace("MIN"::text, '[^0-9.]', '')::decimal(10,2) as minutes_played,
+   ```
+
+3. **Data Validation**: For potentially problematic fields, use case statements with pattern matching
+   ```sql
+   case 
+       when draft_year = '' then NULL
+       when draft_year = 'Undrafted' then NULL
+       when draft_year ~ '^[0-9]+$' then cast(draft_year as integer) 
+       else NULL
+   end as draft_year,
+   ```
+
+## Custom Macros
+
+1. **Surrogate Key Generation**: Use `dbt_utils.generate_surrogate_key` for creating surrogate keys
+   ```sql
+   {{ dbt_utils.generate_surrogate_key(['game_id', 'team_id']) }} as game_team_id,
+   ```
+
+2. **Minutes Extraction**: Use the `extract_minutes` macro for handling minutes format
+   ```sql
+   {{ extract_minutes('"MIN"') }} as minutes_played,
+   ```
+
+3. **Incremental Loading**: For incremental models, use the standard incremental pattern
+   ```sql
+   {% if is_incremental() %}
+   where cast("GAME_DATE" as date) >= (select max(game_date) from {{ this }})
+   {% endif %}
+   ```
+
+## Documentation Requirements
+
+1. **Schema YAML**: Each model must have corresponding schema entries with:
+   - Model description
+   - Column descriptions for all fields
+   - Tests for primary keys (unique, not_null)
+   - Tests for foreign keys (relationships)
+   - Examples:
+     ```yaml
+     models:
+       - name: stg__schedules
+         description: Standardized team schedule data with consistent naming conventions
+         columns:
+           - name: game_date_season_id
+             description: Unique identifier for the schedule record
+             tests:
+               - unique
+               - not_null
+     ```
+
+2. **Source YAML**: All source tables must be documented with:
+   - Source description
+   - Table descriptions
+   - Column descriptions
+   - Tests for critical fields
+   - Examples:
+     ```yaml
+     sources:
+       - name: nba_api
+         description: NBA API data source
+         tables:
+           - name: season_games
+             description: Game schedule information
+             columns:
+               - name: gameId
+                 description: Unique identifier for the game
+                 tests:
+                   - not_null
+     ```
+
+## Testing Standards
+
+1. **Primary Key Tests**: All primary/surrogate keys must have:
+   - `unique` test
+   - `not_null` test
+
+2. **Foreign Key Tests**: All foreign keys should have relationship tests
+   ```yaml
+   tests:
+     - relationships:
+         to: ref('stg_nba-data__team_game_log')
+         field: team_id
+   ```
+
+3. **Value Range Tests**: Percentage fields should have range tests
+   ```yaml
+   tests:
+     - dbt_utils.accepted_range:
+         min_value: 0
+         max_value: 1
+   ```
+
+4. **Data Quality Tests**: Critical fields should have appropriate data quality tests
+   - not_null for required fields
+   - accepted_values for enumerated fields
+
+## Performance Considerations
+
+1. **Materialization**: Staging models should generally be materialized as views
+   ```sql
+   config(
+       schema='staging',
+       materialized='view'
+   )
+   ```
+
+2. **Incremental Models**: For large logs/fact tables, consider incremental loading
+   ```sql
+   config(
+       schema='staging',
+       materialized='incremental',
+       unique_key='game_team_id'
+   )
+   ```
+
+3. **Filtering**: Include appropriate WHERE clauses to filter out invalid records
+   ```sql
+   where "gameId" is not null
+   and "homeTeam_teamId" is not null
+   and "awayTeam_teamId" is not null
+   ```
+
+## Advanced Techniques
+
+1. **SCD Handling**: For dimensional models tracking changes over time:
+   ```sql
+   current_date as valid_from,
+   NULL as valid_to,
+   true as active
+   ```
+
+2. **Row Selection**: For selecting latest records, use window functions:
+   ```sql
+   row_number() over (partition by player_id order by season desc) as row_num
+   
+   -- Then filter in a subsequent CTE
+   where row_num = 1
+   ```
+
+3. **Timestamp Handling**: Include audit timestamps for tracking changes
+   ```sql
+   updated_at as updated_at,
+   current_timestamp as created_at
+   ```
+
+## Refactoring Existing Models
+
+1. **Preserve Structure**: Maintain the existing structure and organization of the model
+2. **Maintain Field Order**: Keep fields in the same order when refactoring
+3. **Update Comments**: Ensure comments are up-to-date after refactoring
+4. **Test After Changes**: Run tests to ensure refactored models pass all tests
+5. **Document Changes**: Update schema definitions if field types or descriptions change
+
+## Best Practices Summary
+
+1. **Consistency**: Follow established patterns within directories
+2. **Readability**: Use clear naming and organization to enhance code readability
+3. **Type Safety**: Always explicitly cast fields to appropriate types
+4. **Documentation**: Thoroughly document all models, columns, and sources
+5. **Testing**: Implement comprehensive tests for data quality and relationships
+6. **Field Grouping**: Group related fields with clear section comments
+
+By following these rules, you'll ensure that all staging models maintain a consistent structure and approach, making the codebase more maintainable, reliable, and understandable. 

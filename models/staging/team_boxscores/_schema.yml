@@ -1,0 +1,422 @@
+version: 2
+
+models:
+  - name: stg__team_traditional_bxsc
+    description: "Cleaned and standardized team traditional box score statistics"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for each team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for each game"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 48
+      - name: pts
+        description: "Points scored"
+        tests:
+          - not_null
+      - name: fgm
+        description: "Field goals made"
+      - name: fga
+        description: "Field goals attempted"
+      - name: fg_pct
+        description: "Field goal percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: fg3m
+        description: "Three pointers made"
+      - name: fg3a
+        description: "Three pointers attempted"
+      - name: fg3_pct
+        description: "Three point percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: ftm
+        description: "Free throws made"
+      - name: fta
+        description: "Free throws attempted"
+      - name: ft_pct
+        description: "Free throw percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: off_reb
+        description: "Offensive rebounds"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: reb
+        description: "Total rebounds"
+      - name: ast
+        description: "Assists"
+      - name: stl
+        description: "Steals"
+      - name: blk
+        description: "Blocks"
+      - name: tov
+        description: "Turnovers"
+      - name: pf
+        description: "Personal fouls"
+      - name: plus_minus
+        description: "Plus/minus points"
+
+  - name: stg__team_advanced_bxsc
+    description: "Cleaned and standardized team advanced box score statistics"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for each team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for each game"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 48
+      - name: off_rating_est
+        description: "Estimated offensive rating"
+      - name: off_rating
+        description: "Offensive rating"
+      - name: def_rating_est
+        description: "Estimated defensive rating"
+      - name: def_rating
+        description: "Defensive rating"
+      - name: est_net_rating
+        description: "Estimated net rating"
+      - name: net_rating
+        description: "Net rating"
+      - name: ast_pct
+        description: "Assist percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: ast_to_tov_ratio
+        description: "Assist to turnover ratio"
+      - name: ast_ratio
+        description: "Assist ratio"
+      - name: off_reb_pct
+        description: "Offensive rebound percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: def_reb_pct
+        description: "Defensive rebound percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: reb_pct
+        description: "Total rebound percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: est_team_tov_pct
+        description: "Estimated Team turnover percentage"
+      - name: tov_ratio
+        description: "Turnover ratio"
+      - name: eff_fg_pct
+        description: "Effective field goal percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: ts_pct
+        description: "True shooting percentage"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: usage_pct
+        description: "Usage percentage"
+      - name: est_usage_pct
+        description: "Estimated usage percentage"
+      - name: est_pace
+        description: "Estimated pace"
+      - name: pace
+        description: "Pace"
+      - name: pace_per_40
+        description: "Pace per 40 minutes"
+      - name: possessions
+        description: "Possessions"
+      - name: pie
+        description: "Player Impact Estimate"
+
+  - name: stg__team_hustle_bxsc
+    description: "Cleaned and standardized team hustle box score statistics"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for each team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for each game"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 48
+      - name: pts
+        description: "Points scored"
+        tests:
+          - not_null
+      - name: cont_shots
+        description: "Total contested shots"
+      - name: cont_2pt
+        description: "Contested 2-point shots"
+      - name: cont_3pt
+        description: "Contested 3-point shots"
+      - name: deflections
+        description: "Deflections created"
+      - name: charges_drawn
+        description: "Charges drawn"
+      - name: screen_ast
+        description: "Screen assists"
+      - name: screen_ast_pts
+        description: "Points from screen assists"
+      - name: off_loose_balls_rec
+        description: "Offensive loose balls recovered"
+      - name: def_loose_balls_rec
+        description: "Defensive loose balls recovered"
+      - name: tot_loose_balls_recal
+        description: "Total loose balls recovered"
+      - name: off_box_outs
+        description: "Offensive box outs"
+      - name: def_box_outs
+        description: "Defensive box outs"
+      - name: box_outs_team_reb
+        description: "Team rebounds from box outs"
+      - name: box_outs_player_reb
+        description: "Player rebounds from box outs"
+      - name: tot_box_outs
+        description: "Total box outs"
+
+  - name: stg__team_misc_bxsc
+    description: "Cleaned and standardized team miscellaneous box score statistics"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for each team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for each game"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 48
+      - name: pts_off_tov
+        description: "Points scored off turnovers"
+      - name: pts_second_chance
+        description: "Second chance points"
+      - name: pts_fastbreak
+        description: "Fast break points"
+      - name: pts_paint
+        description: "Points in the paint"
+      - name: opp_pts_off_tov
+        description: "Opponent points scored off turnovers"
+      - name: opp_pts_second_chance
+        description: "Opponent second chance points"
+      - name: opp_pts_fastbreak
+        description: "Opponent fast break points"
+      - name: opp_pts_paint
+        description: "Opponent points in the paint"
+      - name: blk
+        description: "Blocks recorded"
+      - name: blk_against
+        description: "Blocks against the team"
+      - name: pf
+        description: "Personal fouls committed"
+      - name: pf_drawn
+        description: "Fouls drawn by the team"
+
+  - name: stg__team_scoring_bxsc
+    description: "Cleaned and standardized team scoring box score statistics"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for each team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for each game"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 48
+      - name: pct_fga_2pt
+        description: "Percentage of field goal attempts that were 2-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_fga_3pt
+        description: "Percentage of field goal attempts that were 3-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_2pt
+        description: "Percentage of points from 2-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_midrange_2pt
+        description: "Percentage of points from mid-range 2-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_3pt
+        description: "Percentage of points from 3-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_fastbreak
+        description: "Percentage of points from fast breaks"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_ft
+        description: "Percentage of points from free throws"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_off_tov
+        description: "Percentage of points off turnovers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_pts_paint
+        description: "Percentage of points in the paint"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_assisted_2pt
+        description: "Percentage of assisted 2-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_unassisted_2pt
+        description: "Percentage of unassisted 2-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_assisted_3pt
+        description: "Percentage of assisted 3-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_unassisted_3pt
+        description: "Percentage of unassisted 3-pointers"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_assisted_fgm
+        description: "Percentage of assisted field goals made"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1
+      - name: pct_unassisted_fgm
+        description: "Percentage of unassisted field goals made"
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 1

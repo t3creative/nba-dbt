@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg__league_dash_player_bio
+    description: "Dimension table for player information"
+    config:
+      tags: ['dimensions', 'players']
+    columns:
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - unique
+          - not_null
+      - name: first_name
+        description: "Player's first name"
+      - name: last_name
+        description: "Player's last name"
+      - name: full_name
+        description: "Player's full name"
+      - name: position
+        description: "Player's position"
+      - name: height
+        description: "Player's height in feet-inches format (e.g., '6-8')"
+      - name: height_inches
+        description: "Player's height in inches"
+      - name: weight
+        description: "Player's weight in pounds"
+      - name: birth_date
+        description: "Player's birth date"
+      - name: draft_year
+        description: "Year player was drafted"
+      - name: draft_round
+        description: "Round player was drafted"
+      - name: draft_number
+        description: "Pick number player was drafted"
+      - name: college
+        description: "Player's college"
+      - name: country
+        description: "Player's country of origin"
+      - name: active
+        description: "Indicates if player is currently active"
+      - name: valid_from
+        description: "Date from which this player record is valid"
+      - name: valid_to
+        description: "Date until which this player record is valid"

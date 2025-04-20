@@ -1,0 +1,43 @@
+version: 2
+
+models:
+  - name: int__active_players
+    description: "Active players for the 2024-25 NBA season with their current team information"
+    config:
+      tags: ['player', 'intermediate', 'roster']
+    columns:
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - unique
+          - not_null
+      
+      - name: full_name
+        description: "Player's full name"
+        tests:
+          - not_null
+      
+      - name: team_id
+        description: "Current team identifier"
+        tests:
+          - not_null
+      
+      - name: team_name
+        description: "Current team name"
+        tests:
+          - not_null
+      
+      - name: team_tricode
+        description: "Current team three-letter code"
+        tests:
+          - not_null
+      
+      - name: roster_status
+        description: "Player's roster status (Active)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['Active']
+      
+      - name: created_at
+        description: "Timestamp when the record was created" 

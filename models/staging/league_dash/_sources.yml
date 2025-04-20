@@ -1,0 +1,14 @@
+version: 2
+
+sources:
+  - name: nba_api
+    description: NBA API data source
+    database: nba_data
+    schema: raw
+    tables:
+      - name: league_dash_player_bio_stats
+        description: Player biographical and statistical data
+      - name: teams
+        description: Team information
+      - name: team_info
+        description: Team information with additional details 

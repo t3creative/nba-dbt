@@ -1,0 +1,605 @@
+version: 2
+
+models:
+  - name: stg__player_advanced_bxsc
+    description: "Advanced box score statistics for players including offensive/defensive ratings and advanced metrics"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: comment
+        description: "Player status/availability notes"
+      - name: jersey_num
+        description: "Player's jersey number"
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+      - name: est_offensive_rating
+        description: "Estimated offensive rating"
+      - name: off_rating
+        description: "Actual offensive rating"
+      - name: est_defensive_rating
+        description: "Estimated defensive rating"
+      - name: def_rating
+        description: "Actual defensive rating"
+      - name: est_net_rating
+        description: "Estimated net rating"
+      - name: net_rating
+        description: "Actual net rating"
+      - name: ast_pct
+        description: "Assist percentage"
+      - name: ast_to_tov_ratio
+        description: "Assist to turnover ratio"
+      - name: ast_ratio
+        description: "Assist ratio"
+      - name: off_reb_pct
+        description: "Offensive rebound percentage"
+      - name: def_reb_pct
+        description: "Defensive rebound percentage"
+      - name: reb_pct
+        description: "Total rebound percentage"
+      - name: tov_ratio
+        description: "Turnover ratio"
+      - name: eff_fg_pct
+        description: "Effective field goal percentage"
+      - name: ts_pct
+        description: "True shooting percentage"
+      - name: usage_pct
+        description: "Usage percentage"
+      - name: est_usage_pct
+        description: "Estimated usage percentage"
+      - name: est_pace
+        description: "Estimated pace"
+      - name: pace
+        description: "Actual pace"
+      - name: pace_per_40
+        description: "Pace per 40 minutes"
+      - name: possessions
+        description: "Number of possessions"
+      - name: pie
+        description: "Player Impact Estimate (PIE) - Overall contribution metric"
+        tests:
+          - not_null
+
+  - name: stg__player_traditional_bxsc
+    description: "Traditional box score statistics for players including points, rebounds, assists, etc."
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: team_city
+        description: "Team's city"
+      - name: team_name
+        description: "Team's name"
+      - name: team_tricode
+        description: "Team's three-letter code"
+      - name: team_slug
+        description: "Team's URL slug"
+      - name: first_name
+        description: "Player's first name"
+      - name: family_name
+        description: "Player's family name"
+      - name: name_initial
+        description: "Player's initial"
+      - name: player_slug
+        description: "Player's URL slug"
+      - name: position
+        description: "Player's position"
+      - name: comment
+        description: "Game participation comments"
+      - name: jersey_num
+        description: "Jersey number"
+      - name: min
+        description: "Minutes played in decimal format"
+      - name: fgm
+        description: "Field goals made"
+      - name: fga
+        description: "Field goals attempted"
+      - name: fg_pct
+        description: "Field goal percentage"
+      - name: fg3m
+        description: "Three pointers made"
+      - name: fg3a
+        description: "Three pointers attempted"
+      - name: fg3_pct
+        description: "Three point percentage"
+      - name: ftm
+        description: "Free throws made"
+      - name: fta
+        description: "Free throws attempted"
+      - name: ft_pct
+        description: "Free throw percentage"
+      - name: off_reb
+        description: "Offensive rebounds"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: reb
+        description: "Total rebounds"
+      - name: ast
+        description: "Assists"
+      - name: stl
+        description: "Steals"
+      - name: blk
+        description: "Blocks"
+      - name: tov
+        description: "Turnovers"
+      - name: pf
+        description: "Personal fouls"
+      - name: pts
+        description: "Points scored"
+      - name: plus_minus
+        description: "Plus/minus while on court"
+
+  - name: stg__player_defensive_bxsc
+    description: "Defensive box score statistics for players including matchup data and defensive metrics"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: comment
+        description: "Player status/availability notes"
+      - name: jersey_num
+        description: "Player's jersey number"
+      - name: matchup_min
+        description: "Minutes spent in direct defensive matchups"
+        tests:
+          - not_null
+      - name: partial_poss
+        description: "Partial possessions"
+        tests:
+          - not_null
+      - name: def_switches_on
+        description: "Number of defensive switches"
+      - name: block_pct
+        description: "Percentage of opponent FGA that were blocked"
+        tests:
+          - not_null
+      - name: def_pts_allowed
+        description: "Points allowed by player"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: def_ast_allowed
+        description: "Assists allowed"
+      - name: def_tov_forced
+        description: "Turnovers forced"
+      - name: def_stl
+        description: "Steals"
+      - name: def_blk
+        description: "Blocks"
+      - name: opp_fgm
+        description: "Opponent field goals made"
+      - name: opp_fga
+        description: "Opponent field goals attempted"
+      - name: opp_fg_pct
+        description: "Opponent field goal percentage"
+      - name: opp_fg3m
+        description: "Opponent three pointers made"
+      - name: opp_fg3a
+        description: "Opponent three pointers attempted"
+      - name: opp_fg3_pct
+        description: "Opponent three point percentage"
+      - name: opp_efg_pct
+        description: "Opponent effective field goal percentage"
+      - name: pts_per_poss
+        description: "Points allowed per possession"
+      - name: stops_per_poss
+        description: "Defensive stops per possession"
+
+  - name: stg__player_hustle_bxsc
+    description: "Hustle statistics for players including contested shots, deflections, and box outs"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+      - name: pts
+        description: "Points scored"
+      - name: cont_shots
+        description: "Total contested shots"
+      - name: cont_2pt
+        description: "Contested 2-point shots"
+      - name: cont_3pt
+        description: "Contested 3-point shots"
+      - name: deflections
+        description: "Number of deflections"
+      - name: charges_drawn
+        description: "Charges drawn"
+      - name: screen_ast
+        description: "Screen assists"
+      - name: screen_ast_pts
+        description: "Points from screen assists"
+      - name: off_loose_balls_rec
+        description: "Offensive loose balls recovered"
+      - name: def_loose_balls_rec
+        description: "Defensive loose balls recovered"
+      - name: tot_loose_balls_recal
+        description: "Total loose balls recovered"
+      - name: off_box_outs
+        description: "Offensive box outs"
+      - name: def_box_outs
+        description: "Defensive box outs"
+      - name: box_out_team_reb
+        description: "Team rebounds generated from player's box outs"
+      - name: box_out_player_reb
+        description: "Rebounds secured directly from player's box outs"
+      - name: tot_box_outs
+        description: "Total box outs"
+
+
+  - name: stg__player_misc_bxsc
+    description: "Miscellaneous box score statistics including points by type and differentials"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+      - name: pts_off_tov
+        description: "Points scored directly from opponent turnovers"
+      - name: pts_second_chance
+        description: "Points scored after offensive rebounds"
+      - name: pts_fastbreak
+        description: "Fast break points"
+      - name: pts_paint
+        description: "Points in the paint"
+      - name: opp_pts_off_tov
+        description: "Opponent points off turnovers"
+      - name: opp_pts_second_chance
+        description: "Opponent second chance points"
+      - name: opp_pts_fastbreak
+        description: "Opponent fast break points"
+      - name: opp_pts_paint
+        description: "Opponent points in the paint"
+      - name: blk
+        description: "Blocks"
+      - name: blk_against
+        description: "Shots blocked by opponents"
+      - name: pf
+        description: "Personal fouls"
+      - name: fouls_drawn
+        description: "Fouls drawn from opponents"
+      - name: pts_off_tov_diff
+        description: "Points off turnovers differential"
+      - name: pts_second_chance_diff
+        description: "Second chance points differential"
+      - name: pts_fastbreak_diff
+        description: "Fast break points differential"
+      - name: pts_paint_diff
+        description: "Points in the paint differential"
+      - name: comment
+        description: "Player status/availability notes"
+      - name: jersey_num
+        description: "Player's jersey number"
+      - name: created_at
+        description: "Timestamp when record was created"
+      - name: updated_at
+        description: "Timestamp when record was last updated"
+
+  - name: stg__player_tracking_bxsc
+    description: "Player tracking statistics including movement, ball handling, and shot defense metrics"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+      - name: avg_speed
+        description: "Average speed (miles/hour)"
+      - name: distance_miles
+        description: "Total distance covered in miles"
+      - name: reb_chances_off
+        description: "Potential offensive rebounds in vicinity"
+      - name: reb_chances_def
+        description: "Defensive rebound chances"
+      - name: reb_chances_total
+        description: "Total rebound chances"
+      - name: touches
+        description: "Total number of touches"
+      - name: secondary_ast
+        description: "Secondary assists (hockey assists)"
+      - name: ft_ast
+        description: "Free throw assists"
+      - name: passes
+        description: "Total number of passes"
+      - name: ast
+        description: "Assists"
+      - name: contested_fgm
+        description: "Contested field goals made"
+      - name: contested_fga
+        description: "Contested field goals attempted"
+      - name: contested_fg_pct
+        description: "Contested field goal percentage"
+      - name: uncontested_fgm
+        description: "Uncontested field goals made"
+      - name: uncontested_fga
+        description: "Uncontested field goals attempted"
+      - name: uncontested_fg_pct
+        description: "Uncontested field goal percentage"
+      - name: fg_pct
+        description: "Overall field goal percentage"
+      - name: defended_rim_fgm
+        description: "Field goals made at rim when defending"
+      - name: defended_rim_fga
+        description: "Field goals attempted at rim when defending"
+      - name: defended_rim_fg_pct
+        description: "FG% allowed at rim when primary defender"
+      - name: miles_per_hour
+        description: "Average speed in miles per hour"
+      - name: touches_per_min
+        description: "Touches per minute"
+      - name: passes_per_min
+        description: "Passes per minute"
+      - name: reb_chances_off_pct
+        description: "Percentage of rebound chances that were offensive"
+      - name: contested_shot_freq
+        description: "Frequency of contested shots"
+      - name: pass_to_assist_pct
+        description: "Percentage of passes that led to assists"
+      - name: comment
+        description: "Player status/availability notes"
+      - name: jersey_num
+        description: "Player's jersey number"
+      - name: created_at
+        description: "Timestamp when record was created"
+      - name: updated_at
+        description: "Timestamp when record was last updated"
+
+  - name: stg__player_scoring_bxsc
+    description: "Scoring distribution statistics showing percentage of points from different areas"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: team_city
+        description: "Team's city"
+      - name: team_name
+        description: "Team's name"
+      - name: team_tricode
+        description: "Team's three-letter code"
+      - name: team_slug
+        description: "Team's URL slug"
+      - name: first_name
+        description: "Player's first name"
+      - name: family_name
+        description: "Player's family name"
+      - name: name_initial
+        description: "Player's initial"
+      - name: player_slug
+        description: "Player's URL slug"
+      - name: position
+        description: "Player's position"
+      - name: comment
+        description: "Player status/availability notes"
+      - name: jersey_num
+        description: "Player's jersey number"
+      - name: min
+        description: "Minutes played"
+        tests:
+          - not_null
+      - name: pct_fga_2pt
+        description: "Percentage of field goal attempts that were 2-pointers"
+      - name: pct_fga_3pt
+        description: "Percentage of field goal attempts that were 3-pointers"
+      - name: pct_pts_2pt
+        description: "Percentage of points from 2-pointers"
+      - name: pct_pts_midrange_2pt
+        description: "Percentage of points from midrange 2-pointers"
+      - name: pct_pts_3pt
+        description: "Percentage of points from 3-pointers"
+      - name: pct_pts_fastbreak
+        description: "Percentage of points from fast breaks"
+      - name: pct_pts_ft
+        description: "Percentage of points from free throws"
+      - name: pct_pts_off_tov
+        description: "Percentage of points off turnovers"
+      - name: pct_pts_paint
+        description: "Percentage of points in the paint"
+      - name: pct_assisted_2pt
+        description: "Percentage of 2-pointers that were assisted"
+      - name: pct_unassisted_2pt
+        description: "Percentage of 2-pointers that were unassisted"
+      - name: pct_assisted_3pt
+        description: "Percentage of 3-pointers that were assisted"
+      - name: pct_unassisted_3pt
+        description: "Percentage of 3-pointers that were unassisted"
+      - name: pct_assisted_fgm
+        description: "Percentage of all field goals that were assisted"
+      - name: pct_unassisted_fgm
+        description: "Percentage of all field goals that were unassisted"
+      - name: created_at
+        description: "Timestamp when record was created"
+      - name: updated_at
+        description: "Timestamp when record was last updated"
+
+  - name: stg__player_usage_bxsc
+    description: "Usage statistics showing player's share of team plays and various statistical categories"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+          - relationships:
+              field: game_id
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Unique identifier for the team"
+        tests:
+          - not_null
+      - name: team_city
+        description: "Team's city"
+      - name: team_name
+        description: "Team's name"
+      - name: team_tricode
+        description: "Team's three-letter code"
+      - name: team_slug
+        description: "Team's URL slug"
+      - name: first_name
+        description: "Player's first name"
+      - name: family_name
+        description: "Player's family name"
+      - name: name_initial
+        description: "Player's initial"
+      - name: player_slug
+        description: "Player's URL slug"
+      - name: position
+        description: "Player's position"
+      - name: comment
+        description: "Game participation comments"
+      - name: jersey_num
+        description: "Jersey number"
+      - name: min
+        description: "Minutes played in decimal format"
+      - name: usage_pct
+        description: "Usage percentage"
+      - name: pct_of_team_fgm
+        description: "Percentage of team's field goals made"
+      - name: pct_of_team_fga
+        description: "Percentage of team's field goals attempted"
+      - name: pct_of_team_fg3m
+        description: "Percentage of team's three-pointers made"
+      - name: pct_of_team_fg3a
+        description: "Percentage of team's three-pointers attempted"
+      - name: pct_of_team_ftm
+        description: "Percentage of team's free throws made"
+      - name: pct_of_team_fta
+        description: "Percentage of team's free throws attempted"
+      - name: pct_of_team_oreb
+        description: "Percentage of team's offensive rebounds"
+      - name: pct_of_team_dreb
+        description: "Percentage of team's defensive rebounds"
+      - name: pct_of_team_reb
+        description: "Percentage of team's total rebounds"
+      - name: pct_of_team_ast
+        description: "Percentage of team's assists"
+      - name: pct_of_team_tov
+        description: "Percentage of team's turnovers"
+      - name: pct_of_team_stl
+        description: "Percentage of team's steals"
+      - name: pct_of_team_blk
+        description: "Percentage of team's blocks"
+      - name: pct_of_team_blk_allowed
+        description: "Percentage of team's blocked attempts"
+      - name: pct_of_team_pf
+        description: "Percentage of team's personal fouls"
+      - name: pct_of_team_pfd
+        description: "Percentage of team's fouls drawn"
+      - name: pct_of_team_pts
+        description: "Percentage of team's points"
+      - name: created_at
+        description: "Timestamp when record was created"
+      - name: updated_at
+        description: "Timestamp when record was last updated"

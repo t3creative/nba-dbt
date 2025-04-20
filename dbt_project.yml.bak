@@ -1,0 +1,176 @@
+# Name your project! Project names should contain only lowercase characters
+# and underscores. A good package name should reflect your organization's
+# name or the intended use of these models
+name: 'nba_data_app'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'nba_data_app'
+
+# These configurations specify where dbt should look for different types of files.
+# The `model-paths` config, for example, states that models in this project can be
+# found in the "models/" directory.
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:         # directories to be removed by `dbt clean`
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+# Time zone configuration
+vars:
+  'dbt_date:time_zone': 'America/New_York'
+
+# Configuring models
+# Full documentation: https://docs.getdbt.com/docs/configuring-models
+
+# In this example config, we tell dbt to build all models in the example/
+# directory as views. These settings can be overridden in the individual model
+# files using the `{{ config(...) }}` macro.
+models:
+  nba_data_app:
+      
+    # Staging models - Incremental loading for efficient processing of new data
+    staging:
+      +materialized: view
+      +schema: staging
+      +tags: ["staging"]
+      
+      game_logs:
+        +materialized: view
+        +tags: ["game_logs", "staging"]
+        +unique_key: "game_id"
+      
+      schedules:
+        +materialized: view
+        +tags: ["schedules", "staging"]
+        +unique_key: "game_id"
+
+      player_boxscores:
+        +materialized: view
+        +tags: ["player_boxscores", "staging"]
+        +unique_key: "player_game_key"
+        +indexes:
+          - columns: ['player_game_key']
+          - columns: ['game_id']
+      
+      team_boxscores:
+        +materialized: view
+        +tags: ["team_boxscores", "staging"]
+        +unique_key: "team_game_key"
+        +indexes:
+          - columns: ['team_game_key']
+          - columns: ['game_id']
+          - columns: ['team_id']
+    
+    # Intermediate models
+    intermediate:
+      +materialized: table
+      +schema: intermediate
+      +tags: ["intermediate"]
+      
+      player_boxscores:
+        +materialized: table
+        +tags: ["player_boxscores", "intermediate"]
+        +indexes:
+          - columns: ['player_game_key']
+          - columns: ['game_id']
+          - columns: ['player_id']
+          - columns: ['team_id']
+          - columns: ['game_date']
+          - columns: ['season_year']
+        +partition_by:
+          - field: 'season_year'
+            data_type: 'varchar'
+          - field: 'game_date'
+            data_type: 'date'
+            granularity: 'month'
+        +cluster_by: ['season_year', 'team_id', 'player_id', 'game_date']
+      
+      team_boxscores:
+        +materialized: table
+        +tags: ["team_boxscores", "intermediate"]
+        +indexes:
+          - columns: ['team_game_key']
+          - columns: ['game_id']
+          - columns: ['team_id']
+          - columns: ['game_date']
+          - columns: ['season_year']
+        +partition_by:
+          - field: 'season_year'
+            data_type: 'varchar'
+          - field: 'game_date'
+            data_type: 'date'
+            granularity: 'month'
+        +cluster_by: ['season_year', 'team_id', 'game_date']
+
+      game_details:
+        +materialized: table
+        +tags: ["game_details", "intermediate"]
+        +indexes:
+          - columns: ['game_id']
+          - columns: ['game_date']
+      
+      features:
+        +materialized: table
+        +tags: ["features", "intermediate"]
+        +indexes:
+          - columns: ['game_id']
+          - columns: ['player_id']
+          - columns: ['team_id']
+          - columns: ['game_date']
+          - columns: ['season_year']
+        +partition_by:
+          - field: 'season_year'
+            data_type: 'varchar'
+          - field: 'game_date'
+            data_type: 'date'
+            granularity: 'month'
+        +cluster_by: ['season_year', 'game_date']
+    
+    # Analytics models for predictions and insights
+    analytics:
+      +materialized: table
+      +schema: analytics
+      +tags: ["analytics"]
+      
+      player_performance_prediction:
+        +materialized: table
+        +tags: ["player_prediction", "analytics"]
+        +indexes:
+          - columns: ['player_id']
+          - columns: ['game_id']
+          - columns: ['next_game_id']
+          - columns: ['game_date']
+        +partition_by:
+          - field: 'game_date'
+            data_type: 'date'
+            granularity: 'month'
+        +cluster_by: ['player_id', 'game_date']
+      
+      team_performance_prediction:
+        +materialized: table
+        +tags: ["team_prediction", "analytics"]
+        +indexes:
+          - columns: ['team_id']
+          - columns: ['game_id']
+          - columns: ['next_game_id']
+          - columns: ['game_date']
+        +partition_by:
+          - field: 'game_date'
+            data_type: 'date'
+            granularity: 'month'
+        +cluster_by: ['team_id', 'game_date']
+    
+    # Mart models for frontend consumption
+    mart:
+      frontend:
+        +materialized: table
+        +schema: mart
+        +tags: ["mart"]

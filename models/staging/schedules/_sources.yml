@@ -1,0 +1,162 @@
+version: 2
+
+sources:
+  - name: nba_api
+    database: nba_data
+    schema: raw
+    tables:
+      - name: season_games
+        description: Game schedule information including home/away teams, scores, and game status
+        columns:
+          - name: gameId
+            description: Unique identifier for the game
+            tests:
+              - not_null
+          - name: leagueId
+            description: League identifier
+            tests:
+              - not_null
+          - name: seasonYear
+            description: Season year in YYYY-YY format
+            tests:
+              - not_null
+          - name: gameDate
+            description: Date of the game
+            tests:
+              - not_null
+          - name: gameCode
+            description: Game code
+          - name: gameStatus
+            description: Numeric status code for the game
+            tests:
+              - not_null
+          - name: gameStatusText
+            description: Text description of game status (e.g., "Final")
+          - name: gameSequence
+            description: Sequence number of the game
+          - name: gameDateEst
+            description: Game date in Eastern time
+          - name: gameTimeEst
+            description: Game time in Eastern time
+          - name: gameDateTimeEst
+            description: Combined game date and time in Eastern time
+          - name: gameDateUTC
+            description: Game date in UTC
+          - name: gameTimeUTC
+            description: Game time in UTC
+          - name: gameDateTimeUTC
+            description: Combined game date and time in UTC
+          - name: awayTeamTime
+            description: Game time in away team's local time
+          - name: homeTeamTime
+            description: Game time in home team's local time
+          - name: day
+            description: Day of the week
+          - name: monthNum
+            description: Month number
+          - name: weekNumber
+            description: Week number in the season
+          - name: weekName
+            description: Week name in the season
+          - name: ifNecessary
+            description: Indicates if the game is conditional (e.g., playoff games)
+          - name: seriesGameNumber
+            description: Game number in a series (playoffs)
+          - name: gameLabel
+            description: Label for the game
+          - name: gameSubLabel
+            description: Secondary label for the game
+          - name: seriesText
+            description: Text description of series status
+          - name: arenaName
+            description: Name of the arena
+          - name: arenaState
+            description: State where the arena is located
+          - name: arenaCity
+            description: City where the arena is located
+          - name: postponedStatus
+            description: Status if game is postponed
+          - name: branchLink
+            description: Link for the game
+          - name: gameSubtype
+            description: Subtype of the game
+          - name: isNeutral
+            description: Flag indicating if the game is at a neutral venue
+          - name: homeTeam_teamId
+            description: Team ID for the home team
+            tests:
+              - not_null
+          - name: homeTeam_teamName
+            description: Team name for the home team
+            tests:
+              - not_null
+          - name: homeTeam_teamCity
+            description: City name for the home team
+          - name: homeTeam_teamTricode
+            description: Three-letter code for the home team
+            tests:
+              - not_null
+          - name: homeTeam_teamSlug
+            description: URL slug for the home team
+          - name: homeTeam_wins
+            description: Number of wins for the home team
+          - name: homeTeam_losses
+            description: Number of losses for the home team
+          - name: homeTeam_score
+            description: Score for the home team
+          - name: homeTeam_seed
+            description: Playoff seed for the home team
+          - name: awayTeam_teamId
+            description: Team ID for the away team
+            tests:
+              - not_null
+          - name: awayTeam_teamName
+            description: Team name for the away team
+            tests:
+              - not_null
+          - name: awayTeam_teamCity
+            description: City name for the away team
+          - name: awayTeam_teamTricode
+            description: Three-letter code for the away team
+            tests:
+              - not_null
+          - name: awayTeam_teamSlug
+            description: URL slug for the away team
+          - name: awayTeam_wins
+            description: Number of wins for the away team
+          - name: awayTeam_losses
+            description: Number of losses for the away team
+          - name: awayTeam_score
+            description: Score for the away team
+          - name: awayTeam_seed
+            description: Playoff seed for the away team
+          - name: pointsLeaders_personId
+            description: Player ID of points leader
+          - name: pointsLeaders_firstName
+            description: First name of points leader
+          - name: pointsLeaders_lastName
+            description: Last name of points leader
+          - name: pointsLeaders_teamId
+            description: Team ID of points leader
+          - name: pointsLeaders_teamCity
+            description: Team city of points leader
+          - name: pointsLeaders_teamName
+            description: Team name of points leader
+          - name: pointsLeaders_teamTricode
+            description: Team tricode of points leader
+          - name: pointsLeaders_points
+            description: Points scored by the points leader
+          - name: nationalBroadcasters_broadcasterScope
+            description: Scope of national broadcaster
+          - name: nationalBroadcasters_broadcasterMedia
+            description: Media type of national broadcaster
+          - name: nationalBroadcasters_broadcasterId
+            description: ID of national broadcaster
+          - name: nationalBroadcasters_broadcasterDisplay
+            description: Display name of national broadcaster
+          - name: nationalBroadcasters_broadcasterAbbreviation
+            description: Abbreviation of national broadcaster
+          - name: updated_at
+            description: Timestamp when the record was last updated
+            tests:
+              - not_null 

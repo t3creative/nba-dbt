@@ -1,0 +1,24 @@
+version: 2
+
+sources:
+  - name: raw_boxscores # Changed from nba_data_raw to reflect content
+    description: Raw boxscore related tables from the NBA data source.
+    database: nba_data # Assuming your database name is 'nba_data'
+    schema: raw # The schema where the raw tables reside
+    tables:
+      - name: boxscore_game_info
+        description: Contains basic game information like date and attendance.
+      - name: boxscore_game_summary
+        description: Contains game summary details including teams, status, and season.
+      - name: boxscore_inactive_players
+        description: Lists players marked as inactive for a specific game.
+      - name: boxscore_last_meeting
+        description: Details the results of the last meeting between the two teams playing in this game.
+      - name: boxscore_line_score
+        description: Shows the points scored by each team per period (quarters and overtimes).
+      - name: boxscore_officials
+        description: Lists the officials (referees) for a specific game.
+      - name: boxscore_other_stats
+        description: Contains miscellaneous team-level stats for a game.
+      - name: boxscore_season_series
+        description: Shows the head-to-head record between the two teams for the current season up to this game. 
