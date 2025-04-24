@@ -37,7 +37,7 @@ final as (
         "percentagePointsFastBreak"::decimal(5,3) as pct_pts_fastbreak,
         "percentagePointsFreeThrow"::decimal(5,3) as pct_pts_ft,
         "percentagePointsOffTurnovers"::decimal(5,3) as pct_pts_off_tov,
-        "percentagePointsPaint"::decimal(5,3) as pct_pts_paint,
+        "percentagePointsPaint"::decimal(5,3) as pct_pts_in_paint,
 
         -- Game Stats - Assisted vs Unassisted
         "percentageAssisted2pt"::decimal(5,3) as pct_assisted_2pt,

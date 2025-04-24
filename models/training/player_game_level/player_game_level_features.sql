@@ -352,7 +352,6 @@ traditional_rolling_features as (
         hbs.tot_box_outs,
         
         -- Usage stats
-        ubs.usage_pct as ubs_usage_pct,
         ubs.pct_of_team_fgm,
         ubs.pct_of_team_fga,
         ubs.pct_of_team_fg3m,
@@ -380,7 +379,7 @@ traditional_rolling_features as (
         sbs.pct_pts_fastbreak,
         sbs.pct_pts_ft,
         sbs.pct_pts_off_tov,
-        sbs.pct_pts_paint,
+        sbs.pct_pts_in_paint,
         sbs.pct_assisted_2pt,
         sbs.pct_unassisted_2pt,
         sbs.pct_assisted_3pt,
@@ -468,7 +467,6 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('hbs.tot_box_outs', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as tot_box_outs_rolling_avg_5,
 
         -- Usage stats 5-game rolling averages
-        {{ advanced_rolling_average('ubs.usage_pct', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as ubs_usage_pct_rolling_avg_5,
         {{ advanced_rolling_average('ubs.pct_of_team_fgm', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_of_team_fgm_rolling_avg_5,
         {{ advanced_rolling_average('ubs.pct_of_team_fga', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_of_team_fga_rolling_avg_5,
         {{ advanced_rolling_average('ubs.pct_of_team_fg3m', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_of_team_fg3m_rolling_avg_5,
@@ -496,7 +494,7 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('sbs.pct_pts_fastbreak', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_pts_fastbreak_rolling_avg_5,
         {{ advanced_rolling_average('sbs.pct_pts_ft', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_pts_ft_rolling_avg_5,
         {{ advanced_rolling_average('sbs.pct_pts_off_tov', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_pts_off_tov_rolling_avg_5,
-        {{ advanced_rolling_average('sbs.pct_pts_paint', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_pts_paint_rolling_avg_5,
+        {{ advanced_rolling_average('sbs.pct_pts_in_paint', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_pts_in_paint_rolling_avg_5,
         {{ advanced_rolling_average('sbs.pct_assisted_2pt', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_assisted_2pt_rolling_avg_5,
         {{ advanced_rolling_average('sbs.pct_unassisted_2pt', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_unassisted_2pt_rolling_avg_5,
         {{ advanced_rolling_average('sbs.pct_assisted_3pt', ['tbs.player_id'], 'tbs.game_date', 5, 1, true, false) }} as pct_assisted_3pt_rolling_avg_5,
@@ -595,7 +593,6 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('hbs.tot_box_outs', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as tot_box_outs_rolling_avg_10,
 
         -- Usage stats 10-game rolling averages
-        {{ advanced_rolling_average('ubs.usage_pct', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as ubs_usage_pct_rolling_avg_10,
         {{ advanced_rolling_average('ubs.pct_of_team_fgm', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_of_team_fgm_rolling_avg_10,
         {{ advanced_rolling_average('ubs.pct_of_team_fga', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_of_team_fga_rolling_avg_10,
         {{ advanced_rolling_average('ubs.pct_of_team_fg3m', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_of_team_fg3m_rolling_avg_10,
@@ -623,7 +620,7 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('sbs.pct_pts_fastbreak', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_pts_fastbreak_rolling_avg_10,
         {{ advanced_rolling_average('sbs.pct_pts_ft', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_pts_ft_rolling_avg_10,
         {{ advanced_rolling_average('sbs.pct_pts_off_tov', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_pts_off_tov_rolling_avg_10,
-        {{ advanced_rolling_average('sbs.pct_pts_paint', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_pts_paint_rolling_avg_10,
+        {{ advanced_rolling_average('sbs.pct_pts_in_paint', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_pts_in_paint_rolling_avg_10,
         {{ advanced_rolling_average('sbs.pct_assisted_2pt', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_assisted_2pt_rolling_avg_10,
         {{ advanced_rolling_average('sbs.pct_unassisted_2pt', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_unassisted_2pt_rolling_avg_10,
         {{ advanced_rolling_average('sbs.pct_assisted_3pt', ['tbs.player_id'], 'tbs.game_date', 10, 1, true, false) }} as pct_assisted_3pt_rolling_avg_10,
@@ -713,7 +710,6 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('hbs.tot_box_outs', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as tot_box_outs_rolling_avg_15,
         
         -- Usage stats 15-game rolling averages
-        {{ advanced_rolling_average('ubs.usage_pct', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as ubs_usage_pct_rolling_avg_15,
         {{ advanced_rolling_average('ubs.pct_of_team_fgm', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_of_team_fgm_rolling_avg_15,
         {{ advanced_rolling_average('ubs.pct_of_team_fga', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_of_team_fga_rolling_avg_15,
         {{ advanced_rolling_average('ubs.pct_of_team_fg3m', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_of_team_fg3m_rolling_avg_15,
@@ -741,7 +737,7 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('sbs.pct_pts_fastbreak', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_pts_fastbreak_rolling_avg_15,
         {{ advanced_rolling_average('sbs.pct_pts_ft', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_pts_ft_rolling_avg_15,
         {{ advanced_rolling_average('sbs.pct_pts_off_tov', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_pts_off_tov_rolling_avg_15,
-        {{ advanced_rolling_average('sbs.pct_pts_paint', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_pts_paint_rolling_avg_15,
+        {{ advanced_rolling_average('sbs.pct_pts_in_paint', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_pts_in_paint_rolling_avg_15,
         {{ advanced_rolling_average('sbs.pct_assisted_2pt', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_assisted_2pt_rolling_avg_15,
         {{ advanced_rolling_average('sbs.pct_unassisted_2pt', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_unassisted_2pt_rolling_avg_15,
         {{ advanced_rolling_average('sbs.pct_assisted_3pt', ['tbs.player_id'], 'tbs.game_date', 15, 1, true, false) }} as pct_assisted_3pt_rolling_avg_15,
@@ -829,7 +825,6 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('hbs.tot_box_outs', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as tot_box_outs_rolling_avg_20,
         
         -- Usage stats 20-game rolling averages
-        {{ advanced_rolling_average('ubs.usage_pct', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as ubs_usage_pct_rolling_avg_20,
         {{ advanced_rolling_average('ubs.pct_of_team_fgm', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_of_team_fgm_rolling_avg_20,
         {{ advanced_rolling_average('ubs.pct_of_team_fga', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_of_team_fga_rolling_avg_20,
         {{ advanced_rolling_average('ubs.pct_of_team_fg3m', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_of_team_fg3m_rolling_avg_20,
@@ -912,7 +907,6 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('hbs.tot_box_outs', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as tot_box_outs_season_avg,
 
         -- Usage stats season-to-date averages
-        {{ advanced_rolling_average('ubs.usage_pct', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as ubs_usage_pct_season_avg,
         {{ advanced_rolling_average('ubs.pct_of_team_fgm', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_of_team_fgm_season_avg,
         {{ advanced_rolling_average('ubs.pct_of_team_fga', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_of_team_fga_season_avg,
         {{ advanced_rolling_average('ubs.pct_of_team_fg3m', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_of_team_fg3m_season_avg,
@@ -940,7 +934,7 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('sbs.pct_pts_fastbreak', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_pts_fastbreak_rolling_avg_20,
         {{ advanced_rolling_average('sbs.pct_pts_ft', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_pts_ft_rolling_avg_20,
         {{ advanced_rolling_average('sbs.pct_pts_off_tov', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_pts_off_tov_rolling_avg_20,
-        {{ advanced_rolling_average('sbs.pct_pts_paint', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_pts_paint_rolling_avg_20,
+        {{ advanced_rolling_average('sbs.pct_pts_in_paint', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_pts_in_paint_rolling_avg_20,
         {{ advanced_rolling_average('sbs.pct_assisted_2pt', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_assisted_2pt_rolling_avg_20,
         {{ advanced_rolling_average('sbs.pct_unassisted_2pt', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_unassisted_2pt_rolling_avg_20,
         {{ advanced_rolling_average('sbs.pct_assisted_3pt', ['tbs.player_id'], 'tbs.game_date', 20, 1, true, false) }} as pct_assisted_3pt_rolling_avg_20,
@@ -957,7 +951,7 @@ traditional_rolling_features as (
         {{ advanced_rolling_average('sbs.pct_pts_fastbreak', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_pts_fastbreak_season_avg,
         {{ advanced_rolling_average('sbs.pct_pts_ft', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_pts_ft_season_avg,
         {{ advanced_rolling_average('sbs.pct_pts_off_tov', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_pts_off_tov_season_avg,
-        {{ advanced_rolling_average('sbs.pct_pts_paint', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_pts_paint_season_avg,
+        {{ advanced_rolling_average('sbs.pct_pts_in_paint', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_pts_in_paint_season_avg,
         {{ advanced_rolling_average('sbs.pct_assisted_2pt', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_assisted_2pt_season_avg,
         {{ advanced_rolling_average('sbs.pct_unassisted_2pt', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_unassisted_2pt_season_avg,
         {{ advanced_rolling_average('sbs.pct_assisted_3pt', ['tbs.player_id', 'tbs.season_year'], 'tbs.game_date', 9999, 1, true, false) }} as pct_assisted_3pt_season_avg,

@@ -110,7 +110,7 @@ with boxscores as (
         pct_pts_fastbreak,
         pct_pts_ft,
         pct_pts_off_tov,
-        pct_pts_paint,
+        pct_pts_in_paint,
         pct_assisted_2pt,
         pct_unassisted_2pt,
         pct_assisted_3pt,
@@ -125,7 +125,7 @@ with boxscores as (
     {% if is_incremental() %}
     -- Look back N+1 days to ensure rolling calculations are correct near the incremental boundary
     where game_date >= (
-        select dateadd(day, -{{ rolling_window_games + 1 }}, max(game_date))
+        select max(game_date) - interval '{{ rolling_window_games + 1 }} days'
         from {{ this }}
     )
     {% endif %}
@@ -374,9 +374,9 @@ final as (
         {{ calculate_rolling_avg('pct_pts_off_tov', 'team_id', 'game_date') }} as pct_pts_off_tov_roll_{{ rolling_window_games }}g_avg,
         {{ calculate_rolling_stddev('pct_pts_off_tov', 'team_id', 'game_date') }} as pct_pts_off_tov_roll_{{ rolling_window_games }}g_stddev,
         {{ calculate_lag('pct_pts_off_tov', 'team_id', 'game_date', 1) }} as pct_pts_off_tov_lag_1g,
-        {{ calculate_rolling_avg('pct_pts_paint', 'team_id', 'game_date') }} as pct_pts_paint_roll_{{ rolling_window_games }}g_avg,
-        {{ calculate_rolling_stddev('pct_pts_paint', 'team_id', 'game_date') }} as pct_pts_paint_roll_{{ rolling_window_games }}g_stddev,
-        {{ calculate_lag('pct_pts_paint', 'team_id', 'game_date', 1) }} as pct_pts_paint_lag_1g,
+        {{ calculate_rolling_avg('pct_pts_in_paint', 'team_id', 'game_date') }} as pct_pts_in_paint_roll_{{ rolling_window_games }}g_avg,
+        {{ calculate_rolling_stddev('pct_pts_in_paint', 'team_id', 'game_date') }} as pct_pts_in_paint_roll_{{ rolling_window_games }}g_stddev,
+        {{ calculate_lag('pct_pts_in_paint', 'team_id', 'game_date', 1) }} as pct_pts_in_paint_lag_1g,
         {{ calculate_rolling_avg('pct_assisted_2pt', 'team_id', 'game_date') }} as pct_assisted_2pt_roll_{{ rolling_window_games }}g_avg,
         {{ calculate_rolling_stddev('pct_assisted_2pt', 'team_id', 'game_date') }} as pct_assisted_2pt_roll_{{ rolling_window_games }}g_stddev,
         {{ calculate_lag('pct_assisted_2pt', 'team_id', 'game_date', 1) }} as pct_assisted_2pt_lag_1g,

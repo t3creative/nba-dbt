@@ -37,7 +37,7 @@ models:
         tests:
           - not_null
 
-      - name: pct_pts_paint
+      - name: pct_pts_in_paint
         description: "Raw percentage of points scored in the paint for this game."
 
       - name: def_at_rim_fg_pct
@@ -47,7 +47,7 @@ models:
         description: "Raw rate of defended FGAs at the rim per minute played for this game."
 
       - name: paint_scoring_reliance_deviation
-        description: "Deviation of game pct_pts_paint from player's season average pct_pts_paint."
+        description: "Deviation of game pct_pts_in_paint from player's season average pct_pts_in_paint."
 
       - name: rim_finishing_efficiency_deviation
         description: "Deviation of game def_at_rim_fg_pct from player's season average def_at_rim_fg_pct."

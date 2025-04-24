@@ -18,10 +18,10 @@ renamed AS (
         "TEAM_CITY" AS team_city,
         CAST(
             "PTS_PAINT" AS INTEGER
-        ) AS pts_paint,
+        ) AS pts_in_paint,
         CAST(
             "PTS_2ND_CHANCE" AS INTEGER
-        ) AS pts_2nd_chance,
+        ) AS second_chance_pts,
         CAST(
             "PTS_FB" AS INTEGER
         ) AS pts_fb, -- Fast break points
@@ -61,8 +61,8 @@ SELECT
     team_abbreviation,
     team_city,
     -- Stats
-    pts_paint,
-    pts_2nd_chance,
+    pts_in_paint,
+    second_chance_pts,
     pts_fb,
     largest_lead,
     lead_changes,

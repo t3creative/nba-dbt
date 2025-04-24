@@ -316,15 +316,15 @@ models:
         description: "Points scored after offensive rebounds"
       - name: pts_fastbreak
         description: "Fast break points"
-      - name: pts_paint
+      - name: pts_in_paint
         description: "Points in the paint"
       - name: opp_pts_off_tov
         description: "Opponent points off turnovers"
-      - name: opp_pts_second_chance
+      - name: opp_second_chance_pts
         description: "Opponent second chance points"
-      - name: opp_pts_fastbreak
+      - name: opp_fastbreak_pts
         description: "Opponent fast break points"
-      - name: opp_pts_paint
+      - name: opp_pts_in_paint
         description: "Opponent points in the paint"
       - name: blk
         description: "Blocks"
@@ -340,7 +340,7 @@ models:
         description: "Second chance points differential"
       - name: pts_fastbreak_diff
         description: "Fast break points differential"
-      - name: pts_paint_diff
+      - name: pts_in_paint_diff
         description: "Points in the paint differential"
       - name: comment
         description: "Player status/availability notes"
@@ -498,7 +498,7 @@ models:
         description: "Percentage of points from free throws"
       - name: pct_pts_off_tov
         description: "Percentage of points off turnovers"
-      - name: pct_pts_paint
+      - name: pct_pts_in_paint
         description: "Percentage of points in the paint"
       - name: pct_assisted_2pt
         description: "Percentage of 2-pointers that were assisted"

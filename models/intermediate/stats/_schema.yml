@@ -404,11 +404,11 @@ models:
         description: "Rolling standard deviation of points off turnovers over the previous {{ var('rolling_window_games', 10) }} games."
       - name: pts_off_tov_lag_1g
         description: "Points off turnovers in the previous game."
-      - name: pts_2nd_chance_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: second_chance_pts_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of 2nd chance points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pts_2nd_chance_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: second_chance_pts_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of 2nd chance points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pts_2nd_chance_lag_1g
+      - name: second_chance_pts_lag_1g
         description: "2nd chance points in the previous game."
       - name: pts_fastbreak_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of fastbreak points over the previous {{ var('rolling_window_games', 10) }} games."
@@ -416,11 +416,11 @@ models:
         description: "Rolling standard deviation of fastbreak points over the previous {{ var('rolling_window_games', 10) }} games."
       - name: pts_fastbreak_lag_1g
         description: "Fastbreak points in the previous game."
-      - name: pts_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of points in the paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pts_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of points in the paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pts_paint_lag_1g
+      - name: pts_in_paint_lag_1g
         description: "Points in the paint in the previous game."
       - name: opp_pts_off_tov_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of opponent points off turnovers over the previous {{ var('rolling_window_games', 10) }} games."
@@ -428,23 +428,23 @@ models:
         description: "Rolling standard deviation of opponent points off turnovers over the previous {{ var('rolling_window_games', 10) }} games."
       - name: opp_pts_off_tov_lag_1g
         description: "Opponent points off turnovers in the previous game."
-      - name: opp_pts_2nd_chance_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: opp_second_chance_pts_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of opponent 2nd chance points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_2nd_chance_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: opp_second_chance_pts_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of opponent 2nd chance points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_2nd_chance_lag_1g
+      - name: opp_second_chance_pts_lag_1g
         description: "Opponent 2nd chance points in the previous game."
-      - name: opp_pts_fastbreak_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: opp_fastbreak_pts_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of opponent fastbreak points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_fastbreak_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: opp_fastbreak_pts_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of opponent fastbreak points over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_fastbreak_lag_1g
+      - name: opp_fastbreak_pts_lag_1g
         description: "Opponent fastbreak points in the previous game."
-      - name: opp_pts_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: opp_pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of opponent points in the paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: opp_pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of opponent points in the paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: opp_pts_paint_lag_1g
+      - name: opp_pts_in_paint_lag_1g
         description: "Opponent points in the paint in the previous game."
 
       # Scoring
@@ -496,11 +496,11 @@ models:
         description: "Rolling standard deviation of % of points from points off turnovers over the previous {{ var('rolling_window_games', 10) }} games."
       - name: pct_pts_off_tov_lag_1g
         description: "% of points from points off turnovers in the previous game."
-      - name: pct_pts_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
+      - name: pct_pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of % of points from points in paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pct_pts_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
+      - name: pct_pts_in_paint_roll_{{ var('rolling_window_games', 10) }}g_stddev
         description: "Rolling standard deviation of % of points from points in paint over the previous {{ var('rolling_window_games', 10) }} games."
-      - name: pct_pts_paint_lag_1g
+      - name: pct_pts_in_paint_lag_1g
         description: "% of points from points in paint in the previous game."
       - name: pct_ast_2pm_roll_{{ var('rolling_window_games', 10) }}g_avg
         description: "Rolling average of % of assisted 2pt FGM over the previous {{ var('rolling_window_games', 10) }} games."

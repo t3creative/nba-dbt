@@ -31,7 +31,7 @@ with scoring_data as (
         season_year,
         game_date,
         opponent_id,
-        pct_pts_paint
+        pct_pts_in_paint
     from {{ ref('int__player_scoring_bxsc') }}
     {% if is_incremental() %}
     -- Process games newer than the most recent game date in the table
@@ -64,7 +64,7 @@ player_game_metrics as (
         s.season_year,
         s.game_date,
         s.opponent_id,
-        s.pct_pts_paint,
+        s.pct_pts_in_paint,
         t.def_at_rim_fg_pct,
         t.def_at_rim_fga,
         t.min,
@@ -78,7 +78,7 @@ player_game_metrics as (
 player_season_metrics as (
     select
         *,
-        avg(pct_pts_paint) over (partition by player_id, season_year) as avg_pct_pts_paint,
+        avg(pct_pts_in_paint) over (partition by player_id, season_year) as avg_pct_pts_in_paint,
         avg(def_at_rim_fg_pct) over (partition by player_id, season_year) as avg_def_at_rim_fg_pct,
         avg(def_at_rim_fga_rate) over (partition by player_id, season_year) as avg_def_at_rim_fga_rate
     from player_game_metrics
@@ -95,12 +95,12 @@ final as (
         psm.opponent_id,
 
         -- Raw Game Metrics (for context)
-        psm.pct_pts_paint,
+        psm.pct_pts_in_paint,
         psm.def_at_rim_fg_pct,
         psm.def_at_rim_fga_rate,
 
         -- Deviation Features
-        coalesce(psm.pct_pts_paint - psm.avg_pct_pts_paint, 0) as paint_scoring_reliance_deviation,
+        coalesce(psm.pct_pts_in_paint - psm.avg_pct_pts_in_paint, 0) as paint_scoring_reliance_deviation,
         coalesce(psm.def_at_rim_fg_pct - psm.avg_def_at_rim_fg_pct, 0) as rim_finishing_efficiency_deviation,
         coalesce(psm.def_at_rim_fga_rate - psm.avg_def_at_rim_fga_rate, 0) as rim_attempt_rate_deviation
 

@@ -282,15 +282,15 @@ models:
         description: "Second chance points"
       - name: pts_fastbreak
         description: "Fast break points"
-      - name: pts_paint
+      - name: pts_in_paint
         description: "Points in the paint"
       - name: opp_pts_off_tov
         description: "Opponent points scored off turnovers"
-      - name: opp_pts_second_chance
+      - name: opp_second_chance_pts
         description: "Opponent second chance points"
-      - name: opp_pts_fastbreak
+      - name: opp_fastbreak_pts
         description: "Opponent fast break points"
-      - name: opp_pts_paint
+      - name: opp_pts_in_paint
         description: "Opponent points in the paint"
       - name: blk
         description: "Blocks recorded"
@@ -378,7 +378,7 @@ models:
           - dbt_utils.accepted_range:
               min_value: 0
               max_value: 1
-      - name: pct_pts_paint
+      - name: pct_pts_in_paint
         description: "Percentage of points in the paint"
         tests:
           - dbt_utils.accepted_range:

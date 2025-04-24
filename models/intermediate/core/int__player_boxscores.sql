@@ -181,7 +181,7 @@ final as (
         s.pct_pts_fastbreak,
         s.pct_pts_ft,
         s.pct_pts_off_tov,
-        s.pct_pts_paint,
+        s.pct_pts_in_paint,
         s.pct_assisted_2pt,
         s.pct_unassisted_2pt,
         s.pct_assisted_3pt,

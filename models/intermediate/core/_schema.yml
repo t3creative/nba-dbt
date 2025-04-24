@@ -230,19 +230,19 @@ models:
       # Misc Boxscore Stats
       - name: pts_off_tov
         description: "Points scored off turnovers"
-      - name: pts_2nd_chance
+      - name: second_chance_pts
         description: "Points scored on second chance opportunities"
       - name: pts_fastbreak
         description: "Points scored on fast breaks"
-      - name: pts_paint
+      - name: pts_in_paint
         description: "Points scored in the paint"
       - name: opp_pts_off_tov
         description: "Opponent points scored off turnovers"
-      - name: opp_pts_2nd_chance
+      - name: opp_second_chance_pts
         description: "Opponent points scored on second chance opportunities"
-      - name: opp_pts_fastbreak
+      - name: opp_fastbreak_pts
         description: "Opponent points scored on fast breaks"
-      - name: opp_pts_paint
+      - name: opp_pts_in_paint
         description: "Opponent points scored in the paint"
 
       # Scoring Boxscore Stats
@@ -262,7 +262,7 @@ models:
         description: "Percentage of total points scored from free throws"
       - name: pct_pts_off_tov
         description: "Percentage of total points scored off turnovers"
-      - name: pct_pts_paint
+      - name: pct_pts_in_paint
         description: "Percentage of total points scored in the paint"
       - name: pct_ast_2pm
         description: "Percentage of 2-point field goals made that were assisted"
@@ -470,19 +470,19 @@ models:
       # Misc Boxscore Stats (Source: misc)
       - name: pts_off_tov
         description: "Points scored off turnovers"
-      - name: second_chance_pts # Renamed from pts_2nd_chance
+      - name: second_chance_pts # Renamed from second_chance_pts
         description: "Points scored on second chance opportunities"
       - name: fastbreak_pts # Renamed from pts_fastbreak
         description: "Points scored on fast breaks"
-      - name: pts_in_paint # Renamed from pts_paint
+      - name: pts_in_paint # Renamed from pts_in_paint
         description: "Points scored in the paint"
       - name: opp_pts_off_tov_while_on # Renamed from opp_pts_off_tov
         description: "Opponent points scored off turnovers while player was on court"
-      - name: opp_second_chance_pts_while_on # Renamed from opp_pts_2nd_chance
+      - name: opp_second_chance_pts_while_on # Renamed from opp_second_chance_pts
         description: "Opponent second chance points scored while player was on court"
-      - name: opp_fastbreak_pts_while_on # Renamed from opp_pts_fastbreak
+      - name: opp_fastbreak_pts_while_on # Renamed from opp_fastbreak_pts
         description: "Opponent fast break points scored while player was on court"
-      - name: opp_pts_in_paint_while_on # Renamed from opp_pts_paint
+      - name: opp_pts_in_paint_while_on # Renamed from opp_pts_in_paint
         description: "Opponent points scored in the paint while player was on court"
       - name: blk_against # Added
         description: "Number of times player's shot was blocked"
@@ -506,7 +506,7 @@ models:
         description: "Percentage of points from free throws"
       - name: pct_pts_off_tov
         description: "Percentage of points off turnovers"
-      - name: pct_pts_paint
+      - name: pct_pts_in_paint
         description: "Percentage of points in the paint"
       - name: pct_assisted_2pt
         description: "Percentage of two-pointers that were assisted"

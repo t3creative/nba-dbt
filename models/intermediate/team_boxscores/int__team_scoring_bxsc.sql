@@ -68,7 +68,7 @@ final as (
         ts.pct_pts_fastbreak,
         ts.pct_pts_ft,
         ts.pct_pts_off_tov,
-        ts.pct_pts_paint,
+        ts.pct_pts_in_paint,
 
         -- Game Stats - Assisted vs Unassisted
         ts.pct_assisted_2pt,

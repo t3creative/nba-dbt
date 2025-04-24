@@ -37,9 +37,9 @@ team_misc_bxsc as (
     select
         team_game_key,
         opp_pts_off_tov,
-        opp_pts_second_chance,
-        opp_pts_fastbreak,
-        opp_pts_paint
+        opp_second_chance_pts,
+        opp_fastbreak_pts,
+        opp_pts_in_paint
     from {{ ref('int__team_misc_bxsc') }}
 ),
 
@@ -79,7 +79,7 @@ team_scoring_bxsc as (
         pct_pts_fastbreak,
         pct_pts_ft,
         pct_pts_off_tov,
-        pct_pts_paint
+        pct_pts_in_paint
     from {{ ref('int__team_scoring_bxsc') }}
 ),
 
@@ -97,9 +97,9 @@ team_game_defense_metrics as (
         adv.def_reb_pct,
         -- Misc
         misc.opp_pts_off_tov,
-        misc.opp_pts_second_chance,
-        misc.opp_pts_fastbreak,
-        misc.opp_pts_paint,
+        misc.opp_second_chance_pts,
+        misc.opp_fastbreak_pts,
+        misc.opp_pts_in_paint,
         -- Hustle
         hustle.cont_2pt,
         hustle.cont_3pt,
@@ -124,7 +124,7 @@ team_game_defense_metrics as (
         score.pct_pts_fastbreak,
         score.pct_pts_ft,
         score.pct_pts_off_tov,
-        score.pct_pts_paint,
+        score.pct_pts_in_paint,
         -- Opponent Scoring Distribution
         score.pct_fga_2pt     as opp_pct_fga_2pt,
         score.pct_fga_3pt     as opp_pct_fga_3pt,
@@ -134,7 +134,7 @@ team_game_defense_metrics as (
         score.pct_pts_fastbreak   as opp_pct_pts_fastbreak,
         score.pct_pts_ft      as opp_pct_pts_ft,
         score.pct_pts_off_tov as opp_pct_pts_off_tov,
-        score.pct_pts_paint   as opp_pct_pts_paint
+        score.pct_pts_in_paint   as opp_pct_pts_in_paint
     from team_advanced_bxsc adv
     left join team_misc_bxsc misc                   using (team_game_key)
     left join team_hustle_bxsc hustle               using (team_game_key)
@@ -160,9 +160,9 @@ team_season_defense_agg as (
         avg(opp_ts_pct) as avg_opp_ts_pct,
         avg(def_reb_pct) as avg_def_reb_pct,
         avg(opp_pts_off_tov) as avg_opp_pts_off_tov,
-        avg(opp_pts_second_chance) as avg_opp_pts_second_chance,
-        avg(opp_pts_fastbreak) as avg_opp_pts_fastbreak,
-        avg(opp_pts_paint) as avg_opp_pts_paint,
+        avg(opp_second_chance_pts) as avg_opp_second_chance_pts,
+        avg(opp_fastbreak_pts) as avg_opp_fastbreak_pts,
+        avg(opp_pts_in_paint) as avg_opp_pts_in_paint,
         avg(cont_2pt) as avg_cont_2pt_per_game,
         avg(cont_3pt) as avg_cont_3pt_per_game,
         avg(deflections) as avg_deflections_per_game,
@@ -175,7 +175,7 @@ team_season_defense_agg as (
         avg(opp_pct_pts_fastbreak) as avg_opp_pct_pts_fastbreak,
         avg(opp_pct_pts_ft) as avg_opp_pct_pts_ft,
         avg(opp_pct_pts_off_tov) as avg_opp_pct_pts_off_tov,
-        avg(opp_pct_pts_paint) as avg_opp_pct_pts_paint
+        avg(opp_pct_pts_in_paint) as avg_opp_pct_pts_in_paint
 
     from team_game_defense_metrics
     where team_id is not null and season_year is not null
@@ -194,9 +194,9 @@ final as (
         round(avg_opp_ts_pct::numeric, 4) as avg_opp_ts_pct,
         round(avg_def_reb_pct::numeric, 4) as avg_def_reb_pct,
         round(avg_opp_pts_off_tov::numeric, 2) as avg_opp_pts_off_tov,
-        round(avg_opp_pts_second_chance::numeric, 2) as avg_opp_pts_second_chance,
-        round(avg_opp_pts_fastbreak::numeric, 2) as avg_opp_pts_fastbreak,
-        round(avg_opp_pts_paint::numeric, 2) as avg_opp_pts_paint,
+        round(avg_opp_second_chance_pts::numeric, 2) as avg_opp_second_chance_pts,
+        round(avg_opp_fastbreak_pts::numeric, 2) as avg_opp_fastbreak_pts,
+        round(avg_opp_pts_in_paint::numeric, 2) as avg_opp_pts_in_paint,
         round(avg_cont_2pt_per_game::numeric, 2) as avg_cont_2pt_per_game,
         round(avg_cont_3pt_per_game::numeric, 2) as avg_cont_3pt_per_game,
         round(avg_deflections_per_game::numeric, 2) as avg_deflections_per_game,
@@ -210,7 +210,7 @@ final as (
         round(avg_opp_pct_pts_fastbreak::numeric, 4) as avg_opp_pct_pts_fastbreak,
         round(avg_opp_pct_pts_ft::numeric, 4) as avg_opp_pct_pts_ft,
         round(avg_opp_pct_pts_off_tov::numeric, 4) as avg_opp_pct_pts_off_tov,
-        round(avg_opp_pct_pts_paint::numeric, 4) as avg_opp_pct_pts_paint
+        round(avg_opp_pct_pts_in_paint::numeric, 4) as avg_opp_pct_pts_in_paint
 
     from team_season_defense_agg
 )

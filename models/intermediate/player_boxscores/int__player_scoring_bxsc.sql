@@ -74,7 +74,7 @@ final as (
         bs.pct_pts_fastbreak,
         bs.pct_pts_ft,
         bs.pct_pts_off_tov,
-        bs.pct_pts_paint,
+        bs.pct_pts_in_paint,
         
         -- Scoring Stats - Shot Creation
         bs.pct_assisted_2pt,

@@ -92,8 +92,8 @@ other_stats AS (
         game_id,
         team_id,
         league_id, -- Consider if this is needed or constant
-        pts_paint,
-        pts_2nd_chance,
+        pts_in_paint,
+        second_chance_pts,
         pts_fb,
         largest_lead,
         lead_changes,
@@ -210,8 +210,8 @@ final AS (
         ls_away.pts AS away_pts,
 
         -- Home Team Other Stats
-        os_home.pts_paint AS home_pts_paint,
-        os_home.pts_2nd_chance AS home_pts_2nd_chance,
+        os_home.pts_in_paint AS home_pts_in_paint,
+        os_home.second_chance_pts AS home_second_chance_pts,
         os_home.pts_fb AS home_pts_fb,
         os_home.largest_lead AS home_largest_lead,
         os_home.lead_changes AS home_lead_changes,
@@ -222,8 +222,8 @@ final AS (
         os_home.pts_off_to AS home_pts_off_to,
 
         -- Visitor Team Other Stats
-        os_away.pts_paint AS away_pts_paint,
-        os_away.pts_2nd_chance AS away_pts_2nd_chance,
+        os_away.pts_in_paint AS away_pts_in_paint,
+        os_away.second_chance_pts AS away_second_chance_pts,
         os_away.pts_fb AS away_pts_fb,
         os_away.largest_lead AS away_largest_lead,
         os_away.lead_changes AS away_lead_changes,

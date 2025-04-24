@@ -57,13 +57,13 @@ models:
       - name: avg_opp_pts_off_tov
         description: "Average points off turnovers allowed to opponents per game over the season."
 
-      - name: avg_opp_pts_second_chance
+      - name: avg_opp_second_chance_pts
         description: "Average second chance points allowed to opponents per game over the season."
 
-      - name: avg_opp_pts_fastbreak
+      - name: avg_opp_fastbreak_pts
         description: "Average fast break points allowed to opponents per game over the season."
 
-      - name: avg_opp_pts_paint
+      - name: avg_opp_pts_in_paint
         description: "Average points in the paint allowed to opponents per game over the season."
 
       - name: avg_cont_2pt_per_game
@@ -115,5 +115,5 @@ models:
       - name: avg_opp_pct_pts_off_tov
         description: "Average percentage of opponent points scored off turnovers over the season."
 
-      - name: avg_opp_pct_pts_paint
+      - name: avg_opp_pct_pts_in_paint
         description: "Average percentage of opponent points scored in the paint over the season." 
