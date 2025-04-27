@@ -27,6 +27,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 vars:
   dbt_date_time_zone: 'America/New_York'
   use_simple_schema_names: true
+  training_start_season_year: 2017
+  rolling_window_games: 10
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models

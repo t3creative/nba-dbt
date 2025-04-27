@@ -122,9 +122,11 @@ with boxscores as (
         updated_at
 
     from {{ ref('int__team_boxscores') }}
+    -- Filter based on the starting year extracted from season_year
+    where cast(substring(season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
     {% if is_incremental() %}
     -- Look back N+1 days to ensure rolling calculations are correct near the incremental boundary
-    where game_date >= (
+    and game_date >= (
         select max(game_date) - interval '{{ rolling_window_games + 1 }} days'
         from {{ this }}
     )

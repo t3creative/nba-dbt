@@ -861,6 +861,8 @@ WITH traditional_boxscores AS (
 SELECT
   *
 FROM traditional_rolling_features
+-- Safeguard filter to ensure only data from the specified start year onwards is included
+WHERE cast(substring(season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
 ORDER BY
   player_id NULLS FIRST,
   game_date NULLS FIRST

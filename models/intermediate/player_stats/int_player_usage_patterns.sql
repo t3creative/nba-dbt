@@ -14,7 +14,12 @@
 with source_data as (
     select *
     from {{ ref('int_player_career_stats') }}
-    {{ incremental_date_filter('game_date') }}
+    -- Filter based on the starting year extracted from season_year
+    where cast(substring(season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }} 
+    {% if is_incremental() %}
+    -- Add standard incremental filter using AND
+    and game_date > (select max(game_date) from {{ this }})
+    {% endif %}
 ),
 
 {% if is_incremental() %}

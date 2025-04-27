@@ -215,4 +215,7 @@ final as (
     from team_season_defense_agg
 )
 
-select * from final 
+select * 
+from final 
+-- Safeguard filter to ensure only data from the specified start year onwards is included
+where cast(substring(season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }} 

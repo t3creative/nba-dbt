@@ -35,13 +35,17 @@ source_data as (
         pbs.fga,
         pbs.fta,
         gl.game_date,
-        gl.season_id
-    from {{ ref('stg__player_traditional_bxsc') }} pbs
+        gl.season_id,
+        pbs.season_year
+    from {{ ref('int__player_traditional_bxsc') }} pbs
     inner join game_logs gl on pbs.game_id = gl.game_id
 
-    -- Replace the custom macro with the standard dbt incremental filter
+    -- Filter based on the starting year extracted from pbs.season_year
+    where cast(substring(pbs.season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
+
+    -- Incremental logic
     {% if is_incremental() %}
-    where gl.game_date > (select max(game_date) from {{ this }})
+    and gl.game_date > (select max(game_date) from {{ this }})
     {% endif %}
 ),
 
@@ -67,6 +71,7 @@ current_period_stats as (
         game_id,
         game_date,
         season_id,
+        season_year,
         pts,
         min,
         fga,
@@ -84,6 +89,7 @@ select
     cps.game_id,
     cps.game_date,
     cps.season_id,
+    cps.season_year,
     cps.pts,
     cps.min,
     cps.fga,

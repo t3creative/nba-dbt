@@ -28,7 +28,12 @@ with player_data as (
     from {{ ref('int__player_traditional_bxsc') }} tbs
     inner join {{ ref('int_player_career_stats') }} pcs 
         on tbs.player_game_key = pcs.player_game_key
-    {{ incremental_date_filter('tbs.game_date') }}
+    -- Filter based on the starting year extracted from tbs.season_year
+    where cast(substring(tbs.season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
+    {% if is_incremental() %}
+    -- Add standard incremental filter using AND
+    and tbs.game_date > (select max(game_date) from {{ this }})
+    {% endif %}
 
 )
 
