@@ -25,7 +25,7 @@ with player_data as (
         pcs.career_games_to_date,
         pcs.career_high_pts_to_date,
         pcs.is_new_career_high
-    from {{ ref('int__player_traditional_bxsc') }} tbs
+    from {{ ref('stg__player_traditional_bxsc') }} tbs
     inner join {{ ref('int__player_career_stats') }} pcs 
         on tbs.player_game_key = pcs.player_game_key
     -- Filter based on the starting year extracted from tbs.season_year

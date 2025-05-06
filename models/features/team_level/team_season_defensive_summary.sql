@@ -30,7 +30,7 @@ team_advanced_bxsc as (
         eff_fg_pct,
         ts_pct,
         def_reb_pct
-    from {{ ref('int__team_advanced_bxsc') }}
+    from {{ ref('int__team_boxscores') }}
 ),
 
 team_misc_bxsc as (
@@ -40,7 +40,7 @@ team_misc_bxsc as (
         opp_second_chance_pts,
         opp_fastbreak_pts,
         opp_pts_in_paint
-    from {{ ref('int__team_misc_bxsc') }}
+    from {{ ref('int__team_boxscores') }}
 ),
 
 team_hustle_bxsc as (
@@ -51,7 +51,7 @@ team_hustle_bxsc as (
         deflections,
         charges_drawn,
         def_loose_balls_rec
-    from {{ ref('int__team_hustle_bxsc') }}
+    from {{ ref('int__team_boxscores') }}
 ),
 
 team_traditional_bxsc as (
@@ -65,7 +65,7 @@ team_traditional_bxsc as (
         fta,
         tov,
         pf
-    from {{ ref('int__team_traditional_bxsc') }}
+    from {{ ref('int__team_boxscores') }}
 ),
 
 team_scoring_bxsc as (
@@ -80,7 +80,7 @@ team_scoring_bxsc as (
         pct_pts_ft,
         pct_pts_off_tov,
         pct_pts_in_paint
-    from {{ ref('int__team_scoring_bxsc') }}
+    from {{ ref('int__team_boxscores') }}
 ),
 
 -- Combine all relevant team defense metrics per game

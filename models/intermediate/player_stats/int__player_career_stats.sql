@@ -37,7 +37,7 @@ source_data as (
         gl.game_date,
         gl.season_id,
         pbs.season_year
-    from {{ ref('int__player_traditional_bxsc') }} pbs
+    from {{ ref('stg__player_traditional_bxsc') }} pbs
     inner join game_logs gl on pbs.game_id = gl.game_id
 
     -- Filter based on the starting year extracted from pbs.season_year

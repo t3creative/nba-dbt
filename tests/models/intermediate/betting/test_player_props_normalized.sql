@@ -3,7 +3,7 @@ with source_data as (
     select
         player_name_raw,
         player_id,
-        player_name_standardized,
+        player_name,
         team_abbr_raw,
         team_id,
         team_abbreviation_standardized,
@@ -16,7 +16,7 @@ with source_data as (
     group by
         player_name_raw,
         player_id,
-        player_name_standardized,
+        player_name,
         team_abbr_raw,
         team_id,
         team_abbreviation_standardized
@@ -26,7 +26,7 @@ validation as (
     select
         player_name_raw,
         player_id,
-        player_name_standardized,
+        player_name,
         team_abbr_raw,
         team_id,
         team_abbreviation_standardized,
@@ -38,7 +38,7 @@ validation as (
         -- Check that team_id is not null and valid (-1 is allowed as fallback)
         team_id is not null as has_team_id,
         -- Check that standardized names are not null
-        player_name_standardized is not null as has_player_name,
+        player_name is not null as has_player_name,
         team_abbreviation_standardized is not null as has_team_abbr
     from source_data
 )

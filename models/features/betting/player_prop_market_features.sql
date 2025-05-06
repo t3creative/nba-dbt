@@ -16,20 +16,20 @@
 with player_props as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         no_vig_over_prob,
         no_vig_under_prob,
         vig_percentage,
         sportsbook,
         game_date
-    from {{ ref('int__player_prop_market_analysis') }}
+    from {{ ref('player_prop_market_analysis') }}
     
     {% if is_incremental() %}
         where game_date > (select max(game_date) from {{ this }})
@@ -39,7 +39,7 @@ with player_props as (
 player_market_stats as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         
@@ -62,8 +62,8 @@ player_market_stats as (
         stddev(under_odds) as stddev_under_odds,
         
         -- Probability statistics
-        avg(over_implied_probability) as avg_over_implied_prob,
-        avg(under_implied_probability) as avg_under_implied_prob,
+        avg(over_implied_prob) as avg_over_implied_prob,
+        avg(under_implied_prob) as avg_under_implied_prob,
         avg(no_vig_over_prob) as avg_no_vig_over_prob,
         avg(no_vig_under_prob) as avg_no_vig_under_prob,
         
@@ -84,7 +84,7 @@ player_market_stats as (
         {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id']) }} as feature_key
         
     from player_props
-    group by player_id, player_name_standardized, market_id, market
+    group by player_id, player_name, market_id, market
 ),
 
 -- Get market-wide statistics for comparison
@@ -104,12 +104,12 @@ market_stats as (
 player_stats as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         count(distinct market_id) as markets_count,
         count(*) as total_props_all_markets,
         avg(vig_percentage) as player_avg_vig
     from player_props
-    group by player_id, player_name_standardized
+    group by player_id, player_name
 ),
 
 -- Analyze distribution of lines by market type
@@ -128,7 +128,7 @@ final as (
     select
         pms.feature_key,
         pms.player_id,
-        pms.player_name_standardized,
+        pms.player_name,
         pms.market_id,
         pms.market,
         

@@ -41,9 +41,9 @@ models:
         description: American odds for the over bet
       - name: under_odds
         description: American odds for the under bet
-      - name: over_implied_probability
+      - name: over_implied_prob
         description: Calculated implied probability for the over bet
-      - name: under_implied_probability
+      - name: under_implied_prob
         description: Calculated implied probability for the under bet
       - name: game_date
         description: Date of the game

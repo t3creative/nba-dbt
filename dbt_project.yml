@@ -138,7 +138,12 @@ models:
         +schema: features
         +tags: ["features"]
 
+        betting:
+          +materialized: incremental
+          +tags: ["betting", "features"]
+
         game_context:
+          +materialized: incremental
           +tags: ["game_context", "features"]
 
         play_by_play:

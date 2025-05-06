@@ -23,49 +23,176 @@ with props as (
 players as (
     select 
         player_id,
-        player_first_name,
-        player_last_name,
-        player_first_name || ' ' || player_last_name as player_name,
-        player_slug
-    from {{ ref('stg__player_index') }}
+        player_slug,
+        game_date,
+        game_id,
+        opponent_id
+
+    from {{ ref('int__player_traditional_bxsc') }}
 ),
 
 teams as (
     select 
         team_id,
-        team_tricode as team_abbreviation,
+        team_tricode,
         team_full_name
+        
     from {{ ref('stg__teams') }}
 ),
 
 final as (
     select
+        players.player_id,
+        players.player_slug,
+        players.game_date,
+        players.game_id,
+        players.opponent_id,
         props.prop_id,
         props.offer_id,
-        props.event_id,
-        props.player as player_name_raw,
-        coalesce(players.player_id, -1) as player_id,
-        coalesce(players.player_name, props.player) as player_name,
-        props.player_slug,
-        props.team as team_abbr_raw,
-        coalesce(teams.team_id, -1) as team_id,
-        coalesce(teams.team_abbreviation, props.team) as team_tricode,
+        props.bp_event_id,
+        props.player_name,
+        teams.team_tricode,
+        teams.team_full_name,
+        teams.team_id,
         props.market_id,
         props.market,
         props.line,
         props.sportsbook,
         props.over_odds,
         props.under_odds,
-        props.over_implied_probability,
-        props.under_implied_probability,
-        props.game_date,
         props.source_file,
-        {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id', 'game_date', 'line']) }} as prop_key
+        {{ dbt_utils.generate_surrogate_key(['players.player_id', 'props.market_id', 'props.game_date', 'props.line']) }} as prop_key,
+        -- Implied probabilities
+        case 
+            when over_odds > 0 then 100 / (over_odds + 100)
+            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+            when over_odds = -100 then 0.5  -- Special case for -100 odds (even)
+            else null
+        end as over_implied_prob,
+        
+        case 
+            when under_odds > 0 then 100 / (under_odds + 100)
+            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+            when under_odds = -100 then 0.5  -- Special case for -100 odds (even)
+            else null
+        end as under_implied_prob,
+        
+        -- Total implied probability (to measure the vig)
+        case 
+            when over_odds is not null and under_odds is not null then
+                (case 
+                    when over_odds > 0 then 100 / (over_odds + 100)
+                    when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                    when over_odds = -100 then 0.5
+                    else 0
+                end) +
+                (case 
+                    when under_odds > 0 then 100 / (under_odds + 100)
+                    when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                    when under_odds = -100 then 0.5
+                    else 0
+                end)
+            else null
+        end as total_implied_prob,
+        
+        -- No-vig fair probabilities
+        case 
+            when over_odds is not null and under_odds is not null then
+                case
+                    when (case 
+                            when over_odds > 0 then 100 / (over_odds + 100)
+                            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                            when over_odds = -100 then 0.5
+                            else 0
+                        end +
+                        case 
+                            when under_odds > 0 then 100 / (under_odds + 100)
+                            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                            when under_odds = -100 then 0.5
+                            else 0
+                        end) = 0 then null
+                    else
+                        (case 
+                            when over_odds > 0 then 100 / (over_odds + 100)
+                            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                            when over_odds = -100 then 0.5
+                            else 0
+                        end) / 
+                        (case 
+                            when over_odds > 0 then 100 / (over_odds + 100)
+                            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                            when over_odds = -100 then 0.5
+                            else 0
+                        end +
+                        case 
+                            when under_odds > 0 then 100 / (under_odds + 100)
+                            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                            when under_odds = -100 then 0.5
+                            else 0
+                        end)
+                end
+            else null
+        end as over_no_vig_prob,
+        
+        case 
+            when over_odds is not null and under_odds is not null then
+                case
+                    when (case 
+                            when over_odds > 0 then 100 / (over_odds + 100)
+                            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                            when over_odds = -100 then 0.5
+                            else 0
+                        end +
+                        case 
+                            when under_odds > 0 then 100 / (under_odds + 100)
+                            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                            when under_odds = -100 then 0.5
+                            else 0
+                        end) = 0 then null
+                    else
+                        (case 
+                            when under_odds > 0 then 100 / (under_odds + 100)
+                            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                            when under_odds = -100 then 0.5
+                            else 0
+                        end) / 
+                        (case 
+                            when over_odds > 0 then 100 / (over_odds + 100)
+                            when over_odds < 0 and over_odds != -100 then abs(over_odds) / (abs(over_odds) + 100)
+                            when over_odds = -100 then 0.5
+                            else 0
+                        end +
+                        case 
+                            when under_odds > 0 then 100 / (under_odds + 100)
+                            when under_odds < 0 and under_odds != -100 then abs(under_odds) / (abs(under_odds) + 100)
+                            when under_odds = -100 then 0.5
+                            else 0
+                        end)
+                end
+            else null
+        end as under_no_vig_prob,
+        
+        -- Bookmaker's hold percentage (vig)
+        case 
+            when over_odds is not null and under_odds is not null then
+                ((case 
+                    when over_odds > 0 then 100 / (over_odds + 100)
+                    when over_odds < 0 then abs(over_odds) / (abs(over_odds) + 100)
+                    else 0
+                end) +
+                (case 
+                    when under_odds > 0 then 100 / (under_odds + 100)
+                    when under_odds < 0 then abs(under_odds) / (abs(under_odds) + 100)
+                    else 0
+                end)) - 1.0
+            else null
+        end as hold_percentage
     from props
     left join players
         on props.player_slug = players.player_slug
+        and props.game_date = players.game_date
     left join teams
-        on props.team = teams.team_abbreviation
+        on props.team_tricode = teams.team_tricode
 )
 
 select * from final 

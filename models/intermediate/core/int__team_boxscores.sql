@@ -24,7 +24,7 @@ with traditional as (
 
 advanced as (
     select *
-    from {{ ref('int__team_advanced_bxsc') }}
+    from {{ ref('stg__team_advanced_bxsc') }}
     {% if is_incremental() %}
     where updated_at > (select max(updated_at) from {{ this }})
     {% endif %}
@@ -32,7 +32,7 @@ advanced as (
 
 hustle as (
     select *
-    from {{ ref('int__team_hustle_bxsc') }}
+    from {{ ref('stg__team_hustle_bxsc') }}
     {% if is_incremental() %}
     where updated_at > (select max(updated_at) from {{ this }})
     {% endif %}
@@ -40,7 +40,7 @@ hustle as (
 
 misc as (
     select *
-    from {{ ref('int__team_misc_bxsc') }}
+    from {{ ref('stg__team_misc_bxsc') }}
     {% if is_incremental() %}
     where updated_at > (select max(updated_at) from {{ this }})
     {% endif %}
@@ -48,7 +48,7 @@ misc as (
 
 scoring as (
     select *
-    from {{ ref('int__team_scoring_bxsc') }}
+    from {{ ref('stg__team_scoring_bxsc') }}
     {% if is_incremental() %}
     where updated_at > (select max(updated_at) from {{ this }})
     {% endif %}
@@ -161,6 +161,32 @@ final as (
         s.pct_assisted_fgm,
         s.pct_unassisted_fgm,
 
+        -- Per-Minute Normalized Stats
+        case when t.min > 0 then t.pts / t.min else 0 end as pts_per_min,
+        case when t.min > 0 then t.reb / t.min else 0 end as reb_per_min,
+        case when t.min > 0 then t.ast / t.min else 0 end as ast_per_min,
+        case when t.min > 0 then t.stl / t.min else 0 end as stl_per_min,
+        case when t.min > 0 then t.blk / t.min else 0 end as blk_per_min,
+        case when t.min > 0 then t.tov / t.min else 0 end as tov_per_min,
+        case when t.min > 0 then (t.pts + t.reb + t.ast) / t.min else 0 end as pra_per_min,
+        case when t.min > 0 then t.fgm / t.min else 0 end as fgm_per_min,
+        case when t.min > 0 then t.fga / t.min else 0 end as fga_per_min,
+        case when t.min > 0 then t.fg3m / t.min else 0 end as fg3m_per_min,
+        case when t.min > 0 then t.fg3a / t.min else 0 end as fg3a_per_min,
+        
+        -- Per-100 Possessions Normalized Stats
+        case when a.possessions > 0 then t.pts / a.possessions * 100 else 0 end as pts_per_100,
+        case when a.possessions > 0 then t.reb / a.possessions * 100 else 0 end as reb_per_100,
+        case when a.possessions > 0 then t.ast / a.possessions * 100 else 0 end as ast_per_100,
+        case when a.possessions > 0 then t.stl / a.possessions * 100 else 0 end as stl_per_100,
+        case when a.possessions > 0 then t.blk / a.possessions * 100 else 0 end as blk_per_100,
+        case when a.possessions > 0 then t.tov / a.possessions * 100 else 0 end as tov_per_100,
+        case when a.possessions > 0 then (t.pts + t.reb + t.ast) / a.possessions * 100 else 0 end as pra_per_100,
+        case when a.possessions > 0 then t.fgm / a.possessions * 100 else 0 end as fgm_per_100,
+        case when a.possessions > 0 then t.fga / a.possessions * 100 else 0 end as fga_per_100,
+        case when a.possessions > 0 then t.fg3m / a.possessions * 100 else 0 end as fg3m_per_100,
+        case when a.possessions > 0 then t.fg3a / a.possessions * 100 else 0 end as fg3a_per_100,
+        
         -- Timestamps
         greatest(t.created_at, a.created_at, h.created_at, m.created_at, s.created_at) as created_at,
         greatest(t.updated_at, a.updated_at, h.updated_at, m.updated_at, s.updated_at) as updated_at

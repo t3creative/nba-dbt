@@ -1,9 +1,9 @@
 {{
     config(
-        schema='intermediate',
+        schema='features',
         materialized='incremental',
         unique_key='market_analysis_key',
-        tags=['betting', 'intermediate', 'player_props', 'analysis'],
+        tags=['betting', 'features', 'player_props', 'analysis'],
         partition_by={
             "field": "game_date",
             "data_type": "date",
@@ -18,17 +18,23 @@ with source_props as (
         prop_id,
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
-        team_abbreviation_standardized,
+        team_tricode,
+        team_full_name,
         market_id,
         market,
         line,
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        -- Use calculated fields from normalized model
+        over_implied_prob,
+        under_implied_prob,
+        total_implied_prob,
+        over_no_vig_prob as no_vig_over_prob,
+        under_no_vig_prob as no_vig_under_prob,
+        hold_percentage as vig_percentage,
         game_date
     from {{ ref('int__player_props_normalized') }}
     
@@ -37,27 +43,20 @@ with source_props as (
     {% endif %}
 ),
 
--- Calculate no-vig probabilities and related metrics
+-- Only calculate fair odds (not already in normalized model)
 enhanced_props as (
     select
         *,
-        -- Calculate no-vig probabilities (removing juice)
-        over_implied_probability / (over_implied_probability + under_implied_probability) as no_vig_over_prob,
-        under_implied_probability / (over_implied_probability + under_implied_probability) as no_vig_under_prob,
-        -- Calculate total implied probability (1 + vig)
-        over_implied_probability + under_implied_probability as total_implied_prob,
-        -- Calculate vig percentage
-        (over_implied_probability + under_implied_probability - 1) * 100 as vig_percentage,
-        -- Calculate fair odds (no vig)
+        -- Calculate fair odds from no-vig probabilities
         case 
-            when over_implied_probability / (over_implied_probability + under_implied_probability) < 0.5 
-            then ((1 / (over_implied_probability / (over_implied_probability + under_implied_probability))) - 1) * 100
-            else -100 / ((1 / (over_implied_probability / (over_implied_probability + under_implied_probability))) - 1)
+            when no_vig_over_prob < 0.5 
+            then ((1 / no_vig_over_prob) - 1) * 100
+            else -100 / ((1 / no_vig_over_prob) - 1)
         end as fair_over_odds,
         case 
-            when under_implied_probability / (over_implied_probability + under_implied_probability) < 0.5 
-            then ((1 / (under_implied_probability / (over_implied_probability + under_implied_probability))) - 1) * 100
-            else -100 / ((1 / (under_implied_probability / (over_implied_probability + under_implied_probability))) - 1)
+            when no_vig_under_prob < 0.5 
+            then ((1 / no_vig_under_prob) - 1) * 100
+            else -100 / ((1 / no_vig_under_prob) - 1)
         end as fair_under_odds,
         -- Generate a unique key for this analysis record
         {{ dbt_utils.generate_surrogate_key(['prop_key', 'sportsbook']) }} as market_analysis_key
@@ -85,7 +84,7 @@ market_context as (
 player_context as (
     select
         player_id,
-        player_name_standardized,
+        player_name as player_name,
         market_id,
         market,
         count(*) as player_market_count,
@@ -94,7 +93,7 @@ player_context as (
         min(line) as min_player_market_line,
         max(line) as max_player_market_line
     from enhanced_props
-    group by player_id, player_name_standardized, market_id, market
+    group by player_id, player_name, market_id, market
 ),
 
 -- Add sportsbook context - typical vig per book
@@ -115,9 +114,10 @@ final as (
         ep.prop_id,
         ep.prop_key,
         ep.player_id,
-        ep.player_name_standardized,
+        ep.player_name,
         ep.team_id,
-        ep.team_abbreviation_standardized,
+        ep.team_tricode,
+        ep.team_full_name,
         ep.market_id,
         ep.market,
         
@@ -125,8 +125,8 @@ final as (
         ep.line,
         ep.over_odds,
         ep.under_odds,
-        ep.over_implied_probability,
-        ep.under_implied_probability,
+        ep.over_implied_prob,
+        ep.under_implied_prob,
         ep.no_vig_over_prob,
         ep.no_vig_under_prob,
         ep.fair_over_odds,
@@ -165,11 +165,12 @@ final as (
         
         -- Time data
         ep.game_date,
-        current_timestamp() as analysis_timestamp
+        current_timestamp as analysis_timestamp
     from enhanced_props ep
     join market_context mc on ep.market_id = mc.market_id
     join player_context pc on ep.player_id = pc.player_id and ep.market_id = pc.market_id
     join sportsbook_context sc on ep.sportsbook = sc.sportsbook
+
 )
 
 select * from final 

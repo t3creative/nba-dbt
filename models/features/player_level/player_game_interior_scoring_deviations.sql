@@ -32,7 +32,7 @@ with scoring_data as (
         game_date,
         opponent_id,
         pct_pts_in_paint
-    from {{ ref('int__player_scoring_bxsc') }}
+    from {{ ref('int__player_boxscores') }}
     {% if is_incremental() %}
     -- Process games newer than the most recent game date in the table
     where game_date > (select max(game_date) from {{ this }})
@@ -44,14 +44,11 @@ tracking_data as (
         player_game_key,
         player_id,
         game_id,
-        season_year,
-        game_date,
-        opponent_id,
         def_at_rim_fg_pct,
         def_at_rim_fga,
         -- Need minutes to calculate rates
         min
-    from {{ ref('int__player_tracking_bxsc') }}
+    from {{ ref('stg__player_tracking_bxsc') }}
     where player_game_key in (select player_game_key from scoring_data) -- Ensure we only process relevant games
 ),
 
@@ -105,6 +102,7 @@ final as (
         coalesce(psm.def_at_rim_fga_rate - psm.avg_def_at_rim_fga_rate, 0) as rim_attempt_rate_deviation
 
     from player_season_metrics psm
+    where psm.season_year >= '2017-18'
 )
 
 select * from final 

@@ -90,4 +90,5 @@ select
 
 from base_context g
 left join team_stats_home hts on g.game_id = hts.game_id
-left join team_stats_away ats on g.game_id = ats.game_id 
+left join team_stats_away ats on g.game_id = ats.game_id
+where g.season_year >= '2017-18' 

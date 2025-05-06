@@ -4,8 +4,8 @@ with test_data as (
         prop_id,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability
+        over_implied_prob,
+        under_implied_prob
     from {{ ref('stg__player_props') }}
     where over_odds is not null and under_odds is not null
 ),
@@ -20,27 +20,27 @@ calculated_probs as (
             when over_odds > 0 then 100.0 / (over_odds + 100)
             when over_odds < 0 then abs(over_odds) / (abs(over_odds) + 100)
             else null
-        end as expected_over_implied_probability,
+        end as expected_over_implied_prob,
         case 
             when under_odds > 0 then 100.0 / (under_odds + 100)
             when under_odds < 0 then abs(under_odds) / (abs(under_odds) + 100)
             else null
-        end as expected_under_implied_probability,
-        over_implied_probability,
-        under_implied_probability
+        end as expected_under_implied_prob,
+        over_implied_prob,
+        under_implied_prob
     from test_data
 ),
 
 validation as (
     select
         prop_id,
-        over_implied_probability,
-        expected_over_implied_probability,
-        under_implied_probability,
-        expected_under_implied_probability,
+        over_implied_prob,
+        expected_over_implied_prob,
+        under_implied_prob,
+        expected_under_implied_prob,
         -- Check for significant differences in calculated values
-        abs(over_implied_probability - expected_over_implied_probability) < 0.0001 as over_prob_matches,
-        abs(under_implied_probability - expected_under_implied_probability) < 0.0001 as under_prob_matches
+        abs(over_implied_prob - expected_over_implied_prob) < 0.0001 as over_prob_matches,
+        abs(under_implied_prob - expected_under_implied_prob) < 0.0001 as under_prob_matches
     from calculated_probs
 )
 

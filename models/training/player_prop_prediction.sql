@@ -15,7 +15,7 @@
 with player_props as (
     select
         pp.player_id,
-        pp.player_name_standardized,
+        pp.player_name,
         pp.team_id,
         t.team_tricode as team_abbr,
         pp.market_id,
@@ -23,8 +23,8 @@ with player_props as (
         pp.line,
         pp.over_odds,
         pp.under_odds,
-        pp.over_implied_probability,
-        pp.under_implied_probability,
+        pp.over_implied_prob,
+        pp.under_implied_prob,
         pp.no_vig_over_prob,
         pp.no_vig_under_prob,
         pp.vig_percentage,
@@ -284,7 +284,7 @@ joined_data as (
     select
         pp.prop_id,
         pp.player_id,
-        pp.player_name_standardized,
+        pp.player_name,
         pp.team_id,
         pp.team_abbr,
         pp.market_id,
@@ -293,8 +293,8 @@ joined_data as (
         pp.line,
         pp.over_odds,
         pp.under_odds,
-        pp.over_implied_probability,
-        pp.under_implied_probability,
+        pp.over_implied_prob,
+        pp.under_implied_prob,
         pp.no_vig_over_prob,
         pp.no_vig_under_prob,
         pp.vig_percentage,
@@ -318,12 +318,12 @@ joined_data as (
         -- Calculate implied win probabilities
         case
             when pp.no_vig_over_prob is not null then pp.no_vig_over_prob
-            else pp.over_implied_probability / (pp.over_implied_probability + pp.under_implied_probability)
+            else pp.over_implied_prob / (pp.over_implied_prob + pp.under_implied_prob)
         end as fair_over_prob,
         
         case
             when pp.no_vig_under_prob is not null then pp.no_vig_under_prob
-            else pp.under_implied_probability / (pp.over_implied_probability + pp.under_implied_probability)
+            else pp.under_implied_prob / (pp.over_implied_prob + pp.under_implied_prob)
         end as fair_under_prob
         
     from player_props pp
@@ -407,7 +407,7 @@ combined_features as (
     select
         jd.prop_id,
         jd.player_id,
-        jd.player_name_standardized,
+        jd.player_name,
         jd.team_id,
         jd.team_abbr,
         jd.market_id,

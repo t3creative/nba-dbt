@@ -584,12 +584,12 @@ renamed as (
             when over_odds > 0 then 100.0 / (over_odds + 100)
             when over_odds < 0 then abs(over_odds) / (abs(over_odds) + 100)
             else null
-        end as over_implied_probability,
+        end as over_implied_prob,
         case 
             when under_odds > 0 then 100.0 / (under_odds + 100)
             when under_odds < 0 then abs(under_odds) / (abs(under_odds) + 100)
             else null
-        end as under_implied_probability
+        end as under_implied_prob
     from source
 ),
 
@@ -606,8 +606,8 @@ final as (
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         source_file
     from renamed
@@ -659,8 +659,8 @@ final as (
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         recorded_at,
         source_file
@@ -701,7 +701,7 @@ normalized as (
         props.player as player_name_raw,
         coalesce(players.player_id, 
             {{ generate_player_id('props.player') }}) as player_id,
-        coalesce(players.display_first_last, props.player) as player_name_standardized,
+        coalesce(players.display_first_last, props.player) as player_name,
         props.player_slug,
         props.team as team_abbr_raw,
         coalesce(teams.team_id, -1) as team_id,
@@ -712,8 +712,8 @@ normalized as (
         props.sportsbook,
         props.over_odds,
         props.under_odds,
-        props.over_implied_probability,
-        props.under_implied_probability,
+        props.over_implied_prob,
+        props.under_implied_prob,
         props.game_date,
         props.recorded_at,
         props.source_file
@@ -730,7 +730,7 @@ final as (
         event_id,
         player_id,
         player_name_raw,
-        player_name_standardized,
+        player_name,
         player_slug,
         team_id,
         team_abbr_raw,
@@ -741,8 +741,8 @@ final as (
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         recorded_at,
         source_file,
@@ -764,7 +764,7 @@ with daily_props as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -806,7 +806,7 @@ deduped as (
     select distinct
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -823,7 +823,7 @@ final as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -950,7 +950,7 @@ with all_props as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -959,8 +959,8 @@ with all_props as (
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         recorded_at
     from {{ ref('int__player_props_normalized') }}
@@ -976,7 +976,7 @@ daily_snapshots as (
     select distinct on (prop_key, sportsbook, date_trunc('day', recorded_at))
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -985,8 +985,8 @@ daily_snapshots as (
         sportsbook,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         date_trunc('day', recorded_at) as snapshot_date
     from all_props
@@ -997,7 +997,7 @@ consensus as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -1010,12 +1010,12 @@ consensus as (
         avg(line) as avg_line,
         
         -- Weighted average over odds (by implied probability)
-        sum(over_odds * over_implied_probability) / 
-        nullif(sum(over_implied_probability), 0) as weighted_over_odds,
+        sum(over_odds * over_implied_prob) / 
+        nullif(sum(over_implied_prob), 0) as weighted_over_odds,
         
         -- Weighted average under odds (by implied probability)
-        sum(under_odds * under_implied_probability) / 
-        nullif(sum(under_implied_probability), 0) as weighted_under_odds,
+        sum(under_odds * under_implied_prob) / 
+        nullif(sum(under_implied_prob), 0) as weighted_under_odds,
         
         -- Min/max for range
         min(line) as min_line,
@@ -1034,7 +1034,7 @@ consensus as (
     group by
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -1047,7 +1047,7 @@ final as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         team_id,
         team_abbreviation_standardized,
         market_id,
@@ -1096,7 +1096,7 @@ with historical_props as (
     select
         prop_key,
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         closing_line,
@@ -1150,7 +1150,7 @@ joined as (
 player_market_stats as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         
@@ -1214,7 +1214,7 @@ player_market_stats as (
 final as (
     select distinct
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         total_games,
@@ -1416,8 +1416,8 @@ with sportsbook_props as (
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability
+        over_implied_prob,
+        under_implied_prob
     from {{ ref('int__player_props_normalized') }}
     where game_date >= current_date - interval '365 days'
 ),
@@ -1454,12 +1454,12 @@ joined as (
         sp.under_odds,
         cp.weighted_under_odds,
         sp.under_odds - cp.weighted_under_odds as under_odds_vs_consensus,
-        sp.over_implied_probability,
+        sp.over_implied_prob,
         cp.consensus_over_implied_prob,
-        sp.over_implied_probability - cp.consensus_over_implied_prob as over_prob_vs_consensus,
-        sp.under_implied_probability,
+        sp.over_implied_prob - cp.consensus_over_implied_prob as over_prob_vs_consensus,
+        sp.under_implied_prob,
         cp.consensus_under_implied_prob,
-        sp.under_implied_probability - cp.consensus_under_implied_prob as under_prob_vs_consensus
+        sp.under_implied_prob - cp.consensus_under_implied_prob as under_prob_vs_consensus
     from sportsbook_props sp
     join consensus_props cp
         on sp.player_id = cp.player_id
@@ -1536,7 +1536,7 @@ with current_props as (
     select
         cp.prop_key,
         cp.player_id,
-        p.player_name_standardized,
+        p.player_name,
         p.team_id,
         p.team_abbreviation_standardized as team,
         cp.market_id,
@@ -1591,7 +1591,7 @@ joined as (
     select
         cp.prop_key,
         cp.player_id,
-        cp.player_name_standardized,
+        cp.player_name,
         cp.team_id,
         cp.team as team_abbr,
         cp.market_id,

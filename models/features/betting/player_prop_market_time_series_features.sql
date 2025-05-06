@@ -15,14 +15,14 @@
 with player_props as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         sportsbook,
         game_date
     from {{ ref('int__player_props_normalized') }}
@@ -34,14 +34,14 @@ with player_props as (
 time_ordered_props as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         
         -- Previous values
@@ -84,14 +84,14 @@ time_ordered_props as (
 with_changes as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
+        over_implied_prob,
+        under_implied_prob,
         game_date,
         previous_line,
         previous_over_odds,
@@ -149,7 +149,7 @@ with_changes as (
 player_market_temporal as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         
@@ -181,8 +181,16 @@ player_market_temporal as (
         -- Volatility metrics
         stddev(line_change) / nullif(avg(abs(line_change)), 0) as line_change_volatility_ratio,
         
-        -- Recent trend analysis (last 3 games)
-        array_agg(trend_direction order by game_date desc) filter (where game_date > (max(game_date) - interval '30 days')) as recent_trends,
+        -- Recent trend analysis (last 30 days)
+        array_agg(
+            case 
+                when game_date > (select max(game_date) - interval '30 days' from with_changes wc2 
+                                 where wc2.player_id = with_changes.player_id and wc2.market_id = with_changes.market_id)
+                then trend_direction
+                else null
+            end
+            order by game_date desc
+        ) filter (where trend_direction is not null) as recent_trends,
         
         -- Odds change metrics
         avg(over_odds_change) as avg_over_odds_change,
@@ -197,7 +205,7 @@ player_market_temporal as (
         {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id']) }} as feature_key
         
     from with_changes
-    group by player_id, player_name_standardized, market_id, market
+    group by player_id, player_name, market_id, market
 ),
 
 -- Extract month-by-month averages for seasonal patterns
@@ -227,7 +235,7 @@ final as (
     select
         pmt.feature_key,
         pmt.player_id,
-        pmt.player_name_standardized,
+        pmt.player_name,
         pmt.market_id,
         pmt.market,
         

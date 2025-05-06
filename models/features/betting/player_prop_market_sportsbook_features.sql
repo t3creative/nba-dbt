@@ -15,17 +15,17 @@
 with player_props as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         line,
         over_odds,
         under_odds,
-        over_implied_probability,
-        under_implied_probability,
-        no_vig_over_prob,
-        no_vig_under_prob,
-        vig_percentage,
+        over_implied_prob,
+        under_implied_prob,
+        over_no_vig_prob as no_vig_over_prob,
+        under_no_vig_prob as no_vig_under_prob,
+        hold_percentage as vig_percentage,
         sportsbook,
         game_date
     from {{ ref('int__player_props_normalized') }}
@@ -41,8 +41,8 @@ consensus_props as (
         avg(line) as consensus_line,
         avg(over_odds) as consensus_over_odds,
         avg(under_odds) as consensus_under_odds,
-        avg(over_implied_probability) as consensus_over_prob,
-        avg(under_implied_probability) as consensus_under_prob
+        avg(over_implied_prob) as consensus_over_prob,
+        avg(under_implied_prob) as consensus_under_prob
     from player_props
     group by player_id, market_id, game_date
 ),
@@ -51,7 +51,7 @@ consensus_props as (
 joined as (
     select
         pp.player_id,
-        pp.player_name_standardized,
+        pp.player_name,
         pp.market_id,
         pp.market,
         pp.sportsbook,
@@ -65,12 +65,12 @@ joined as (
         pp.under_odds,
         cp.consensus_under_odds,
         pp.under_odds - cp.consensus_under_odds as under_odds_vs_consensus,
-        pp.over_implied_probability,
+        pp.over_implied_prob,
         cp.consensus_over_prob,
-        pp.over_implied_probability - cp.consensus_over_prob as over_prob_vs_consensus,
-        pp.under_implied_probability,
+        pp.over_implied_prob - cp.consensus_over_prob as over_prob_vs_consensus,
+        pp.under_implied_prob,
         cp.consensus_under_prob,
-        pp.under_implied_probability - cp.consensus_under_prob as under_prob_vs_consensus,
+        pp.under_implied_prob - cp.consensus_under_prob as under_prob_vs_consensus,
         pp.vig_percentage
     from player_props pp
     join consensus_props cp
@@ -83,7 +83,7 @@ joined as (
 sportsbook_analysis as (
     select
         player_id,
-        player_name_standardized,
+        player_name,
         market_id,
         market,
         sportsbook,
@@ -119,7 +119,7 @@ sportsbook_analysis as (
         {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id', 'sportsbook']) }} as feature_key
         
     from joined
-    group by player_id, player_name_standardized, market_id, market, sportsbook
+    group by player_id, player_name, market_id, market, sportsbook
 ),
 
 -- Get sportsbook general tendencies (across all players/markets)
@@ -138,7 +138,7 @@ final as (
     select
         sa.feature_key,
         sa.player_id,
-        sa.player_name_standardized,
+        sa.player_name,
         sa.market_id,
         sa.market,
         sa.sportsbook,

@@ -3,74 +3,80 @@ version: 2
 models:
   - name: int__player_props_normalized
     description: >
-      Normalized player props data with standardized player and team identifiers.
-      This model joins player props with player and team reference data to ensure consistent identifiers.
+      Normalized player proposition bets with enriched player and team data.
+      Includes implied probability calculations and no-vig metrics.
     config:
       materialized: incremental
       unique_key: prop_id
       tags: ['betting', 'intermediate', 'player_props']
     
     columns:
+      - name: player_id
+        description: Unique identifier for the player
+        tests:
+          - not_null
+      
+      - name: player_slug
+        description: URL-friendly identifier for the player
+        tests:
+          - not_null
+      
+      - name: game_date
+        description: Date of the game
+        tests:
+          - not_null
+      
+      - name: game_id
+        description: Unique identifier for the game
+        tests:
+          - not_null
+      
+      - name: opponent_id
+        description: Identifier for the opponent team
+      
       - name: prop_id
-        description: Unique identifier for each prop line carried over from staging
+        description: Unique identifier for the proposition bet
         tests:
           - unique
           - not_null
       
       - name: offer_id
-        description: Original offer identifier from the source
+        description: Identifier for the betting offer
       
-      - name: event_id
-        description: Identifier for the game event
+      - name: bp_event_id
+        description: Event identifier from the data source
       
-      - name: player_id
-        description: Standardized player identifier that matches other tables in the database
+      - name: player_name
+        description: Full name of the player
         tests:
           - not_null
       
-      - name: player_name_raw
-        description: Original player name from the betting source
-        tests:
-          - not_null
+      - name: team_tricode
+        description: Three-letter team abbreviation
       
-      - name: player_name_standardized
-        description: Normalized player name that matches official NBA player names
-        tests:
-          - not_null
-      
-      - name: player_slug
-        description: URL-friendly player identifier from source
+      - name: team_full_name
+        description: Full name of the player's team
       
       - name: team_id
-        description: Standardized team identifier that matches other tables in the database
-        tests:
-          - not_null
-      
-      - name: team_abbr_raw
-        description: Original team abbreviation from the betting source
-        tests:
-          - not_null
-      
-      - name: team_abbreviation_standardized
-        description: Normalized team abbreviation that matches official NBA team abbreviations
-        tests:
-          - not_null
+        description: Unique identifier for the player's team
       
       - name: market_id
         description: Identifier for the betting market type
+        tests:
+          - not_null
       
       - name: market
-        description: Description of the betting market (e.g., Points O/U, Rebounds O/U)
+        description: Description of the betting market (e.g., Points, Rebounds, Assists)
         tests:
           - not_null
       
       - name: line
-        description: The betting line (over/under value)
+        description: The betting line value
         tests:
           - not_null
       
       - name: sportsbook
-        description: Name of the sportsbook offering the line
+        description: Name of the sportsbook offering the bet
         tests:
           - not_null
       
@@ -79,182 +85,29 @@ models:
       
       - name: under_odds
         description: American odds for the under bet
-      
-      - name: over_implied_probability
-        description: Calculated implied probability for the over bet
-      
-      - name: under_implied_probability
-        description: Calculated implied probability for the under bet
-      
-      - name: game_date
-        description: Date of the game
-        tests:
-          - not_null
       
       - name: source_file
-        description: Original file path where the data was sourced from
+        description: Source file where the data originated
       
       - name: prop_key
-        description: >
-          Composite key combining player_id, market_id, game_date, and line 
-          to uniquely identify a prop bet for tracking line movement across sportsbooks
-        tests:
-          - not_null
-
-  - name: int__player_prop_market_analysis
-    description: >
-      Extended analysis of player props with market context metrics.
-      This model adds valuable comparative metrics for historical odds analysis.
-    config:
-      materialized: incremental
-      unique_key: market_analysis_key
-      tags: ['betting', 'intermediate', 'player_props', 'analysis']
-    
-    columns:
-      - name: market_analysis_key
-        description: Unique identifier for each market analysis record
-        tests:
-          - unique
-          - not_null
-      
-      - name: prop_id
-        description: Reference to the original prop ID
-        tests:
-          - not_null
-
-      - name: prop_key
-        description: Composite key identifying the prop line
+        description: Surrogate key combining player, market, date and line
         tests:
           - not_null
       
-      - name: player_id
-        description: Standardized player identifier
-        tests:
-          - not_null
+      - name: over_implied_prob
+        description: Implied probability derived from over odds (0-1 scale)
       
-      - name: player_name_standardized
-        description: Normalized player name
-        tests:
-          - not_null
-      
-      - name: team_id
-        description: Standardized team identifier
-        tests:
-          - not_null
-      
-      - name: team_abbreviation_standardized
-        description: Normalized team abbreviation
-        tests:
-          - not_null
-      
-      - name: market_id
-        description: Identifier for the betting market type
-      
-      - name: market
-        description: Description of the betting market (e.g., Points O/U, Rebounds O/U)
-        tests:
-          - not_null
-      
-      - name: line
-        description: The betting line (over/under value)
-        tests:
-          - not_null
-      
-      - name: over_odds
-        description: American odds for the over bet
-      
-      - name: under_odds
-        description: American odds for the under bet
-      
-      - name: over_implied_probability
-        description: Implied probability for the over bet
-      
-      - name: under_implied_probability
-        description: Implied probability for the under bet
-      
-      - name: no_vig_over_prob
-        description: Over probability with the bookmaker's margin (vig) removed
-      
-      - name: no_vig_under_prob
-        description: Under probability with the bookmaker's margin (vig) removed
-      
-      - name: fair_over_odds
-        description: American odds for the over bet with vig removed
-      
-      - name: fair_under_odds
-        description: American odds for the under bet with vig removed
+      - name: under_implied_prob
+        description: Implied probability derived from under odds (0-1 scale)
       
       - name: total_implied_prob
-        description: Sum of over and under implied probabilities (values > 1 indicate bookmaker margin)
+        description: Sum of over and under implied probabilities (>1 indicates vig)
       
-      - name: vig_percentage
-        description: Percentage of vig applied by the sportsbook ((total_implied_prob - 1) * 100)
+      - name: over_no_vig_prob
+        description: Fair probability for over after removing bookmaker margin
       
-      - name: avg_market_line
-        description: Average line value across all props of this market type
+      - name: under_no_vig_prob
+        description: Fair probability for under after removing bookmaker margin
       
-      - name: median_market_line
-        description: Median line value across all props of this market type
-      
-      - name: stddev_market_line
-        description: Standard deviation of lines for this market type
-      
-      - name: min_market_line
-        description: Minimum line observed for this market type
-      
-      - name: max_market_line
-        description: Maximum line observed for this market type
-      
-      - name: avg_market_vig
-        description: Average vig (total implied probability) for this market type
-      
-      - name: avg_market_vig_pct
-        description: Average vig percentage for this market type
-      
-      - name: avg_player_market_line
-        description: Average line for this player in this market type
-      
-      - name: stddev_player_market_line
-        description: Standard deviation of lines for this player in this market type
-      
-      - name: min_player_market_line
-        description: Minimum line observed for this player in this market type
-      
-      - name: max_player_market_line
-        description: Maximum line observed for this player in this market type
-      
-      - name: sportsbook
-        description: Name of the sportsbook offering the line
-        tests:
-          - not_null
-      
-      - name: avg_sportsbook_vig
-        description: Average vig (total implied probability) used by this sportsbook
-      
-      - name: avg_sportsbook_vig_pct
-        description: Average vig percentage used by this sportsbook
-      
-      - name: stddev_sportsbook_vig_pct
-        description: Standard deviation of vig percentages for this sportsbook
-      
-      - name: line_vs_market_avg
-        description: How this line compares to the market average (positive = higher than average)
-      
-      - name: line_vs_player_avg
-        description: How this line compares to the player's average (positive = higher than average)
-      
-      - name: vig_vs_book_avg
-        description: How this vig compares to the sportsbook's average (positive = higher than average)
-      
-      - name: vig_vs_market_avg
-        description: How this vig compares to the market average (positive = higher than average)
-      
-      - name: game_date
-        description: Date of the game
-        tests:
-          - not_null
-      
-      - name: analysis_timestamp
-        description: Timestamp when this analysis was generated
-        tests:
-          - not_null 
+      - name: hold_percentage
+        description: Bookmaker's margin (vig) as a percentage

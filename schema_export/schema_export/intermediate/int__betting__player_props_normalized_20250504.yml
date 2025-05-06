@@ -31,7 +31,7 @@ columns:
   column_default: null
   is_nullable: 'YES'
   udt_name: text
-- column_name: player_name_standardized
+- column_name: player_name
   data_type: text
   character_maximum_length: null
   column_default: null
@@ -97,13 +97,13 @@ columns:
   column_default: null
   is_nullable: 'YES'
   udt_name: float8
-- column_name: over_implied_probability
+- column_name: over_implied_prob
   data_type: double precision
   character_maximum_length: null
   column_default: null
   is_nullable: 'YES'
   udt_name: float8
-- column_name: under_implied_probability
+- column_name: under_implied_prob
   data_type: double precision
   character_maximum_length: null
   column_default: null

@@ -1,5 +1,6 @@
 {{
     config(
+        enabled=false,   
         schema='intermediate',
         materialized='incremental',
         unique_key='team_game_key',

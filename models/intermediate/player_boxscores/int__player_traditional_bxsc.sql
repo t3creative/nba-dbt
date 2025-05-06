@@ -1,5 +1,6 @@
 {{
     config(
+        enabled=true,
         schema='intermediate',
         materialized='incremental',
         unique_key='player_game_key',
@@ -54,6 +55,7 @@ final as (
         bs.first_name,
         bs.family_name,
         concat(bs.first_name, ' ', bs.family_name) as player_name,
+        bs.player_slug,
         tt.team_tricode,
         gopp.game_date,
         gopp.home_away,

@@ -57,7 +57,7 @@ player_game_stats as (
         trad.fga,
         adv.possessions
     from {{ ref('int__player_traditional_bxsc') }} as trad
-    left join {{ ref('int__player_advanced_bxsc') }} as adv
+    left join {{ ref('stg__player_advanced_bxsc') }} as adv
         on trad.player_game_key = adv.player_game_key -- Assumes player_game_key uniquely identifies player-game instance across boxscore types
     where adv.possessions is not null and trad.fga is not null -- Ensure necessary stats are available
 ),
@@ -111,6 +111,7 @@ final as (
     left join player_season_avg_stats avgs
         on m.off_player_id = avgs.player_id
         and m.season_year = avgs.season_year
+    where m.season_year >= '2017-18'
 )
 
 select * from final

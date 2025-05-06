@@ -1,23 +1,23 @@
 WITH traditional_boxscores AS (
   SELECT
     *
-  FROM {{ ref('int__player_traditional_bxsc') }} AS int__player_traditional_bxsc
+  FROM {{ ref('int__player_boxscores') }} AS int__player_boxscores
 ), advanced_boxscores AS (
   SELECT
     *
-  FROM {{ ref('int__player_advanced_bxsc') }} AS int__player_advanced_bxsc
+  FROM {{ ref('int__player_boxscores') }} AS int__player_boxscores
 ), hustle_boxscores AS (
   SELECT
     *
-  FROM {{ ref('int__player_hustle_bxsc') }} AS int__player_hustle_bxsc
+  FROM {{ ref('int__player_boxscores') }} AS int__player_boxscores
 ), usage_boxscores AS (
   SELECT
     *
-  FROM {{ ref('int__player_usage_bxsc') }} AS int__player_usage_bxsc
+  FROM {{ ref('int__player_boxscores') }} AS int__player_boxscores
 ), scoring_boxscores AS (
   SELECT
     *
-  FROM {{ ref('int__player_scoring_bxsc') }} AS int__player_scoring_bxsc
+  FROM {{ ref('int__player_boxscores') }} AS int__player_boxscores
 ), team_game_context /* Get team context features from int__game_context */ AS (
   SELECT
     *

@@ -31,7 +31,7 @@ renamed as (
         under_odds,
         -- Date and Source
         game_date,
-        source_file,
+        source_file
 
     from source
 ),
