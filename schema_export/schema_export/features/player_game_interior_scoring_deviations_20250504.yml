@@ -1,0 +1,76 @@
+schema: features
+table: player_game_interior_scoring_deviations
+columns:
+- column_name: player_game_key
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: player_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: game_id
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: season_year
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_date
+  data_type: date
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: date
+- column_name: opponent_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: pct_pts_in_paint
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: def_at_rim_fg_pct
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: def_at_rim_fga_rate
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: paint_scoring_reliance_deviation
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: rim_finishing_efficiency_deviation
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: rim_attempt_rate_deviation
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+export_date: '2025-05-04T21:32:44.237693'

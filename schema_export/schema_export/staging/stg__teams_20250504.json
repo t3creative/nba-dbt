@@ -1,0 +1,87 @@
+{
+  "schema": "staging",
+  "table": "stg__teams",
+  "columns": [
+    {
+      "column_name": "team_key",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "team_full_name",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_tricode",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_nickname",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_city",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_state",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "year_founded",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "championship_years",
+      "data_type": "ARRAY",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "_text"
+    },
+    {
+      "column_name": "league",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    }
+  ],
+  "export_date": "2025-05-04T21:32:45.060914"
+}

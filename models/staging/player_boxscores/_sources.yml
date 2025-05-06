@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: nba_api
+    description: "Raw player box score statistics"
     database: nba_data
     schema: raw
     tables:
@@ -320,111 +321,6 @@ sources:
             description: "Rebounds secured by player from their own box outs"
           - name: boxOuts
             description: "Total box outs"
-
-      # Matchups Box Score
-      - name: player_boxscore_matchups_v3
-        description: "Raw player matchups box score statistics"
-        columns:
-          - name: gameId
-            description: "Unique identifier for each game"
-            tests:
-              - not_null
-          - name: teamId
-            description: "Team identifier"
-          - name: teamCity
-            description: "Team city name"
-          - name: teamName
-            description: "Team name"
-          - name: teamTricode
-            description: "Team three-letter code"
-          - name: teamSlug
-            description: "Team URL slug"
-          - name: personIdOff
-            description: "Offensive player identifier"
-            tests:
-              - not_null
-          - name: firstNameOff
-            description: "Offensive player first name"
-          - name: familyNameOff
-            description: "Offensive player family name"
-          - name: nameIOff
-            description: "Offensive player name initial"
-          - name: playerSlugOff
-            description: "Offensive player URL slug"
-          - name: positionOff
-            description: "Offensive player position"
-          - name: commentOff
-            description: "Offensive player status/availability notes"
-          - name: jerseyNumOff
-            description: "Offensive player jersey number"
-          - name: personIdDef
-            description: "Defensive player identifier"
-            tests:
-              - not_null
-          - name: firstNameDef
-            description: "Defensive player first name"
-          - name: familyNameDef
-            description: "Defensive player family name"
-          - name: nameIDef
-            description: "Defensive player name initial"
-          - name: playerSlugDef
-            description: "Defensive player URL slug"
-          - name: jerseyNumDef
-            description: "Defender's jersey number"
-          - name: matchupMinutes
-            description: "Minutes offensive and defensive players were directly matched"
-            tests:
-              - not_null
-          - name: matchupMinutesSort
-            description: "Matchup minutes for sorting purposes"
-          - name: partialPossessions
-            description: "Partial possessions in matchup"
-          - name: percentageDefenderTotalTime
-            description: "Percentage of defender's total time spent guarding this offensive player"
-          - name: percentageOffensiveTotalTime
-            description: "Percentage of offensive player's total time spent being guarded by this defender"
-          - name: percentageTotalTimeBothOn
-            description: "Percentage of total time both players were on court together"
-          - name: switchesOn
-            description: "Number of defensive switches onto this matchup"
-          - name: playerPoints
-            description: "Points scored by the offensive player while being guarded by this defender"
-          - name: teamPoints
-            description: "Team points scored during this matchup"
-          - name: matchupAssists
-            description: "Assists by offensive player while being guarded by this defender"
-          - name: matchupPotentialAssists
-            description: "Potential assists by offensive player while being guarded by this defender"
-          - name: matchupTurnovers
-            description: "Turnovers by offensive player while being guarded by this defender"
-          - name: matchupBlocks
-            description: "Blocks by defensive player against this offensive player"
-          - name: matchupFieldGoalsMade
-            description: "Field goals made by offensive player while being guarded by this defender"
-          - name: matchupFieldGoalsAttempted
-            description: "Field goals attempted by offensive player while being guarded by this defender"
-          - name: matchupFieldGoalsPercentage
-            description: "Field goal percentage by offensive player while being guarded by this defender"
-          - name: matchupThreePointersMade
-            description: "Three pointers made by offensive player while being guarded by this defender"
-          - name: matchupThreePointersAttempted
-            description: "Three pointers attempted by offensive player while being guarded by this defender"
-          - name: matchupThreePointersPercentage
-            description: "Three point percentage by offensive player while being guarded by this defender"
-          - name: matchupFreeThrowsMade
-            description: "Free throws made by offensive player resulting from fouls by this defender"
-          - name: matchupFreeThrowsAttempted
-            description: "Free throws attempted by offensive player resulting from fouls by this defender"
-          - name: helpBlocks
-            description: "Blocks made by defensive player when helping against other offensive players"
-          - name: helpFieldGoalsMade
-            description: "Field goals made by other offensive players when this defender provided help defense"
-          - name: helpFieldGoalsAttempted
-            description: "Field goals attempted by other offensive players when this defender provided help defense"
-          - name: helpFieldGoalsPercentage
-            description: "Field goal percentage allowed by this defender when providing help defense"
-          - name: shootingFouls
-            description: "Shooting fouls committed by defender in this matchup"
 
       # Defensive Box Score
       - name: player_boxscore_defensive_v2

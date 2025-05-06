@@ -1,0 +1,279 @@
+{
+  "schema": "intermediate",
+  "table": "int__player_traditional_bxsc",
+  "columns": [
+    {
+      "column_name": "player_game_key",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "season_year",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "first_name",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "family_name",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "player_name",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "team_tricode",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "game_date",
+      "data_type": "date",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "date"
+    },
+    {
+      "column_name": "home_away",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "opponent_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "min",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "pts",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fgm",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fga",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fg_pct",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "fg3m",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fg3a",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fg3_pct",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "ftm",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "fta",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "ft_pct",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "off_reb",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "def_reb",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "reb",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "ast",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "stl",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "blk",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "tov",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "pf",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "plus_minus",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "game_id",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "player_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "team_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "timestamptz"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "timestamptz"
+    }
+  ],
+  "export_date": "2025-05-04T21:32:45.016913"
+}

@@ -1,0 +1,46 @@
+schema: intermediate
+table: int__active_players
+columns:
+- column_name: player_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: full_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: team_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: team_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: team_tricode
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: roster_status
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: created_at
+  data_type: timestamp with time zone
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: timestamptz
+export_date: '2025-05-04T21:32:44.455713'

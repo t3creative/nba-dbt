@@ -27,7 +27,7 @@ clean-targets:         # directories to be removed by `dbt clean`
 vars:
   dbt_date_time_zone: 'America/New_York'
   use_simple_schema_names: true
-  training_start_season_year: 2017
+  training_start_season_year: 2017-18
   rolling_window_games: 10
 
 # Configuring models
@@ -45,203 +45,112 @@ models:
       game_logs:
         +materialized: view
         +tags: ["game_logs", "staging"]
-        +unique_key: "game_id"
 
-      # Add configuration for the new game_summary directory
       game_summary:
         +materialized: view
         +tags: ["game_summary", "staging"]
-        # Individual models can define specific unique keys in their schema.yml
       
       schedules:
         +materialized: view
         +tags: ["schedules", "staging"]
-        +unique_key: "game_id"
 
       player_boxscores:
         +materialized: view
         +tags: ["player_boxscores", "staging"]
-        +unique_key: "player_game_key"
-        +indexes:
-          - columns: ['player_game_key']
-          - columns: ['game_id']
-          - columns: ['player_id']
-          - columns: ['team_id']
 
       player_matchups:
         +materialized: view
         +tags: ["player_matchups", "staging"]
-        +unique_key: "player_matchup_key"
-        +indexes:
-          - columns: ['player_matchup_key']
-          - columns: ['game_id']
-          - columns: ['off_player_id']
-          - columns: ['def_player_id']
           
       team_boxscores:
         +materialized: view
         +tags: ["team_boxscores", "staging"]
-        +unique_key: "team_game_key"
-        +indexes:
-          - columns: ['team_game_key']
-          - columns: ['game_id']
-          - columns: ['team_id']
 
       league_dash:
         +materialized: view
         +tags: ["league_dash", "staging"]
-        +unique_key: "player_id"
-        +indexes:
-          - columns: ['player_id']
-    
+      
+      betting:
+        +materialized: view
+        +tags: ["betting", "staging"]
+
+      teams:
+        +materialized: view
+        +tags: ["teams", "staging"]
+      
+      players:
+        +materialized: view
+        +tags: ["players", "staging"]
+
+      play_by_play:
+        +materialized: view
+        +tags: ["play_by_play", "staging"]
+            
     # Intermediate models
     intermediate:
       +materialized: incremental
       +schema: intermediate
       +tags: ["intermediate"]
-      
-      # Add configuration for the new core intermediate path
+
       core:
         +materialized: incremental
         +tags: ["intermediate", "core"]
-        # Specific model configs will override this, but sets a default
+
+      betting:
+        +materialized: incremental
+        +tags: ["betting", "intermediate"]
       
       player_boxscores:
         +materialized: incremental
         +tags: ["player_boxscores", "intermediate"]
-        +indexes:
-          - columns: ['player_game_key']
-          - columns: ['game_id']
-          - columns: ['player_id']
-          - columns: ['team_id']
-          - columns: ['game_date']
-          - columns: ['season_year']
-        +partition_by:
-          - field: 'season_year'
-            data_type: 'varchar'
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['season_year', 'team_id', 'player_id', 'game_date']
 
       player_matchups:
         +materialized: incremental
         +tags: ["player_matchups", "intermediate"]
-        +indexes:
-          - columns: ['player_matchup_key']
-          - columns: ['game_id']
-          - columns: ['off_player_id']
-          - columns: ['def_player_id']
-          - columns: ['game_date']
-          - columns: ['season_year']
-        +partition_by:
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['off_player_id', 'def_player_id', 'game_date']
 
       team_boxscores:
         +materialized: incremental
         +tags: ["team_boxscores", "intermediate"]
-        +indexes:
-          - columns: ['team_game_key']
-          - columns: ['game_id']
-          - columns: ['team_id']
-          - columns: ['game_date']
-          - columns: ['season_year']
-        +partition_by:
-          - field: 'season_year'
-            data_type: 'varchar'
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['season_year', 'team_id', 'game_date']
     
       game_context:
         +materialized: incremental
         +tags: ["game_context", "intermediate"]
-        +unique_key: "game_id"
-        +indexes:
-          - columns: ['game_id']
-          - columns: ['game_date']
-          - columns: ['home_team_id']
-          - columns: ['away_team_id']
-          - columns: ['season_year']
-        +partition_by:
-          - field: 'season_year'
-            data_type: 'varchar'
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['season_year', 'game_date']
+
+      play_by_play:
+        +materialized: incremental
+        +tags: ["play_by_play", "intermediate"]
 
       player_stats:
         +materialized: incremental
         +tags: ["player_stats", "intermediate"]
-        +indexes:
-          - columns: ['player_id']
-          - columns: ['game_id']
-          - columns: ['season_year']
-          - columns: ['game_date']
-        +partition_by:
-          - field: 'season_year'
-            data_type: 'varchar'
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['season_year', 'player_id', 'game_date']
 
       players:
         +materialized: incremental
         +tags: ["players", "intermediate"]
-        +indexes:
-          - columns: ['player_id']
-        
+
       player_scoring:
         +materialized: incremental
         +tags: ["player_scoring", "intermediate"]
-        +indexes:
-          - columns: ['player_id']
-          - columns: ['game_id']
-          - columns: ['player_game_key']
-    
+        
+    # Feature models
     features:
         +materialized: incremental
         +schema: features
-        +tags: ["features", "intermediate"]
-        +indexes:
-          - columns: ['player_game_key']
-          - columns: ['game_id']
-          - columns: ['player_id']
-          - columns: ['game_date']
-          - columns: ['season_year']
-        +partition_by:
-          - field: 'season_year'
-            data_type: 'varchar'
-          - field: 'game_date'
-            data_type: 'date'
-            granularity: 'month'
-        +cluster_by: ['season_year', 'player_id', 'game_date']
-        
-        game_context:
-          +materialized: incremental
-          +tags: ["game_context", "features", "ml"]
-          +unique_key: "game_id"
-          +indexes:
-            - columns: ['game_id']
-            - columns: ['game_date']
-            - columns: ['home_team_id']
-            - columns: ['away_team_id']
-            - columns: ['season_year']
-          +partition_by:
-            - field: 'season_year'
-              data_type: 'varchar'
-            - field: 'game_date'
-              data_type: 'date'
-              granularity: 'month'
-          +cluster_by: ['season_year', 'game_date']
+        +tags: ["features"]
 
+        game_context:
+          +tags: ["game_context", "features"]
+
+        play_by_play:
+          +materialized: incremental
+          +tags: ["play_by_play", "features"]
+        
+        player_level:
+          +materialized: incremental
+          +tags: ["player_level", "features"]
+
+    # Training models
     training:
       +materialized: table
       +schema: training
-
+      +tags: ["training"]

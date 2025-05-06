@@ -1,0 +1,223 @@
+{
+  "schema": "intermediate",
+  "table": "int_player_scoring_features",
+  "columns": [
+    {
+      "column_name": "player_game_key",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "player_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "player_name",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "game_id",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "team_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "season_year",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "game_date",
+      "data_type": "date",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "date"
+    },
+    {
+      "column_name": "pts",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "is_30_plus_game",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "is_40_plus_game",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "is_new_career_high",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "career_high_pts_to_date",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "career_games_to_date",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "days_since_last_30_plus_game",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "days_since_last_40_plus_game",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "thirty_plus_games_career",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "forty_plus_games_career",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "thirty_plus_games_this_season",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "forty_plus_games_this_season",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "thirty_plus_games_last_season",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "forty_plus_games_last_season",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    },
+    {
+      "column_name": "avg_usage_in_30_plus_career",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "avg_usage_in_40_plus_career",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "avg_usage_0_to_9_pts",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "avg_usage_10_to_19_pts",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "avg_usage_20_to_29_pts",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "career_ppg_to_date",
+      "data_type": "bigint",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int8"
+    }
+  ],
+  "export_date": "2025-05-04T21:32:45.032914"
+}

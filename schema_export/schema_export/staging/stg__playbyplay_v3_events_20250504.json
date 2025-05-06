@@ -1,0 +1,215 @@
+{
+  "schema": "staging",
+  "table": "stg__playbyplay_v3_events",
+  "columns": [
+    {
+      "column_name": "game_id",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "event_number",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "clock",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "period",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "team_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "team_tricode",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "player_id",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "player_name",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "shot_x",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "shot_y",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "shot_distance",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "shot_result",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "is_field_goal",
+      "data_type": "boolean",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "bool"
+    },
+    {
+      "column_name": "shot_value",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "home_score",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "away_score",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "points",
+      "data_type": "integer",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "int4"
+    },
+    {
+      "column_name": "location",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "description",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "action_type",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "sub_type",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "action_id",
+      "data_type": "character varying",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "varchar"
+    },
+    {
+      "column_name": "shot_zone",
+      "data_type": "text",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "text"
+    },
+    {
+      "column_name": "seconds_remaining_in_period",
+      "data_type": "numeric",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "numeric"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "timestamptz"
+    },
+    {
+      "column_name": "updated_at",
+      "data_type": "timestamp with time zone",
+      "character_maximum_length": null,
+      "column_default": null,
+      "is_nullable": "YES",
+      "udt_name": "timestamptz"
+    }
+  ],
+  "export_date": "2025-05-04T21:32:45.043913"
+}

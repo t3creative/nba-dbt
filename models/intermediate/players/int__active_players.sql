@@ -20,17 +20,17 @@ with player_logs as (
 active_players as (
     select 
         player_id,
-        player_name as full_name,
+        player_name,
         team_id,
         team_name,
         team_tricode,
         row_number() over (partition by player_id order by game_date desc) as rn
     from player_logs
-)
+)   
 
 select
     player_id,
-    full_name,
+    player_name,
     team_id,
     team_name,
     team_tricode,

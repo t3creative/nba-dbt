@@ -1,0 +1,53 @@
+version: 2
+
+models:
+  - name: stg__player_props
+    description: Standardized player prop betting lines with cleaned data types and calculated implied probabilities
+    config:
+      alias: betting__player_props
+    columns:
+      - name: prop_id
+        description: Unique identifier for each prop line
+        tests:
+          - unique
+          - not_null
+      - name: offer_id
+        description: Original offer identifier from the source
+      - name: event_id
+        description: Identifier for the game event
+      - name: player
+        description: Player name
+        tests:
+          - not_null
+      - name: player_slug
+        description: URL-friendly player identifier
+      - name: team
+        description: Team abbreviation
+      - name: market_id
+        description: Identifier for the betting market type
+      - name: market
+        description: Description of the betting market (e.g., Points O/U, Rebounds O/U)
+        tests:
+          - not_null
+      - name: line
+        description: The betting line (over/under value)
+        tests:
+          - not_null
+      - name: sportsbook
+        description: Name of the sportsbook offering the line
+        tests:
+          - not_null
+      - name: over_odds
+        description: American odds for the over bet
+      - name: under_odds
+        description: American odds for the under bet
+      - name: over_implied_probability
+        description: Calculated implied probability for the over bet
+      - name: under_implied_probability
+        description: Calculated implied probability for the under bet
+      - name: game_date
+        description: Date of the game
+        tests:
+          - not_null
+      - name: source_file
+        description: Original file path where the data was sourced from 

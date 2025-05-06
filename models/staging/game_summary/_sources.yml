@@ -1,10 +1,10 @@
 version: 2
 
 sources:
-  - name: raw_boxscores # Changed from nba_data_raw to reflect content
-    description: Raw boxscore related tables from the NBA data source.
-    database: nba_data # Assuming your database name is 'nba_data'
-    schema: raw # The schema where the raw tables reside
+  - name: nba_api
+    description: "Raw boxscore related tables from the NBA data source."
+    database: nba_data
+    schema: raw 
     tables:
       - name: boxscore_game_info
         description: Contains basic game information like date and attendance.

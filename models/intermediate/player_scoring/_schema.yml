@@ -2,7 +2,7 @@
 version: 2
 
 models:
-  - name: int_player_scoring_features
+  - name: int__player_scoring_features
     description: Final aggregated player scoring features table
     columns:
       - name: player_game_key

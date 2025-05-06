@@ -1,0 +1,352 @@
+schema: staging
+table: stg__schedules
+columns:
+- column_name: game_date_season_id
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: game_id
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: league_id
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: season_year
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_date
+  data_type: date
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: date
+- column_name: game_code
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_status
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: game_status_text
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_sequence
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: game_date_est
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_time_est
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_date_time_est
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_date_utc
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_time_utc
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_date_time_utc
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: day_of_week
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: month_num
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: week_number
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: week_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: if_necessary
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: series_game_number
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_label
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_sub_label
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: series_text
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: game_subtype
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: is_neutral
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: arena_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: arena_city
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: arena_state
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: postponed_status
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: branch_link
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: home_team_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: home_team_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: home_team_city
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: home_team_tricode
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: home_team_slug
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: home_team_wins
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: home_team_losses
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: home_team_score
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: home_team_seed
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: home_team_time
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: away_team_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: away_team_name
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: away_team_city
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: away_team_tricode
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: away_team_slug
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: away_team_wins
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: away_team_losses
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: away_team_score
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: away_team_seed
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: away_team_time
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: national_broadcaster_scope
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: national_broadcaster_media
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: national_broadcaster_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: national_broadcaster_display
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: national_broadcaster_abbreviation
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: updated_at
+  data_type: timestamp without time zone
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: timestamp
+- column_name: created_at
+  data_type: timestamp with time zone
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: timestamptz
+export_date: '2025-05-04T21:32:44.858894'

@@ -1,5 +1,0 @@
-player_matchup_level
-player_season_level
-team_game_level
-team_matcup_level
-team_season_level

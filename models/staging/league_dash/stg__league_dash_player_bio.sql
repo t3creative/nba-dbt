@@ -43,7 +43,7 @@ latest_player_data as (
         player_id,
         first_name,
         last_name,
-        player_name as full_name,
+        player_name,
         -- Position is not available in this table, set to NULL
         NULL as position,
         -- Height information
@@ -98,7 +98,7 @@ select
     player_id,
     first_name,
     last_name,
-    full_name,
+    player_name,
     position,
     height,
     height_inches,

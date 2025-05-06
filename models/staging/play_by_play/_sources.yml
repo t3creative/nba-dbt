@@ -1,0 +1,47 @@
+version: 2
+
+sources:
+  - name: nba_api
+    description: "Raw play-by-play data"
+    database: nba_data
+    schema: raw
+    tables:
+      - name: playbyplay_v2_events
+        description: >
+          Version 2 of the NBA play-by-play data with detailed event tracking.
+          Contains information about game events including shots, fouls, timeouts, etc.
+        columns:
+          - name: GAME_ID
+            description: Unique identifier for the game
+            tests:
+              - not_null
+          - name: EVENTNUM
+            description: Sequential number of the event within the game
+            tests:
+              - not_null
+          - name: EVENTMSGTYPE
+            description: Numeric code representing the type of event
+          - name: PERIOD
+            description: Game period (quarter) when the event occurred
+            tests:
+              - not_null
+
+      - name: playbyplay_v3_events
+        description: >
+          Version 3 of the NBA play-by-play data with enhanced event tracking.
+          Includes more detailed shot information and scoring data.
+        columns:
+          - name: gameId
+            description: Unique identifier for the game
+            tests:
+              - not_null
+          - name: actionNumber
+            description: Sequential number of the action within the game
+            tests:
+              - not_null
+          - name: period
+            description: Game period (quarter) when the action occurred
+            tests:
+              - not_null
+          - name: shotDistance
+            description: Distance of shot from basket in feet (when applicable)

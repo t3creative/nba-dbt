@@ -1,0 +1,40 @@
+schema: staging
+table: stg__game_officials
+columns:
+- column_name: game_official_key
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: game_id
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: official_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: first_name
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: last_name
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: jersey_num
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+export_date: '2025-05-04T21:32:44.755383'

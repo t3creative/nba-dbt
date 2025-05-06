@@ -1,0 +1,10 @@
+version: 2
+
+sources:
+  - name: nba_api
+    description: Raw teams data from the NBA data source.
+    database: nba_data
+    schema: raw
+    tables:
+      - name: teams
+        description: Contains basic team information including team identifiers, names, locations, and founding information. 

@@ -15,7 +15,7 @@ models:
         description: "Player's first name"
       - name: last_name
         description: "Player's last name"
-      - name: full_name
+      - name: player_name
         description: "Player's full name"
       - name: position
         description: "Player's position"

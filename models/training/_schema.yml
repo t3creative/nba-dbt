@@ -1,0 +1,433 @@
+version: 2
+
+models:
+  - name: player_game_level
+    description: "Player game level statistical features with rolling averages from traditional box scores"
+    columns:
+      - name: player_game_key
+        description: "Unique identifier for player-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      - name: game_date
+        description: "Date of the game"
+        tests:
+          - not_null
+      - name: season_year
+        description: "NBA season year"
+      - name: team_tricode
+        description: "Three letter team code"
+        
+      # Current game stats
+      - name: pts
+        description: "Points scored in the current game"
+      - name: min
+        description: "Minutes played in the current game"
+      - name: fgm
+        description: "Field goals made in the current game"
+      - name: fga
+        description: "Field goals attempted in the current game"
+      - name: fg_pct
+        description: "Field goal percentage in the current game"
+      - name: fg3m
+        description: "Three pointers made in the current game"
+      - name: fg3a
+        description: "Three pointers attempted in the current game"
+      - name: fg3_pct
+        description: "Three point percentage in the current game"
+      - name: ftm
+        description: "Free throws made in the current game"
+      - name: fta
+        description: "Free throws attempted in the current game"
+      - name: ft_pct
+        description: "Free throw percentage in the current game"
+      - name: off_reb
+        description: "Offensive rebounds in the current game"
+      - name: def_reb
+        description: "Defensive rebounds in the current game"
+      - name: reb
+        description: "Total rebounds in the current game"
+      - name: ast
+        description: "Assists in the current game"
+      - name: stl
+        description: "Steals in the current game"
+      - name: blk
+        description: "Blocks in the current game"
+      - name: tov
+        description: "Turnovers in the current game"
+      - name: pf
+        description: "Personal fouls in the current game"
+      - name: plus_minus
+        description: "Plus/minus in the current game"
+        
+      # 5-game rolling averages
+      - name: pts_rolling_avg_5
+        description: "5-game rolling average of points scored"
+      - name: min_rolling_avg_5
+        description: "5-game rolling average of minutes played"
+      - name: fgm_rolling_avg_5
+        description: "5-game rolling average of field goals made"
+      - name: fga_rolling_avg_5
+        description: "5-game rolling average of field goals attempted"
+      - name: fg_pct_rolling_avg_5
+        description: "5-game rolling average of field goal percentage (properly calculated from totals)"
+      - name: fg3m_rolling_avg_5
+        description: "5-game rolling average of three pointers made"
+      - name: fg3a_rolling_avg_5
+        description: "5-game rolling average of three pointers attempted"
+      - name: fg3_pct_rolling_avg_5
+        description: "5-game rolling average of three point percentage (properly calculated from totals)"
+      - name: ftm_rolling_avg_5
+        description: "5-game rolling average of free throws made"
+      - name: fta_rolling_avg_5
+        description: "5-game rolling average of free throws attempted"
+      - name: ft_pct_rolling_avg_5
+        description: "5-game rolling average of free throw percentage (properly calculated from totals)"
+      - name: off_reb_rolling_avg_5
+        description: "5-game rolling average of offensive rebounds"
+      - name: def_reb_rolling_avg_5
+        description: "5-game rolling average of defensive rebounds"
+      - name: reb_rolling_avg_5
+        description: "5-game rolling average of total rebounds"
+      - name: ast_rolling_avg_5
+        description: "5-game rolling average of assists"
+      - name: stl_rolling_avg_5
+        description: "5-game rolling average of steals"
+      - name: blk_rolling_avg_5
+        description: "5-game rolling average of blocks"
+      - name: tov_rolling_avg_5
+        description: "5-game rolling average of turnovers"
+      - name: pf_rolling_avg_5
+        description: "5-game rolling average of personal fouls"
+      - name: plus_minus_rolling_avg_5
+        description: "5-game rolling average of plus/minus"
+        
+      # 10-game rolling averages
+      - name: pts_rolling_avg_10
+        description: "10-game rolling average of points scored"
+      - name: min_rolling_avg_10
+        description: "10-game rolling average of minutes played"
+      - name: fgm_rolling_avg_10
+        description: "10-game rolling average of field goals made"
+      - name: fga_rolling_avg_10
+        description: "10-game rolling average of field goals attempted"
+      - name: fg_pct_rolling_avg_10
+        description: "10-game rolling average of field goal percentage (properly calculated from totals)"
+      - name: fg3m_rolling_avg_10
+        description: "10-game rolling average of three pointers made"
+      - name: fg3a_rolling_avg_10
+        description: "10-game rolling average of three pointers attempted"
+      - name: fg3_pct_rolling_avg_10
+        description: "10-game rolling average of three point percentage (properly calculated from totals)"
+      - name: ftm_rolling_avg_10
+        description: "10-game rolling average of free throws made"
+      - name: fta_rolling_avg_10
+        description: "10-game rolling average of free throws attempted"
+      - name: ft_pct_rolling_avg_10
+        description: "10-game rolling average of free throw percentage (properly calculated from totals)"
+      - name: off_reb_rolling_avg_10
+        description: "10-game rolling average of offensive rebounds"
+      - name: def_reb_rolling_avg_10
+        description: "10-game rolling average of defensive rebounds"
+      - name: reb_rolling_avg_10
+        description: "10-game rolling average of total rebounds"
+      - name: ast_rolling_avg_10
+        description: "10-game rolling average of assists"
+      - name: stl_rolling_avg_10
+        description: "10-game rolling average of steals"
+      - name: blk_rolling_avg_10
+        description: "10-game rolling average of blocks"
+      - name: tov_rolling_avg_10
+        description: "10-game rolling average of turnovers"
+      - name: pf_rolling_avg_10
+        description: "10-game rolling average of personal fouls"
+      - name: plus_minus_rolling_avg_10
+        description: "10-game rolling average of plus/minus"
+        
+      # 15-game rolling averages
+      - name: pts_rolling_avg_15
+        description: "15-game rolling average of points scored"
+      - name: min_rolling_avg_15
+        description: "15-game rolling average of minutes played"
+      - name: fgm_rolling_avg_15
+        description: "15-game rolling average of field goals made"
+      - name: fga_rolling_avg_15
+        description: "15-game rolling average of field goals attempted"
+      - name: fg_pct_rolling_avg_15
+        description: "15-game rolling average of field goal percentage (properly calculated from totals)"
+      - name: fg3m_rolling_avg_15
+        description: "15-game rolling average of three pointers made"
+      - name: fg3a_rolling_avg_15
+        description: "15-game rolling average of three pointers attempted"
+      - name: fg3_pct_rolling_avg_15
+        description: "15-game rolling average of three point percentage (properly calculated from totals)"
+      - name: ftm_rolling_avg_15
+        description: "15-game rolling average of free throws made"
+      - name: fta_rolling_avg_15
+        description: "15-game rolling average of free throws attempted"
+      - name: ft_pct_rolling_avg_15
+        description: "15-game rolling average of free throw percentage (properly calculated from totals)"
+      - name: off_reb_rolling_avg_15
+        description: "15-game rolling average of offensive rebounds"
+      - name: def_reb_rolling_avg_15
+        description: "15-game rolling average of defensive rebounds"
+      - name: reb_rolling_avg_15
+        description: "15-game rolling average of total rebounds"
+      - name: ast_rolling_avg_15
+        description: "15-game rolling average of assists"
+      - name: stl_rolling_avg_15
+        description: "15-game rolling average of steals"
+      - name: blk_rolling_avg_15
+        description: "15-game rolling average of blocks"
+      - name: tov_rolling_avg_15
+        description: "15-game rolling average of turnovers"
+      - name: pf_rolling_avg_15
+        description: "15-game rolling average of personal fouls"
+      - name: plus_minus_rolling_avg_15
+        description: "15-game rolling average of plus/minus"
+        
+      # 20-game rolling averages
+      - name: pts_rolling_avg_20
+        description: "20-game rolling average of points scored"
+      - name: min_rolling_avg_20
+        description: "20-game rolling average of minutes played"
+      - name: fgm_rolling_avg_20
+        description: "20-game rolling average of field goals made"
+      - name: fga_rolling_avg_20
+        description: "20-game rolling average of field goals attempted"
+      - name: fg_pct_rolling_avg_20
+        description: "20-game rolling average of field goal percentage (properly calculated from totals)"
+      - name: fg3m_rolling_avg_20
+        description: "20-game rolling average of three pointers made"
+      - name: fg3a_rolling_avg_20
+        description: "20-game rolling average of three pointers attempted"
+      - name: fg3_pct_rolling_avg_20
+        description: "20-game rolling average of three point percentage (properly calculated from totals)"
+      - name: ftm_rolling_avg_20
+        description: "20-game rolling average of free throws made"
+      - name: fta_rolling_avg_20
+        description: "20-game rolling average of free throws attempted"
+      - name: ft_pct_rolling_avg_20
+        description: "20-game rolling average of free throw percentage (properly calculated from totals)"
+      - name: off_reb_rolling_avg_20
+        description: "20-game rolling average of offensive rebounds"
+      - name: def_reb_rolling_avg_20
+        description: "20-game rolling average of defensive rebounds"
+      - name: reb_rolling_avg_20
+        description: "20-game rolling average of total rebounds"
+      - name: ast_rolling_avg_20
+        description: "20-game rolling average of assists"
+      - name: stl_rolling_avg_20
+        description: "20-game rolling average of steals"
+      - name: blk_rolling_avg_20
+        description: "20-game rolling average of blocks"
+      - name: tov_rolling_avg_20
+        description: "20-game rolling average of turnovers"
+      - name: pf_rolling_avg_20
+        description: "20-game rolling average of personal fouls"
+      - name: plus_minus_rolling_avg_20
+        description: "20-game rolling average of plus/minus"
+        
+      # Season-to-date averages
+      - name: pts_season_avg
+        description: "Season-to-date average of points scored"
+      - name: min_season_avg
+        description: "Season-to-date average of minutes played"
+      - name: fgm_season_avg
+        description: "Season-to-date average of field goals made"
+      - name: fga_season_avg
+        description: "Season-to-date average of field goals attempted"
+      - name: fg_pct_season_avg
+        description: "Season-to-date average of field goal percentage (properly calculated from totals)"
+      - name: fg3m_season_avg
+        description: "Season-to-date average of three pointers made"
+      - name: fg3a_season_avg
+        description: "Season-to-date average of three pointers attempted"
+      - name: fg3_pct_season_avg
+        description: "Season-to-date average of three point percentage (properly calculated from totals)"
+      - name: ftm_season_avg
+        description: "Season-to-date average of free throws made"
+      - name: fta_season_avg
+        description: "Season-to-date average of free throws attempted"
+      - name: ft_pct_season_avg
+        description: "Season-to-date average of free throw percentage (properly calculated from totals)"
+      - name: off_reb_season_avg
+        description: "Season-to-date average of offensive rebounds"
+      - name: def_reb_season_avg
+        description: "Season-to-date average of defensive rebounds"
+      - name: reb_season_avg
+        description: "Season-to-date average of total rebounds"
+      - name: ast_season_avg
+        description: "Season-to-date average of assists"
+      - name: stl_season_avg
+        description: "Season-to-date average of steals"
+      - name: blk_season_avg
+        description: "Season-to-date average of blocks"
+      - name: tov_season_avg
+        description: "Season-to-date average of turnovers"
+      - name: pf_season_avg
+        description: "Season-to-date average of personal fouls"
+      - name: plus_minus_season_avg
+        description: "Season-to-date average of plus/minus"
+
+  - name: player_prop_prediction
+    description: >
+      Comprehensive ML-ready dataset combining player prop betting data with player performance statistics,
+      team context, and derived features for training predictive models.
+    config:
+      tags: ['betting', 'player_props', 'ml', 'training']
+    columns:
+      - name: prop_id
+        description: Unique identifier for each player prop
+        tests:
+          - unique
+          - not_null
+      
+      - name: player_id
+        description: Unique identifier for the player
+        tests:
+          - not_null
+      
+      - name: market_id
+        description: Unique identifier for the betting market
+        tests:
+          - not_null
+      
+      - name: market
+        description: Description of the betting market (e.g., Points O/U, Rebounds O/U)
+        tests:
+          - not_null
+      
+      - name: stat_name
+        description: Corresponding statistical category for the market (e.g., PTS, REB, AST)
+      
+      - name: line
+        description: The betting line for the prop
+        tests:
+          - not_null
+      
+      - name: over_odds
+        description: American odds for the over bet
+      
+      - name: under_odds
+        description: American odds for the under bet
+      
+      - name: fair_over_prob
+        description: Implied probability for over (with vig removed)
+      
+      - name: fair_under_prob
+        description: Implied probability for under (with vig removed)
+      
+      - name: vig_percentage
+        description: Bookmaker margin percentage
+      
+      - name: game_date
+        description: Date of the game
+        tests:
+          - not_null
+      
+      - name: game_id
+        description: Unique identifier for the game
+        tests:
+          - not_null
+      
+      - name: is_home
+        description: Whether player's team is the home team (true/false)
+      
+      - name: opponent_team_id
+        description: Identifier for the opposing team
+      
+      - name: actual_stat_value
+        description: Actual statistical performance of the player in the game
+      
+      - name: outcome
+        description: Result of the bet (OVER, UNDER, PUSH, or NULL for future games)
+      
+      - name: historical_avg_line
+        description: Player's historical average line for this market
+      
+      - name: historical_stddev_line
+        description: Standard deviation of player's historical lines
+      
+      - name: market_position
+        description: Position of player's average line relative to market distribution
+      
+      - name: avg_abs_line_change
+        description: Average absolute change in line between consecutive games
+      
+      - name: line_volatility_class
+        description: Classification of line volatility (Very Stable to Highly Volatile)
+      
+      - name: line_direction_bias
+        description: Tendency for lines to increase or decrease over time
+      
+      - name: line_predictability_score
+        description: Score indicating how predictable line values are (0-100)
+      
+      - name: potential_edge
+        description: Assessment of potential betting value from sportsbook patterns
+      
+      - name: last_5_avg
+        description: Player's average for this stat over last 5 games
+      
+      - name: last_10_avg
+        description: Player's average for this stat over last 10 games
+      
+      - name: season_avg
+        description: Player's season average for this stat
+      
+      - name: home_avg
+        description: Player's average for this stat in home games
+      
+      - name: away_avg
+        description: Player's average for this stat in away games
+      
+      - name: opponent_avg_allowed
+        description: Opponent team's average allowed for this stat
+      
+      - name: defensive_rating
+        description: Opponent team's defensive rating
+      
+      - name: pace_factor
+        description: Opponent team's pace factor
+      
+      - name: line_vs_last_5_avg
+        description: Difference between line and player's last 5 game average
+      
+      - name: line_vs_last_10_avg
+        description: Difference between line and player's last 10 game average
+      
+      - name: line_vs_season_avg
+        description: Difference between line and player's season average
+      
+      - name: home_away_adjusted_line
+        description: Line adjusted for home/away performance differential
+      
+      - name: line_vs_opponent_avg
+        description: Difference between line and opponent's average allowed
+      
+      - name: line_z_score
+        description: Z-score of line relative to player's historical lines
+      
+      - name: value_rating
+        description: Rating indicating potential betting value based on historical performance
+      
+      - name: consistency_score
+        description: Score indicating player's consistency for this stat (0-1)
+      
+      - name: over_label
+        description: Binary target variable for classification models (1=OVER, 0=UNDER)
+      
+      - name: line_difference
+        description: Target variable for regression models (actual_stat_value - line)
+      
+      - name: generated_at
+        description: Timestamp when this training data was generated 

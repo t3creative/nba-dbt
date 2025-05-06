@@ -1,0 +1,45 @@
+version: 2
+
+models:
+  - name: stg__teams
+    description: Staging model for NBA team information.
+    columns:
+      - name: team_key
+        description: Surrogate key generated from team_id.
+        tests:
+          - unique
+          - not_null
+      - name: team_id
+        description: Unique identifier for the team.
+        tests:
+          - not_null
+      - name: team_full_name
+        description: Full name of the team.
+        tests:
+          - not_null
+      - name: team_tricode
+        description: Three-letter abbreviation for the team.
+        tests:
+          - not_null
+      - name: team_nickname
+        description: Team nickname (e.g., Warriors, Lakers).
+        tests:
+          - not_null
+      - name: team_city
+        description: City where the team is located.
+        tests:
+          - not_null
+      - name: team_state
+        description: State where the team is located.
+        tests:
+          - not_null
+      - name: year_founded
+        description: Year the team was founded.
+        tests:
+          - not_null
+      - name: championship_years
+        description: JSON array of years when the team won championships.
+      - name: league
+        description: League the team belongs to (e.g., NBA).
+        tests:
+          - not_null 

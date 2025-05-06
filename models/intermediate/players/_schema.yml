@@ -12,7 +12,7 @@ models:
           - unique
           - not_null
       
-      - name: full_name
+      - name: player_name
         description: "Player's full name"
         tests:
           - not_null

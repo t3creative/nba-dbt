@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_player_career_stats
+  - name: int__player_career_stats
     description: Tracks running career statistics for players including points, games played, and career highs
     columns:
       - name: player_game_key
@@ -44,7 +44,7 @@ models:
       - name: is_new_career_high
         description: Flag indicating if this game set a new career high in points (1=yes, 0=no)
 
-  - name: int_player_milestone_games
+  - name: int__player_milestone_games
     description: Records milestone scoring games (30+, 40+ points) and related statistical aggregations
     columns:
       - name: player_game_key
@@ -89,7 +89,7 @@ models:
       - name: latest_40_plus_date
         description: Date of the player's most recent 40+ point game
 
-  - name: int_player_usage_patterns
+  - name: int__player_usage_patterns
     description: Aggregates player usage statistics across different scoring thresholds and patterns per game
     columns:
       - name: player_game_key

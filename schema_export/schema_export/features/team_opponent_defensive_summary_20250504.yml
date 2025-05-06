@@ -1,0 +1,58 @@
+schema: features
+table: team_opponent_defensive_summary
+columns:
+- column_name: team_season_key
+  data_type: text
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: text
+- column_name: team_id
+  data_type: integer
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: int4
+- column_name: season_year
+  data_type: character varying
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: varchar
+- column_name: season_last_game_date
+  data_type: date
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: date
+- column_name: avg_def_rating
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: avg_opp_pts_paint
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: avg_def_reb_pct
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: avg_cont_2pt_per_game
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+- column_name: avg_blk_per_game
+  data_type: numeric
+  character_maximum_length: null
+  column_default: null
+  is_nullable: 'YES'
+  udt_name: numeric
+export_date: '2025-05-04T21:32:44.449712'

@@ -4,7 +4,7 @@ WITH source AS (
     SELECT
         *
     FROM
-        {{ source('raw_boxscores', 'boxscore_last_meeting') }}
+        {{ source('nba_api', 'boxscore_last_meeting') }}
 ),
 
 renamed AS (

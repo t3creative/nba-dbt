@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int_game_matchups
+  - name: int__game_matchups
     description: "Intermediate model that parses matchup strings to identify home and away teams for each game"
     config:
       tags: ['game_context', 'intermediate']
@@ -45,7 +45,7 @@ models:
       - name: created_at
         description: "Timestamp of when the record was created"
 
-  - name: int_game_context
+  - name: int__game_context
     description: "Intermediate model providing game context information including rest days and team performance"
     config:
       tags: ['game_context', 'intermediate']

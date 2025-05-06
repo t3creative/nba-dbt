@@ -2,6 +2,7 @@ version: 2
 
 sources:
   - name: nba_api
+    description: "Raw player game log statistics"
     database: nba_data
     schema: raw
     tables:

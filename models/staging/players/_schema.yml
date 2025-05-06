@@ -1,0 +1,73 @@
+version: 2
+
+models:
+  - name: stg__player_index
+    description: Staging model for NBA player information including personal details, team affiliations, and career statistics.
+    columns:
+      - name: player_key
+        description: Surrogate key generated from player_id.
+        tests:
+          - unique
+          - not_null
+      - name: player_id
+        description: Unique identifier for the player.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique identifier for the team the player is associated with.
+        tests:
+          - not_null
+      - name: player_first_name
+        description: First name of the player.
+        tests:
+          - not_null
+      - name: player_last_name
+        description: Last name of the player.
+        tests:
+          - not_null
+      - name: player_slug
+        description: URL-friendly identifier for the player.
+        tests:
+          - not_null
+      - name: team_slug
+        description: URL-friendly identifier for the team.
+      - name: is_defunct
+        description: Flag indicating if the team is no longer active.
+      - name: team_city
+        description: City where the team is located.
+      - name: team_name
+        description: Name of the team.
+      - name: team_abbreviation
+        description: Three-letter abbreviation for the team.
+      - name: jersey_number
+        description: Player's jersey number.
+      - name: position
+        description: Player's position (G, F, C, G-F, etc.).
+      - name: height
+        description: Player's height (in feet-inches format).
+      - name: weight
+        description: Player's weight (in pounds).
+      - name: college
+        description: College the player attended before entering the NBA.
+      - name: country
+        description: Player's country of origin.
+      - name: draft_year
+        description: Year the player was drafted.
+      - name: draft_round
+        description: Round in which the player was drafted.
+      - name: draft_number
+        description: Pick number at which the player was drafted.
+      - name: roster_status
+        description: Player's roster status code.
+      - name: from_year
+        description: First year of the player's career.
+      - name: to_year
+        description: Last year of the player's career (or current year for active players).
+      - name: pts
+        description: Player's average points per game for the stats timeframe.
+      - name: reb
+        description: Player's average rebounds per game for the stats timeframe.
+      - name: ast
+        description: Player's average assists per game for the stats timeframe.
+      - name: stats_timeframe
+        description: Timeframe for the stats (e.g., Season, Career). 
