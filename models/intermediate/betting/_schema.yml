@@ -65,10 +65,18 @@ models:
         tests:
           - not_null
       
-      - name: market
-        description: Description of the betting market (e.g., Points, Rebounds, Assists)
+      - name: market_original
+        description: Original market name from the data source (e.g., "Points O/U", "Rebounds O/U")
         tests:
           - not_null
+      
+      - name: market
+        description: Standardized market code (e.g., "PTS", "REB", "AST", "PTS+AST")
+        tests:
+          - not_null
+      
+      - name: is_combined_stat
+        description: Boolean flag indicating if this is a combined stat market (e.g., PTS+AST, PTS+REB+AST)
       
       - name: line
         description: The betting line value

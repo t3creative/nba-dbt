@@ -274,7 +274,7 @@ player_form as (
         null as away_avg,
         null as last_vs_team_avg,
         null as injury_status
-    from {{ ref('int__player_rolling_stats') }} rs
+    from {{ ref('player_rolling_stats') }} rs
     cross join (select distinct market_id, market from player_props) msm
     where rs.game_date >= current_date - interval '730 days'
 ),

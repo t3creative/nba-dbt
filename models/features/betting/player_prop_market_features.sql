@@ -77,8 +77,10 @@ player_market_stats as (
         (max(game_date) - min(game_date))::integer as days_in_market,
         
         -- Most recent values
-        array_agg(line order by game_date desc)[1:3] as recent_lines,
-        array_agg(sportsbook order by game_date desc)[1:3] as recent_books,
+        (array_agg(line order by game_date desc))[1] as most_recent_line,
+        (array_agg(line order by game_date desc))[2] as second_recent_line,
+        (array_agg(line order by game_date desc))[3] as third_recent_line,
+        (array_agg(sportsbook order by game_date desc))[1] as most_recent_book,
         
         -- Generate feature key
         {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id']) }} as feature_key
@@ -195,11 +197,11 @@ final as (
         -- Market context
         ms.player_count as market_player_count,
         
-        -- Recent values (as string to store in table)
-        pms.recent_lines[1] as most_recent_line,
-        pms.recent_lines[2] as second_recent_line,
-        pms.recent_lines[3] as third_recent_line,
-        pms.recent_books[1] as most_recent_book,
+        -- Recent values
+        pms.most_recent_line,
+        pms.second_recent_line,
+        pms.third_recent_line,
+        pms.most_recent_book,
         
         -- Feature metadata
         current_date as feature_date

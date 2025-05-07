@@ -1,6 +1,6 @@
 {
   "schema": "intermediate",
-  "table": "int__player_rolling_stats",
+  "table": "player_rolling_stats",
   "columns": [
     {
       "column_name": "player_game_key",

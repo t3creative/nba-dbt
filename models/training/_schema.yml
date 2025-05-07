@@ -431,3 +431,148 @@ models:
       
       - name: generated_at
         description: Timestamp when this training data was generated 
+
+  - name: training_player_props
+    description: "Training-ready dataset for NBA player proposition betting models that combines market data with player, matchup, team, and game context features. Supports multiple prop markets (PTS, REB, AST) in one long-format table."
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - game_id
+            - player_id
+            - prop_stat
+    columns:
+      - name: game_id
+        description: "Unique identifier for the game"
+        tests:
+          - not_null
+      
+      - name: player_id
+        description: "Unique identifier for the player"
+        tests:
+          - not_null
+      
+      - name: prop_stat
+        description: "Statistical category for the proposition bet (e.g., PTS, REB, AST)"
+        tests:
+          - not_null
+      
+      - name: game_date
+        description: "Date of the game, used for incremental loads and time-based validation splits"
+        tests:
+          - not_null
+      
+      # Market features
+      - name: line
+        description: "The proposition line value set by sportsbooks"
+      
+      - name: closing_odds_dec
+        description: "Closing decimal odds for the proposition"
+      
+      - name: over_implied_prob
+        description: "Implied probability of exceeding the line based on over odds"
+      
+      - name: under_implied_prob
+        description: "Implied probability of falling short of the line based on under odds"
+      
+      - name: vig_percentage
+        description: "Percentage of vig (house edge) in the market"
+      
+      # Player features - dynamically selected based on prop_stat
+      - name: rolling_5_avg
+        description: "Player's 5-game rolling average for the relevant proposition statistic (dynamically selected based on prop_stat)"
+      
+      - name: rolling_10_avg
+        description: "Player's 10-game rolling average for the relevant proposition statistic (dynamically selected based on prop_stat)"
+      
+      - name: season_avg
+        description: "Player's season average for the relevant proposition statistic (dynamically selected based on prop_stat)"
+      
+      - name: pct_of_team_stat
+        description: "Percentage of team's total for the relevant statistic (points, rebounds, or assists based on prop_stat)"
+      
+      - name: usage_pct
+        description: "Player's usage percentage, indicating the percentage of team plays used by the player while on court"
+      
+      - name: ts_pct
+        description: "True shooting percentage, measuring shooting efficiency accounting for field goals, three-pointers, and free throws"
+      
+      # Matchup features
+      - name: defensive_field_goal_diff
+        description: "Difference between the offensive player's season avg FG% and their FG% when guarded by this defender"
+      
+      - name: matchup_points_allowed_per_100_poss
+        description: "Points the defender allowed per 100 possessions guarding the offensive player"
+      
+      - name: offensive_matchup_advantage
+        description: "Difference between the offensive player's points per 100 possessions in this matchup vs. their season average"
+      
+      - name: partial_poss
+        description: "Number of possessions the offensive player and defender were matched up together"
+      
+      # Team defensive features
+      - name: opp_def_rating
+        description: "Opponent team's defensive rating (points allowed per 100 possessions)"
+      
+      - name: opp_eff_fg_pct
+        description: "Opponent team's allowed effective field goal percentage"
+      
+      - name: opp_pts_in_paint_allowed
+        description: "Average points in the paint allowed by the opponent team"
+      
+      - name: opp_deflections_per_game
+        description: "Average number of deflections by the opponent team per game"
+      
+      - name: opp_contested_2pt_per_game
+        description: "Average number of contested 2-point shots by the opponent team per game"
+      
+      - name: opp_contested_3pt_per_game
+        description: "Average number of contested 3-point shots by the opponent team per game"
+      
+      # Game context features
+      - name: rest_advantage
+        description: "Rest day advantage/disadvantage compared to opponent (home_rest_days - away_rest_days)"
+      
+      - name: home_court_advantage_factor
+        description: "Calculated factor representing strength of home court advantage"
+      
+      - name: season_stage
+        description: "Stage of the season (Early Season, Mid Season, Late Season, Playoffs)"
+      
+      - name: win_pct_diff_last_10
+        description: "Difference in win percentage between teams over last 10 games"
+      
+      - name: home_team_streak
+        description: "Classification of home team's current form (Hot Streak, Cold Streak, Neutral)"
+      
+      - name: away_team_streak
+        description: "Classification of away team's current form (Hot Streak, Cold Streak, Neutral)"
+      
+      # Pace/style features
+      - name: possessions_per_48
+        description: "Number of possessions per 48 minutes in the game"
+      
+      - name: game_pace_category
+        description: "Categorical pace descriptor (FAST_PACED, MODERATE_FAST, MODERATE, MODERATE_SLOW, SLOW_PACED)"
+      
+      - name: avg_possession_duration
+        description: "Average duration of possessions in seconds"
+      
+      - name: total_possessions
+        description: "Total number of possessions in the game"
+      
+      - name: scoring_efficiency
+        description: "Proportion of possessions that result in scoring"
+      
+      - name: pace_consistency
+        description: "Pattern of game pace (CONSISTENT_PACE, INCREASING_PACE, DECREASING_PACE, VARIABLE_PACE)"
+      
+      # Derived features
+      - name: line_vs_recent_avg
+        description: "Difference between proposition line and player's recent 5-game average for the relevant statistic"
+      
+      # Label columns
+      - name: actual_stat
+        description: "Actual statistic value achieved by the player for the relevant statistic (dynamically selected based on prop_stat)"
+      
+      - name: beat_line_flag
+        description: "Binary classification label: 1 if player exceeded the line, 0 otherwise" 

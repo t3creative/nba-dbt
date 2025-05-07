@@ -1,7 +1,7 @@
 {{
     config(
         schema='features',
-        materialized='table',
+        materialized='incremental',
         tags=['betting', 'features', 'player_props', 'time_series', 'ml'],
         partition_by={
             "field": "feature_date",
