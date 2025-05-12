@@ -32,7 +32,7 @@ with scoring_data as (
         game_date,
         opponent_id,
         pct_pts_in_paint
-    from {{ ref('int__player_boxscores') }}
+    from {{ ref('int__combined_player_boxscore') }}
     {% if is_incremental() %}
     -- Process games newer than the most recent game date in the table
     where game_date > (select max(game_date) from {{ this }})

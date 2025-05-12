@@ -48,7 +48,7 @@ player_outcomes as (
         'PTS' as stat_name,
         pbs.pts as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -60,7 +60,7 @@ player_outcomes as (
         'REB' as stat_name,
         pbs.reb as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -72,7 +72,7 @@ player_outcomes as (
         'AST' as stat_name,
         pbs.ast as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -84,7 +84,7 @@ player_outcomes as (
         'BLK' as stat_name,
         pbs.blk as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -96,7 +96,7 @@ player_outcomes as (
         'STL' as stat_name,
         pbs.stl as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -108,7 +108,7 @@ player_outcomes as (
         'FG3M' as stat_name,
         pbs.fg3m as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -120,7 +120,7 @@ player_outcomes as (
         'PTS_REB' as stat_name,
         pbs.pts + pbs.reb as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -132,7 +132,7 @@ player_outcomes as (
         'PTS_AST' as stat_name,
         pbs.pts + pbs.ast as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -144,7 +144,7 @@ player_outcomes as (
         'REB_AST' as stat_name,
         pbs.reb + pbs.ast as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
     
     union all
@@ -156,7 +156,7 @@ player_outcomes as (
         'PTS_REB_AST' as stat_name,
         pbs.pts + pbs.reb + pbs.ast as stat_value,
         pbs.min as minutes
-    from {{ ref('int__player_boxscores') }} pbs
+    from {{ ref('int__combined_player_boxscore') }} pbs
     where pbs.game_date >= current_date - interval '730 days'
 ),
 

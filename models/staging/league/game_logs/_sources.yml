@@ -1,0 +1,84 @@
+version: 2
+
+sources:
+  - name: nba_api
+    description: "Raw player game log statistics"
+    database: nba_data
+    schema: raw
+    tables:
+
+      - name: league_game_logs
+        description: "Raw league-wide game log statistics"
+        columns:
+          - name: SEASON_ID
+            description: "Season identifier"
+            tests:
+              - not_null
+          - name: TEAM_ID
+            description: "Team identifier"
+            tests:
+              - not_null
+          - name: TEAM_ABBREVIATION
+            description: "Team abbreviation"
+            tests:
+              - not_null
+          - name: TEAM_NAME
+            description: "Team name"
+            tests:
+              - not_null
+          - name: GAME_ID
+            description: "Game identifier"
+            tests:
+              - not_null
+          - name: GAME_DATE
+            description: "Game date"
+            tests:
+              - not_null
+          - name: MATCHUP
+            description: "Game matchup"
+            tests:
+              - not_null
+          - name: WL
+            description: "Win/Loss"
+          - name: MIN
+            description: "Minutes played"
+          - name: FGM
+            description: "Field goals made"
+          - name: FGA
+            description: "Field goals attempted"
+          - name: FG_PCT
+            description: "Field goal percentage"
+          - name: FG3M
+            description: "Three pointers made"
+          - name: FG3A
+            description: "Three pointers attempted"
+          - name: FG3_PCT
+            description: "Three point percentage"
+          - name: FTM
+            description: "Free throws made"
+          - name: FTA
+            description: "Free throws attempted"
+          - name: FT_PCT
+            description: "Free throw percentage"
+          - name: OREB
+            description: "Offensive rebounds"
+          - name: DREB
+            description: "Defensive rebounds"
+          - name: REB
+            description: "Total rebounds"
+          - name: AST
+            description: "Assists"
+          - name: STL
+            description: "Steals"
+          - name: BLK
+            description: "Blocks"
+          - name: TOV
+            description: "Turnovers"
+          - name: PF
+            description: "Personal fouls"
+          - name: PTS
+            description: "Points"
+          - name: PLUS_MINUS
+            description: "Plus/minus"
+          - name: VIDEO_AVAILABLE
+            description: "Video availability flag" 

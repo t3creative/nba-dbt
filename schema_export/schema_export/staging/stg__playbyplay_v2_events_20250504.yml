@@ -55,7 +55,7 @@ columns:
   column_default: null
   is_nullable: 'YES'
   udt_name: varchar
-- column_name: visitor_description
+- column_name: away_description
   data_type: character varying
   character_maximum_length: null
   column_default: null

@@ -1,0 +1,138 @@
+version: 2
+
+models:
+  - name: stg__game_info
+    description: Staging model for basic game information like date and attendance.
+    columns:
+      - name: game_info_key
+        description: Surrogate key generated from game_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+
+  - name: stg__game_summary
+    description: Staging model for game summary details including teams, status, and season.
+    columns:
+      - name: game_summary_key
+        description: Surrogate key generated from game_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+      - name: home_team_id
+        description: Unique identifier for the home team.
+        tests:
+          - not_null
+      - name: away_team_id
+        description: Unique identifier for the away team.
+        tests:
+          - not_null
+
+  - name: stg__inactive_players
+    description: Staging model listing players marked as inactive for a specific game.
+    columns:
+      - name: game_inactive_player_key
+        description: Surrogate key generated from game_id and player_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+      - name: player_id
+        description: Unique identifier for the player.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique identifier for the team the player belongs to for this game.
+        tests:
+          - not_null
+
+  - name: stg__last_meeting
+    description: Staging model detailing the results of the last meeting between the two teams playing in this game.
+    columns:
+      - name: game_last_meeting_key
+        description: Surrogate key generated from game_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the current game.
+        tests:
+          - not_null
+      - name: last_game_id
+        description: Unique identifier for the previous game between these two teams.
+        tests:
+          - not_null
+
+  - name: stg__line_score
+    description: Staging model showing the points scored by each team per period (quarters and overtimes).
+    columns:
+      - name: game_team_line_score_key
+        description: Surrogate key generated from game_id and team_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique identifier for the team.
+        tests:
+          - not_null
+
+  - name: stg__game_officials
+    description: Staging model listing the officials (referees) for a specific game.
+    columns:
+      - name: game_official_key
+        description: Surrogate key generated from game_id and official_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+      - name: official_id
+        description: Unique identifier for the official.
+        tests:
+          - not_null
+
+  - name: stg__other_stats
+    description: Staging model containing miscellaneous team-level stats for a game (e.g., points in paint, fastbreak points).
+    columns:
+      - name: game_team_other_stats_key
+        description: Surrogate key generated from game_id and team_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null
+      - name: team_id
+        description: Unique identifier for the team.
+        tests:
+          - not_null
+
+  - name: stg__season_series
+    description: Staging model showing the head-to-head record between the two teams for the current season up to this game.
+    columns:
+      - name: game_season_series_key
+        description: Surrogate key generated from game_id.
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: Unique identifier for the game.
+        tests:
+          - not_null 

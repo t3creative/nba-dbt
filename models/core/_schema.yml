@@ -1,0 +1,371 @@
+version: 2
+
+models:
+  - name: dim__players
+    description: "Dimension table for NBA players, containing player biographical and career information"
+    columns:
+      - name: player_key
+        description: "Surrogate key for the player dimension"
+        tests:
+          - unique
+          - not_null
+      - name: player_id
+        description: "Natural key / person ID from NBA API"
+        tests:
+          - not_null
+      - name: player_first_name
+        description: "Player's first name"
+      - name: player_last_name
+        description: "Player's last name"
+      - name: player_slug
+        description: "URL-friendly player identifier"
+      - name: position
+        description: "Player's primary position (G, F, C, etc.)"
+      - name: height
+        description: "Player's height"
+      - name: weight
+        description: "Player's weight in pounds"
+      - name: college
+        description: "College/university attended by the player"
+      - name: country
+        description: "Player's country of origin"
+      - name: draft_year
+        description: "Year the player was drafted"
+      - name: draft_round
+        description: "Round in which the player was drafted"
+      - name: draft_number
+        description: "Pick number in the draft"
+      - name: from_year
+        description: "First year of player's NBA career"
+      - name: to_year
+        description: "Last year of player's NBA career (or current year for active players)"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__teams
+    description: "Dimension table for NBA teams, containing team information and attributes"
+    columns:
+      - name: team_key
+        description: "Surrogate key for the team dimension"
+        tests:
+          - unique
+          - not_null
+      - name: team_id
+        description: "Natural key / team ID from NBA API"
+        tests:
+          - not_null
+      - name: team_city
+        description: "City where the team is located"
+      - name: team_name
+        description: "Team name (mascot)"
+      - name: team_abbreviation
+        description: "Three-letter team abbreviation"
+        tests:
+          - not_null
+      - name: team_slug
+        description: "URL-friendly team identifier"
+      - name: conference
+        description: "Conference the team belongs to (Eastern/Western)"
+      - name: division
+        description: "Division within the conference"
+      - name: is_active
+        description: "Flag indicating if the team is currently active in the NBA"
+      - name: year_founded
+        description: "Year the team was founded"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__games
+    description: "Dimension table for NBA games, containing game metadata and context"
+    columns:
+      - name: game_key
+        description: "Surrogate key for the game dimension"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Natural key / game ID from NBA API"
+        tests:
+          - not_null
+      - name: game_date
+        description: "Date the game was played"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim__game_dates')
+              field: date_day
+      - name: home_team_id
+        description: "ID of the home team"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim__teams')
+              field: team_id
+      - name: away_team_id
+        description: "ID of the away team"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim__teams')
+              field: team_id
+      - name: arena_name
+        description: "Name of the arena where the game was played"
+      - name: arena_city
+        description: "City where the arena is located"
+      - name: arena_state
+        description: "State where the arena is located"
+      - name: attendance
+        description: "Number of attendees at the game"
+      - name: game_time
+        description: "Time when the game started"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__officials
+    description: "Dimension table for NBA game officials/referees"
+    columns:
+      - name: official_key
+        description: "Surrogate key for the official dimension"
+        tests:
+          - unique
+          - not_null
+      - name: official_id
+        description: "Natural key / official ID from NBA API"
+        tests:
+          - not_null
+      - name: first_name
+        description: "Official's first name"
+      - name: last_name
+        description: "Official's last name"
+      - name: jersey_num
+        description: "Official's jersey number"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__seasons
+    description: "Dimension table for NBA seasons with type and date information"
+    columns:
+      - name: season_key
+        description: "Surrogate key for the season dimension"
+        tests:
+          - unique
+          - not_null
+      - name: season
+        description: "NBA season year (e.g., '2021' for 2021-22 season)"
+        tests:
+          - not_null
+      - name: season_type
+        description: "Type of season (Regular Season, Playoffs, Preseason, All-Star)"
+        tests:
+          - not_null
+      - name: season_type_sort
+        description: "Numeric sort order for season types"
+        tests:
+          - not_null
+      - name: start_date
+        description: "Start date of the season period"
+      - name: end_date
+        description: "End date of the season period"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__game_dates
+    description: "Date dimension table containing only dates when NBA games were played with additional attributes"
+    columns:
+      - name: date_key
+        description: "Surrogate key for the date dimension"
+        tests:
+          - unique
+          - not_null
+      - name: date_day
+        description: "Calendar date when games were played"
+        tests:
+          - unique
+          - not_null
+      - name: day_of_week
+        description: "Day of week as number (0-6, where 0 is Sunday)"
+      - name: day_of_week_name
+        description: "Day of week name (Monday, Tuesday, etc.)"
+      - name: month_of_year
+        description: "Month of year as number (1-12)"
+      - name: month_name
+        description: "Month name (January, February, etc.)"
+      - name: year_number
+        description: "Calendar year"
+      - name: quarter_of_year
+        description: "Calendar quarter (1-4)"
+      - name: is_weekend
+        description: "Flag indicating if date falls on a weekend"
+      - name: year_month
+        description: "Year and month formatted as YYYY-MM"
+      - name: nba_season
+        description: "NBA season year associated with this date (e.g., '2021' for dates in the 2021-22 season)"
+      - name: day_type
+        description: "Classification of day (Weekday, Friday, Saturday, Sunday)"
+      - name: season_segment
+        description: "Segment of the NBA season (Early Season, Mid Season, Late Season, End of Season, Playoffs, Off Season)"
+
+  - name: dim__arenas
+    description: "Dimension table for NBA arenas/venues"
+    columns:
+      - name: arena_key
+        description: "Surrogate key for the arena dimension"
+        tests:
+          - unique
+          - not_null
+      - name: arena_name
+        description: "Name of the arena"
+        tests:
+          - not_null
+      - name: arena_city
+        description: "City where the arena is located"
+      - name: arena_state
+        description: "State/province where the arena is located"
+      - name: arena_country
+        description: "Country where the arena is located, defaults to USA"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__sportsbooks
+    description: "Dimension table for sportsbooks that offer NBA betting markets"
+    columns:
+      - name: sportsbook_key
+        description: "Surrogate key for the sportsbook dimension"
+        tests:
+          - unique
+          - not_null
+      - name: sportsbook_code
+        description: "Original sportsbook code/identifier from the source"
+        tests:
+          - not_null
+      - name: sportsbook_name
+        description: "Standardized sportsbook name"
+        tests:
+          - not_null
+      - name: parent_company
+        description: "Parent company that owns the sportsbook"
+      - name: book_type
+        description: "Classification of sportsbook (Casino-Based, DFS-Origin, European-Origin, Other)"
+      - name: sportsbook_slug
+        description: "URL-friendly version of the sportsbook name"
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null
+
+  - name: dim__betting_props
+    description: "Dimension table for NBA player prop betting markets"
+    columns:
+      - name: prop_market_key
+        description: "Surrogate key for the prop market dimension"
+        tests:
+          - unique
+          - not_null
+      - name: market_cleaned
+        description: "Standardized market identifier (PTS, AST, REB, etc.)"
+        tests:
+          - not_null
+      - name: stat_type
+        description: "Human-readable description of the statistic being measured"
+        tests:
+          - not_null
+      - name: market_original
+        description: "Original market name from the source data"
+      - name: prop_category
+        description: "High-level category of the prop (Scoring, Performance, Combined, Achievement, etc.)"
+        tests:
+          - not_null
+      - name: is_combined
+        description: "Indicates if this is a combined statistic (e.g., PTS+AST)"
+        tests:
+          - not_null
+      - name: market_availability
+        description: "Typical availability of this market (High, Medium, Low, Variable)"
+      - name: prop_format
+        description: "Format of the proposition (Over/Under, Yes/No)"
+        tests:
+          - not_null
+      - name: involves_scoring
+        description: "Flag indicating if this prop involves scoring statistics"
+        tests:
+          - not_null
+      - name: involves_rebounds
+        description: "Flag indicating if this prop involves rebounding statistics"
+        tests:
+          - not_null
+      - name: involves_assists
+        description: "Flag indicating if this prop involves assist statistics"
+        tests:
+          - not_null
+      - name: involves_blocks
+        description: "Flag indicating if this prop involves block statistics"
+        tests:
+          - not_null
+      - name: involves_steals
+        description: "Flag indicating if this prop involves steal statistics"
+        tests:
+          - not_null
+      - name: valid_from
+        description: "SCD Type 2 valid from timestamp"
+        tests:
+          - not_null
+      - name: valid_to
+        description: "SCD Type 2 valid to timestamp (NULL for current records)"
+      - name: is_current
+        description: "Flag indicating if this is the current record (TRUE/FALSE)"
+        tests:
+          - not_null

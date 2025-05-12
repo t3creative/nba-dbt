@@ -1,0 +1,65 @@
+version: 2
+
+models:
+  - name: feat__player_pts
+    description: Engineered features for predicting NBA player points.
+    columns:
+      - name: player_game_key
+        description: Unique identifier for player-game combinations
+      - name: player_id
+        description: Unique identifier for the player
+      - name: game_id
+        description: Unique identifier for the game
+      - name: game_date
+        description: Date when the game was played
+      # Engineered Features
+      - name: scoring_load_index
+        description: Measures a player's scoring responsibility adjusted for minutes and team share.
+      - name: scoring_efficiency_composite
+        description: Weighted average of true shooting and effective field goal percentages.
+      - name: points_opportunity_ratio
+        description: Points per touch to reflect scoring efficiency on ball.
+      - name: shot_creation_index
+        description: Self-created shot volume adjusted for team field goal attempts.
+      - name: defensive_attention_factor
+        description: Estimates defensive pressure using contested and at-rim attempts.
+      - name: scoring_versatility_ratio
+        description: Higher values indicate balanced scoring from 2PT, 3PT, and FT sources.
+      - name: offensive_role_factor
+        description: Blends usage rate with assist contribution to infer offensive role.
+      - name: adjusted_usage_with_defense
+        description: Adjusts usage rate based on defensive matchup difficulty.
+      - name: recent_minutes_trend
+        description: Change in playing time across the last 3 games; tracks role shifts.
+      - name: pts_per_half_court_poss
+        description: Points per non-transition possession; proxy for consistent scoring.
+      - name: usage_weighted_ts
+        description: True shooting weighted by usage to reflect high-efficiency scorers.
+      - name: three_pt_value_efficiency_index
+        description: Volume and accuracy combined into one 3-point scoring metric.
+      - name: paint_reliance_index
+        description: Dependence on paint scoring based on shot and point distribution.
+      - name: assisted_shot_efficiency
+        description: Efficiency on assisted baskets; proxy for catch-and-shoot ability.
+      - name: pace_adjusted_points_per_minute
+        description: Points per minute normalized to a 100-possession pace.
+      - name: second_chance_conversion_rate
+        description: Efficiency of converting offensive rebounds into second-chance points.
+      - name: contested_vs_uncontested_fg_pct_diff
+        description: Difference in FG% between contested and uncontested shots.
+      - name: shooting_volume_per_min
+        description: True shooting attempts per minute including FGA and adjusted FTA.
+      - name: effective_three_point_contribution_rate
+        description: Points from 3PTM per FGA; highlights reliance on threes.
+      - name: free_throw_generation_aggressiveness
+        description: FTA per FGA; reflects ability to draw fouls.
+      - name: self_created_scoring_rate_per_min
+        description: Unassisted FGM per minute; proxy for isolation scoring.
+      - name: opportunistic_scoring_rate_per_min
+        description: Points from turnovers and fastbreaks per minute.
+      - name: scoring_focus_ratio
+        description: Usage vs assist ratio; high values imply score-first mentality.
+      - name: contested_fg_makes_per_minute
+        description: Rate of made contested field goals per minute played.
+      - name: scoring_profile_balance_3pt_vs_paint
+        description: Contrast between 3PT and paint scoring tendencies.

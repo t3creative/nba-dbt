@@ -4,6 +4,7 @@ logs/
 backup/
 docs/
 data_examples/
+schema_export/
 
 .cursor/
 

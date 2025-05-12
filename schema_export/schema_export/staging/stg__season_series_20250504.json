@@ -27,7 +27,7 @@
       "udt_name": "int4"
     },
     {
-      "column_name": "visitor_team_id",
+      "column_name": "away_team_id",
       "data_type": "integer",
       "character_maximum_length": null,
       "column_default": null,

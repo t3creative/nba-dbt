@@ -99,7 +99,7 @@
       "udt_name": "text"
     },
     {
-      "column_name": "visitor_description",
+      "column_name": "away_description",
       "data_type": "text",
       "character_maximum_length": null,
       "column_default": null,

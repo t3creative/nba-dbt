@@ -4,9 +4,9 @@ with source_data as (
         player_name_raw,
         player_id,
         player_name,
-        team_abbr_raw,
+        team_tricode_raw,
         team_id,
-        team_abbreviation_standardized,
+        team_tricode_standardized,
         -- Count number of distinct prop lines per player
         count(*) as prop_count,
         -- Track match rate
@@ -17,9 +17,9 @@ with source_data as (
         player_name_raw,
         player_id,
         player_name,
-        team_abbr_raw,
+        team_tricode_raw,
         team_id,
-        team_abbreviation_standardized
+        team_tricode_standardized
 ),
 
 validation as (
@@ -27,9 +27,9 @@ validation as (
         player_name_raw,
         player_id,
         player_name,
-        team_abbr_raw,
+        team_tricode_raw,
         team_id,
-        team_abbreviation_standardized,
+        team_tricode_standardized,
         prop_count,
         has_real_player_id,
         has_real_team_id,
@@ -39,7 +39,7 @@ validation as (
         team_id is not null as has_team_id,
         -- Check that standardized names are not null
         player_name is not null as has_player_name,
-        team_abbreviation_standardized is not null as has_team_abbr
+        team_tricode_standardized is not null as has_team_abbr
     from source_data
 )
 

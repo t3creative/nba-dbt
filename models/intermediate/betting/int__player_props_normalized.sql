@@ -3,6 +3,7 @@
         schema='intermediate',
         materialized='incremental',
         unique_key='prop_key',
+        on_schema_change='sync_all_columns',
         tags=['betting', 'intermediate', 'player_props'],
         indexes=[
             {'columns': ['prop_key'], 'unique': True},
@@ -133,12 +134,12 @@ pivoted_data as (
         max(source_market_id) as max_source_market_id,
         max(market) as max_market,
         max(offer_id) as max_source_offer_id, 
-        max(source_file) as last_source_file,
+        max(source_file) as last_source_file
 
-        {% for s_book in distinct_sportsbooks %}
-        max(case when sportsbook = '{{ s_book | replace("'''", "''''''") }}' then over_odds else null end) as {{ (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '') ~ '_over_odds') }},
-        max(case when sportsbook = '{{ s_book | replace("'''", "''''''") }}' then under_odds else null end) as {{ (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '') ~ '_under_odds') }}{% if not loop.last %},{% endif %}
-        {% endfor %}
+        {%- for s_book in distinct_sportsbooks %}
+        , max(case when sportsbook = '{{ s_book | replace("'''", "''''''") }}' then over_odds else null end) as {{ (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '') ~ '_over_odds') }}
+        , max(case when sportsbook = '{{ s_book | replace("'''", "''''''") }}' then under_odds else null end) as {{ (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '') ~ '_under_odds') }}
+        {%- endfor %}
         
     from prepared_data
     where player_id is not null and game_id is not null -- Ensure key components are not null
@@ -161,28 +162,28 @@ pivoted_data as (
 
 final_props_with_probabilities as (
     select
-        pd.*,
+        pd.*
 
-        {% for s_book in distinct_sportsbooks %}
-        {% set s_book_slug = (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '')) %}
-        {% set over_odds_col = s_book_slug ~ '_over_odds' %}
-        {% set under_odds_col = s_book_slug ~ '_under_odds' %}
+        {%- for s_book in distinct_sportsbooks %}
+        {%- set s_book_slug = (s_book | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '')) %}
+        {%- set over_odds_col = s_book_slug ~ '_over_odds' %}
+        {%- set under_odds_col = s_book_slug ~ '_under_odds' %}
 
-        case 
+        , case 
             when pd.{{ over_odds_col }} > 0 then 100.0 / (pd.{{ over_odds_col }} + 100.0)
             when pd.{{ over_odds_col }} < 0 and pd.{{ over_odds_col }} != -100 then abs(pd.{{ over_odds_col }}) / (abs(pd.{{ over_odds_col }}) + 100.0)
             when pd.{{ over_odds_col }} = -100 then 0.5
             else null
-        end as {{ s_book_slug ~ '_over_implied_prob' }},
+        end as {{ s_book_slug ~ '_over_implied_prob' }}
         
-        case 
+        , case 
             when pd.{{ under_odds_col }} > 0 then 100.0 / (pd.{{ under_odds_col }} + 100.0)
             when pd.{{ under_odds_col }} < 0 and pd.{{ under_odds_col }} != -100 then abs(pd.{{ under_odds_col }}) / (abs(pd.{{ under_odds_col }}) + 100.0)
             when pd.{{ under_odds_col }} = -100 then 0.5
             else null
-        end as {{ s_book_slug ~ '_under_implied_prob' }},
+        end as {{ s_book_slug ~ '_under_implied_prob' }}
         
-        (
+        , (
             (case 
                 when pd.{{ over_odds_col }} > 0 then 100.0 / (pd.{{ over_odds_col }} + 100.0)
                 when pd.{{ over_odds_col }} < 0 and pd.{{ over_odds_col }} != -100 then abs(pd.{{ over_odds_col }}) / (abs(pd.{{ over_odds_col }}) + 100.0)
@@ -195,9 +196,9 @@ final_props_with_probabilities as (
                 when pd.{{ under_odds_col }} = -100 then 0.5
                 else 0.0 
             end)
-        ) as {{ s_book_slug ~ '_total_implied_prob' }},
+        ) as {{ s_book_slug ~ '_total_implied_prob' }}
 
-        case 
+        , case 
             when 
                 ((case 
                     when pd.{{ over_odds_col }} > 0 then 100.0 / (pd.{{ over_odds_col }} + 100.0)
@@ -222,9 +223,9 @@ final_props_with_probabilities as (
                     when pd.{{ under_odds_col }} < 0 and pd.{{ under_odds_col }} != -100 then abs(pd.{{ under_odds_col }}) / (abs(pd.{{ under_odds_col }}) + 100.0)
                     when pd.{{ under_odds_col }} = -100 then 0.5 else 0.0 end))
             else null 
-        end as {{ s_book_slug ~ '_over_no_vig_prob' }},
+        end as {{ s_book_slug ~ '_over_no_vig_prob' }}
 
-        case 
+        , case 
             when 
                 ((case 
                     when pd.{{ over_odds_col }} > 0 then 100.0 / (pd.{{ over_odds_col }} + 100.0)
@@ -249,9 +250,9 @@ final_props_with_probabilities as (
                     when pd.{{ under_odds_col }} < 0 and pd.{{ under_odds_col }} != -100 then abs(pd.{{ under_odds_col }}) / (abs(pd.{{ under_odds_col }}) + 100.0)
                     when pd.{{ under_odds_col }} = -100 then 0.5 else 0.0 end))
             else null
-        end as {{ s_book_slug ~ '_under_no_vig_prob' }},
+        end as {{ s_book_slug ~ '_under_no_vig_prob' }}
 
-        (
+        , (
             (case 
                 when pd.{{ over_odds_col }} > 0 then 100.0 / (pd.{{ over_odds_col }} + 100.0)
                 when pd.{{ over_odds_col }} < 0 and pd.{{ over_odds_col }} != -100 then abs(pd.{{ over_odds_col }}) / (abs(pd.{{ over_odds_col }}) + 100.0)
@@ -264,8 +265,8 @@ final_props_with_probabilities as (
                 when pd.{{ under_odds_col }} = -100 then 0.5
                 else 0.0
             end)
-        ) - 1.0 as {{ s_book_slug ~ '_hold_percentage' }}{% if not loop.last %},{% endif %}
-        {% endfor %}
+        ) - 1.0 as {{ s_book_slug ~ '_hold_percentage' }}
+        {%- endfor %}
         
     from pivoted_data pd
 )

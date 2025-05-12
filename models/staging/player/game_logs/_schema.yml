@@ -1,0 +1,103 @@
+version: 2
+
+models:
+  - name: stg__game_logs_player
+    description: "Cleaned and standardized player game log statistics"
+    columns:
+      - name: player_game_team_id
+        description: "Unique identifier for each player game record (combination of player, game, and team)"
+        tests:
+          - unique
+          - not_null
+      - name: game_id
+        description: "Game identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_league')
+              field: game_id
+      - name: game_date
+        description: "Date of the game"
+        tests:
+          - not_null
+      - name: season_year
+        description: "Season year"
+        tests:
+          - not_null
+      - name: matchup
+        description: "Matchup description (e.g. team vs opponent)"
+      - name: win_loss
+        description: "Game result (W/L)"
+      - name: player_id
+        description: "Player identifier"
+        tests:
+          - not_null
+      - name: player_name
+        description: "Player full name"
+        tests:
+          - not_null
+      - name: team_id
+        description: "Team identifier"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg__game_logs_team')
+              field: team_id
+      - name: team_tricode
+        description: "Team 3-letter code"
+      - name: team_name
+        description: "Team full name"
+      - name: min
+        description: "Minutes played in game"
+      - name: fgm
+        description: "Total field goals made"
+      - name: fga
+        description: "Total field goals attempted"
+      - name: fg_pct
+        description: "Field goal percentage"
+      - name: fg3m
+        description: "3-point field goals made"
+      - name: fg3a
+        description: "3-point field goals attempted"
+      - name: fg3_pct
+        description: "3-point field goal percentage"
+      - name: ftm
+        description: "Free throws made"
+      - name: fta
+        description: "Free throws attempted"
+      - name: ft_pct
+        description: "Free throw percentage"
+      - name: off_reb
+        description: "Offensive rebounds"
+      - name: def_reb
+        description: "Defensive rebounds"
+      - name: reb
+        description: "Total rebounds"
+      - name: ast
+        description: "Assists"
+      - name: tov
+        description: "Turnovers"
+      - name: stl
+        description: "Steals"
+      - name: blk
+        description: "Blocks"
+      - name: blk_against
+        description: "Shots blocked by opponents"
+      - name: pf
+        description: "Personal fouls committed"
+      - name: pf_drawn
+        description: "Fouls drawn from opponents"
+      - name: pts
+        description: "Total points scored"
+      - name: plus_minus
+        description: "Plus/minus rating"
+      - name: fantasy_points
+        description: "NBA fantasy points scored"
+      - name: double_doubles
+        description: "Double-doubles recorded"
+      - name: triple_doubles
+        description: "Triple-doubles recorded"
+      - name: created_at
+        description: "Timestamp when record was created"
+        tests:
+          - not_null

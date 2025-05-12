@@ -36,55 +36,71 @@ vars:
 models:
   nba_data_app:
 
+    # Core models
+    core:
+      +materialized: table
+      +schema: core
+      +tags: ["core"]
+
+      dim__dates:
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__dates"]
+
+      dim__games:
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__games"]
+
+      dim__officials: 
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__officials"]
+
+      dim__players:
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__players"] 
+
+      dim__seasons:
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__seasons"] 
+
+      dim__teams:
+        +materialized: table
+        +schema: core
+        +tags: ["core", "dim__teams"]         
+        
     # Staging models
     staging:
       +materialized: view
       +schema: staging
       +tags: ["staging"]
       
-      game_logs:
-        +materialized: view
-        +tags: ["game_logs", "staging"]
-
-      game_summary:
-        +materialized: view
-        +tags: ["game_summary", "staging"]
-      
-      schedules:
-        +materialized: view
-        +tags: ["schedules", "staging"]
-
-      player_boxscores:
-        +materialized: view
-        +tags: ["player_boxscores", "staging"]
-
-      player_matchups:
-        +materialized: view
-        +tags: ["player_matchups", "staging"]
-          
-      team_boxscores:
-        +materialized: view
-        +tags: ["team_boxscores", "staging"]
-
-      league_dash:
-        +materialized: view
-        +tags: ["league_dash", "staging"]
-      
       betting:
         +materialized: view
         +tags: ["betting", "staging"]
 
-      teams:
+      game:
         +materialized: view
-        +tags: ["teams", "staging"]
+        +tags: ["game", "staging"]
       
-      players:
+      league:
         +materialized: view
-        +tags: ["players", "staging"]
+        +tags: ["league", "staging"]
 
-      play_by_play:
+      playbyplay:
         +materialized: view
-        +tags: ["play_by_play", "staging"]
+        +tags: ["playbyplay", "staging"]
+
+      player:
+        +materialized: view
+        +tags: ["player", "staging"]
+          
+      team:
+        +materialized: view
+        +tags: ["team", "staging"]
             
     # Intermediate models
     intermediate:
@@ -92,45 +108,29 @@ models:
       +schema: intermediate
       +tags: ["intermediate"]
 
-      core:
-        +materialized: incremental
-        +tags: ["intermediate", "core"]
-
       betting:
         +materialized: incremental
         +tags: ["betting", "intermediate"]
       
-      player_boxscores:
+      game:
         +materialized: incremental
-        +tags: ["player_boxscores", "intermediate"]
+        +tags: ["game", "intermediate"]
 
-      player_matchups:
+      opponent:
         +materialized: incremental
-        +tags: ["player_matchups", "intermediate"]
+        +tags: ["opponent", "intermediate"]
 
-      team_boxscores:
+      playbyplay:
         +materialized: incremental
-        +tags: ["team_boxscores", "intermediate"]
+        +tags: ["playbyplay", "intermediate"]
     
-      game_context:
+      player:
         +materialized: incremental
-        +tags: ["game_context", "intermediate"]
+        +tags: ["player", "intermediate"]
 
-      play_by_play:
+      team:
         +materialized: incremental
-        +tags: ["play_by_play", "intermediate"]
-
-      player_stats:
-        +materialized: incremental
-        +tags: ["player_stats", "intermediate"]
-
-      players:
-        +materialized: incremental
-        +tags: ["players", "intermediate"]
-
-      player_scoring:
-        +materialized: incremental
-        +tags: ["player_scoring", "intermediate"]
+        +tags: ["team", "intermediate"]
         
     # Feature models
     features:
@@ -153,6 +153,10 @@ models:
         player_level:
           +materialized: incremental
           +tags: ["player_level", "features"]
+
+        player_pts_features:
+          +materialized: incremental
+          +tags: ["player_pts_features", "features"]
 
     # Training models
     training:

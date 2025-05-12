@@ -26,7 +26,7 @@ with boxscores as (
         season_year,
         opponent_id,
 
-        -- Select ALL numeric stats from int__team_boxscores
+        -- Select ALL numeric stats from int__combined_team_boxscore
         -- Traditional
         min,
         fgm,
@@ -121,7 +121,7 @@ with boxscores as (
         -- Timestamps for Incremental
         updated_at
 
-    from {{ ref('int__team_boxscores') }}
+    from {{ ref('int__combined_team_boxscore') }}
     -- Filter based on the starting year extracted from season_year
     where cast(substring(season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
     {% if is_incremental() %}

@@ -1,0 +1,56 @@
+version: 2
+
+models:
+  - name: player_team_bridge
+    description: >
+      A slowly changing dimension (Type 2) bridge table that tracks player team affiliations over time,
+      capturing when players change teams and maintaining a history of all their team memberships.
+    config:
+      tags: ['core', 'bridge']
+    
+    columns:
+      - name: player_team_key
+        description: Surrogate key for the player-team relationship
+        tests:
+          - unique
+          - not_null
+      
+      - name: player_id
+        description: Unique player identifier
+        tests:
+          - not_null
+      
+      - name: team_id
+        description: Unique team identifier
+        tests:
+          - not_null
+      
+      - name: team_name
+        description: Full name of the team (e.g., Lakers, Celtics)
+        tests:
+          - not_null
+      
+      - name: team_tricode
+        description: Three-letter code for the team (e.g., LAL, BOS)
+        tests:
+          - not_null
+      
+      - name: valid_from
+        description: Date when the player joined this team
+        tests:
+          - not_null
+      
+      - name: valid_to
+        description: Date when the player left this team (NULL if current team)
+      
+      - name: is_current
+        description: Flag indicating if this is the player's current team (TRUE) or historical (FALSE)
+        tests:
+          - not_null
+      
+      - name: data_source
+        description: Source of the team affiliation data (game_logs or player_index)
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['game_logs', 'player_index'] 

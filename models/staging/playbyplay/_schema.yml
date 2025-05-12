@@ -1,0 +1,68 @@
+version: 2
+
+models:
+  - name: stg__pbp_v2
+    description: >
+      Staging model for NBA play-by-play version 2 data.
+      Standardizes field names, parses score values, and translates event types.
+    config:
+      materialized: view
+      tags: ['staging', 'play_by_play']
+    columns:
+      - name: game_id
+        description: Unique identifier for the game
+        tests:
+          - not_null
+      - name: event_num
+        description: Sequential number of the event within the game
+        tests:
+          - not_null
+      - name: event_type
+        description: Numeric code representing the type of event
+        tests:
+          - not_null
+      - name: period
+        description: Game period (quarter) when the event occurred
+        tests:
+          - not_null
+      - name: event_type_name
+        description: Human-readable name of the event type (SHOT, FOUL, etc.)
+      - name: home_score
+        description: Home team's score after the event (parsed from score string)
+      - name: away_score
+        description: Away team's score after the event (parsed from score string)
+      - name: seconds_remaining_in_period
+        description: Seconds remaining in the current period/quarter
+
+  - name: stg__pbp_v3
+    description: >
+      Staging model for NBA play-by-play version 3 data.
+      Standardizes field names and adds derived columns for shot zones.
+    config:
+      materialized: view
+      tags: ['staging', 'play_by_play']
+    columns:
+      - name: game_id
+        description: Unique identifier for the game
+        tests:
+          - not_null
+      - name: action_number
+        description: Sequential number of the action within the game
+        tests:
+          - not_null
+      - name: period
+        description: Game period (quarter) when the action occurred
+        tests:
+          - not_null
+      - name: team_id
+        description: Identifier for the team involved in the action
+      - name: shot_distance
+        description: Distance of shot from basket in feet (when applicable)
+      - name: shot_zone
+        description: Categorized zone of the shot based on distance (At Rim, Mid Range, etc.)
+      - name: score_home
+        description: Home team's score after the action
+      - name: score_away
+        description: Away team's score after the action
+      - name: seconds_remaining_in_period
+        description: Seconds remaining in the current period/quarter

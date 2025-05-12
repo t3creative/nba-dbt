@@ -25,7 +25,7 @@ columns:
   column_default: null
   is_nullable: 'YES'
   udt_name: int4
-- column_name: last_game_visitor_team_id
+- column_name: last_game_away_team_id
   data_type: integer
   character_maximum_length: null
   column_default: null
@@ -61,25 +61,25 @@ columns:
   column_default: null
   is_nullable: 'YES'
   udt_name: int4
-- column_name: last_game_visitor_team_city
+- column_name: last_game_away_team_city
   data_type: text
   character_maximum_length: null
   column_default: null
   is_nullable: 'YES'
   udt_name: text
-- column_name: last_game_visitor_team_name
+- column_name: last_game_away_team_name
   data_type: text
   character_maximum_length: null
   column_default: null
   is_nullable: 'YES'
   udt_name: text
-- column_name: last_game_visitor_team_abbreviation
+- column_name: last_game_away_team_abbreviation
   data_type: text
   character_maximum_length: null
   column_default: null
   is_nullable: 'YES'
   udt_name: text
-- column_name: last_game_visitor_team_points
+- column_name: last_game_away_team_points
   data_type: integer
   character_maximum_length: null
   column_default: null
