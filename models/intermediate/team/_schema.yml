@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: feat_team__performance_metrics
+    description: "Core team performance metrics model combining team boxscores and outcomes"
+    columns:
+      - name: team_game_key
+        description: "Unique identifier for team-game combination"
+        tests:
+          - unique
+          - not_null
+      - name: off_rating
+        description: "Team's offensive rating"
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 80
+              max_value: 140
+
+  - name: marts__team_context_features
+    description: "Consolidated team context features for player prediction"
+    columns:
+      - name: player_game_key
+        tests:
+          - unique
+          - not_null
+      - name: team_adjusted_pts_projection
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              min_value: 0
+              max_value: 70

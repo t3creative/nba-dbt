@@ -214,8 +214,6 @@ final AS (
         os_home.second_chance_pts AS home_second_chance_pts,
         os_home.fastbreak_pts AS home_fastbreak_pts,
         os_home.largest_lead AS home_largest_lead,
-        os_home.lead_changes AS home_lead_changes,
-        os_home.times_tied AS home_times_tied,
         os_home.team_turnovers AS home_team_turnovers,
         os_home.total_turnovers AS home_total_turnovers,
         os_home.team_rebounds AS home_team_rebounds,
@@ -226,12 +224,14 @@ final AS (
         os_away.second_chance_pts AS away_second_chance_pts,
         os_away.fastbreak_pts AS away_fastbreak_pts,
         os_away.largest_lead AS away_largest_lead,
-        os_away.lead_changes AS away_lead_changes,
-        os_away.times_tied AS away_times_tied,
         os_away.team_turnovers AS away_team_turnovers,
         os_away.total_turnovers AS away_total_turnovers,
         os_away.team_rebounds AS away_team_rebounds,
         os_away.pts_off_to AS away_pts_off_to,
+
+        -- Game Level Other Stats (Lead Changes, Times Tied)
+        os_home.lead_changes, -- Assumes value is the same for home and away
+        os_home.times_tied,   -- Assumes value is the same for home and away
 
         -- Inactive Players
         ip_home.inactive_player_ids AS home_inactive_player_ids,

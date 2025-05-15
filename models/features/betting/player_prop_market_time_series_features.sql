@@ -1,3 +1,4 @@
+-- depends_on: {{ ref('stg__player_props') }}
 {{
     config(
         schema='features',
@@ -12,11 +13,65 @@
     )
 }}
 
-with player_props as (
+{%- call statement('get_sportsbooks', fetch_result=True) -%}
+    select distinct sportsbook from {{ ref('stg__player_props') }}
+    order by 1
+{%- endcall -%}
+
+{%- if execute -%}
+    {%- set distinct_sportsbooks_raw = load_result('get_sportsbooks')['data'] | map(attribute=0) | list -%}
+{%- else -%}
+    {%- set distinct_sportsbooks_raw = [] -%}
+{%- endif -%}
+
+with base_props as (
+    select * from {{ ref('int_betting__player_props_probabilities') }}
+    where game_date >= current_date - interval '365 days'
+    {% if is_incremental() %}
+        -- If already built, only process the latest 60 days of data to refresh
+        and game_date >= (select greatest(max(feature_date) - interval '60 days', current_date - interval '365 days') from {{ this }})
+    {% endif %}
+),
+
+-- Unpivot step
+unpivoted_data as (
+    {% if distinct_sportsbooks_raw | length > 0 %}
+    {% for s_book_raw in distinct_sportsbooks_raw %}
+    {% set s_book_slug = (s_book_raw | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '')) %}
+    select
+        player_prop_key,
+        player_id,
+        player_slug,
+        player_name,
+        game_date,
+        market_id as market_cleaned,
+        market,
+        line,
+
+        {{ "'" ~ s_book_raw | replace("'", "''") ~ "'" }} as sportsbook,
+        {{ s_book_slug ~ "_over_odds_decimal" }} as over_odds,
+        {{ s_book_slug ~ "_under_odds_decimal" }} as under_odds,
+        {{ s_book_slug ~ "_over_implied_prob" }} as over_implied_prob,
+        {{ s_book_slug ~ "_under_implied_prob" }} as under_implied_prob
+    from base_props
+    where {{ s_book_slug ~ "_over_odds_decimal" }} is not null or {{ s_book_slug ~ "_under_odds_decimal" }} is not null
+    {% if not loop.last %}union all{% endif %}
+    {% endfor %}
+    {% else %}
+    select
+        null::text as player_prop_key, null::text as player_id, null::text as player_slug, null::text as player_name,
+        null::date as game_date, null::text as market_cleaned, null::text as market, null::numeric as line,
+        null::text as sportsbook, null::decimal as over_odds, null::decimal as under_odds,
+        null::numeric as over_implied_prob, null::numeric as under_implied_prob
+    where 1=0
+    {% endif %}
+),
+
+player_props as (
     select
         player_id,
         player_name,
-        market_id,
+        market_cleaned as market_id,
         market,
         line,
         over_odds,
@@ -25,9 +80,18 @@ with player_props as (
         under_implied_prob,
         sportsbook,
         game_date
-    from {{ ref('int__player_props_normalized') }}
-    where game_date >= current_date - interval '365 days'
-    and sportsbook = 'Consensus' -- Using consensus lines for time series analysis
+    from unpivoted_data
+    where sportsbook = 'Consensus'
+    
+    -- Added player-market combination filter for better performance
+    -- Only process player-market combinations with at least 3 data points
+    and (player_id, market_cleaned) in (
+        select player_id, market_cleaned
+        from unpivoted_data
+        where sportsbook = 'Consensus'
+        group by player_id, market_cleaned
+        having count(*) >= 3
+    )
 ),
 
 -- Add temporal ordering and compute changes between consecutive games
@@ -101,33 +165,37 @@ with_changes as (
         game_sequence,
         
         -- Calculate changes
-        line - previous_line as line_change,
-        (line - previous_line) / nullif(previous_line, 0) * 100 as line_pct_change,
-        over_odds - previous_over_odds as over_odds_change,
-        under_odds - previous_under_odds as under_odds_change,
+        coalesce(line - previous_line, 0) as line_change,
+        case 
+            when previous_line is null or previous_line = 0 then 0
+            else (line - previous_line) / previous_line * 100 
+        end as line_pct_change,
+        coalesce(over_odds - previous_over_odds, 0) as over_odds_change,
+        coalesce(under_odds - previous_under_odds, 0) as under_odds_change,
         
         -- Calculate moving averages
-        avg(line) over (
+        coalesce(avg(line) over (
             partition by player_id, market_id 
             order by game_date 
             rows between 3 preceding and 1 preceding
-        ) as ma_3_line,
+        ), line) as ma_3_line,
         
-        avg(line) over (
+        coalesce(avg(line) over (
             partition by player_id, market_id 
             order by game_date 
             rows between 5 preceding and 1 preceding
-        ) as ma_5_line,
+        ), line) as ma_5_line,
         
         -- Calculate moving standard deviations
-        stddev(line) over (
+        coalesce(stddev(line) over (
             partition by player_id, market_id 
             order by game_date 
             rows between 5 preceding and 1 preceding
-        ) as std_5_line,
+        ), 0) as std_5_line,
         
         -- Trend direction
         case
+            when previous_line is null then 'Initial'
             when line > previous_line then 'Up'
             when line < previous_line then 'Down'
             else 'Stable'
@@ -135,6 +203,7 @@ with_changes as (
         
         -- Trend strength (how many consecutive games in same direction)
         case
+            when previous_line is null then 0
             when line > previous_line and previous_line > lag(line, 2) over (partition by player_id, market_id order by game_date) then 2
             when line < previous_line and previous_line < lag(line, 2) over (partition by player_id, market_id order by game_date) then 2
             when line > previous_line or line < previous_line then 1
@@ -142,7 +211,6 @@ with_changes as (
         end as trend_strength
         
     from time_ordered_props
-    where previous_line is not null
 ),
 
 -- Aggregate temporal patterns by player-market
@@ -181,16 +249,10 @@ player_market_temporal as (
         -- Volatility metrics
         stddev(line_change) / nullif(avg(abs(line_change)), 0) as line_change_volatility_ratio,
         
-        -- Recent trend analysis (last 30 days)
-        array_agg(
-            case 
-                when game_date > (select max(game_date) - interval '30 days' from with_changes wc2 
-                                 where wc2.player_id = with_changes.player_id and wc2.market_id = with_changes.market_id)
-                then trend_direction
-                else null
-            end
-            order by game_date desc
-        ) filter (where trend_direction is not null) as recent_trends,
+        -- Recent trend analysis (limited to most recent 5)
+        array_agg(trend_direction ORDER BY game_date DESC) FILTER (
+            WHERE trend_direction IS NOT NULL
+        ) as recent_trends,
         
         -- Odds change metrics
         avg(over_odds_change) as avg_over_odds_change,
@@ -199,7 +261,8 @@ player_market_temporal as (
         stddev(under_odds_change) as stddev_under_odds_change,
         
         -- Seasonal trends (group by month)
-        array_agg(distinct extract(month from game_date) order by extract(month from game_date)) as months_with_data,
+        -- Just get distinct months without complex aggregation
+        array_agg(DISTINCT extract(month from game_date) ORDER BY extract(month from game_date)) as months_with_data,
         
         -- Generate feature key
         {{ dbt_utils.generate_surrogate_key(['player_id', 'market_id']) }} as feature_key
@@ -281,8 +344,8 @@ final as (
         pmt.stddev_over_odds_change,
         pmt.stddev_under_odds_change,
         
-        -- Recent trends as string
-        array_to_string(pmt.recent_trends, '-') as recent_trend_pattern,
+        -- Recent trends as string (limit to 5)
+        array_to_string((SELECT array_agg(x) FROM (SELECT unnest(pmt.recent_trends) as x LIMIT 5) t), '-') as recent_trend_pattern,
         
         -- Seasonal metrics
         mv.month_to_month_line_stddev,
@@ -303,6 +366,7 @@ final as (
         on pmt.player_id = mv.player_id
         and pmt.market_id = mv.market_id
     where pmt.game_count >= 5 -- Minimum sample for reliability
+    and pmt.last_game_date >= current_date - interval '90 days' -- Focus on recent activity
 )
 
 select * from final 

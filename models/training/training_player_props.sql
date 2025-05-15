@@ -18,7 +18,7 @@ with player_boxscore as (
     pts,
     reb,
     ast
-  from {{ ref('int__player_traditional_bxsc') }}
+  from {{ ref('int__player_bxsc_traditional') }}
   where game_date >= '2017-10-01' and player_id = '2544' -- Start from 2017-18 season
   {% if is_incremental() %}
     and game_date > (select max(game_date) from {{ this }})
@@ -42,7 +42,7 @@ player_features as (
     pct_of_team_pts_roll_10g_avg,
     pct_of_team_reb_roll_10g_avg,
     pct_of_team_ast_roll_10g_avg
-  from {{ ref('player_rolling_stats') }}
+  from {{ ref('feat_player__rolling_stats') }}
   where game_date >= '2017-10-01'  -- Start from 2017-18 season
   {% if is_incremental() %}
     and game_date > (select max(game_date) from {{ this }})
@@ -103,7 +103,7 @@ player_props as (
     consensus_over_no_vig_prob as over_no_vig_prob,
     consensus_under_no_vig_prob as under_no_vig_prob,
     consensus_hold_percentage as hold_percentage
-  from {{ ref('int__player_props_normalized') }}
+  from {{ ref('int_betting__player_props_probabilities') }}
   where market_cleaned in ('PTS', 'REB', 'AST')
     and (consensus_over_odds is not null or consensus_under_odds is not null)
   {% if is_incremental() %}
@@ -122,23 +122,43 @@ team_def_features as (
     avg_deflections_per_game,
     avg_cont_2pt_per_game,
     avg_cont_3pt_per_game
-  from {{ ref('team_season_defensive_summary') }}
+  from {{ ref('feat_team__season_defensive_summary') }}
 ),
 
+-- Get game context features directly from int__game_context
 game_context_features as (
   select
-    game_id,
-    rest_advantage,                     -- Rest day advantage/disadvantage 
-    home_court_advantage_factor,        -- Home court advantage strength
-    season_stage,                       -- Stage of season (Early/Mid/Late/Playoffs)
-    win_pct_diff_last_10,               -- Win percentage differential over last 10 games
-    home_team_streak,                   -- Home team form (Hot/Cold/Neutral streak)
-    away_team_streak,                   -- Away team form (Hot/Cold/Neutral streak)
-    game_date
-  from {{ ref('game_context_features') }}
-
+    gc.game_id,
+    -- Rest day advantage
+    (gc.home_rest_days - gc.away_rest_days) as rest_advantage,
+    -- Home court advantage factor calculation
+    abs(coalesce(gc.home_win_pct_last_10, 0.5) - coalesce(gc.away_win_pct_last_10, 0.5)) 
+        * coalesce(gc.home_rest_days, 0) / greatest(coalesce(gc.away_rest_days, 1), 1) 
+        * (case when gc.away_back_to_back then 1.5 else 1.0 end) as home_court_advantage_factor,
+    -- Season stage
+    case
+        when gc.season_type = 'Regular Season' and gc.home_team_game_num < 20 then 'Early Season'
+        when gc.season_type = 'Regular Season' and gc.home_team_game_num > 60 then 'Late Season'
+        when gc.season_type = 'Playoffs' then 'Playoffs'
+        else 'Mid Season'
+    end as season_stage,
+    -- Win percentage differential
+    (coalesce(gc.home_win_pct_last_10, 0.5) - coalesce(gc.away_win_pct_last_10, 0.5)) as win_pct_diff_last_10,
+    -- Team streaks
+    case
+        when gc.home_wins_last_10 >= 7 then 'Hot Streak'
+        when gc.home_losses_last_10 >= 7 then 'Cold Streak'
+        else 'Neutral'
+    end as home_team_streak,
+    case
+        when gc.away_wins_last_10 >= 7 then 'Hot Streak'
+        when gc.away_losses_last_10 >= 7 then 'Cold Streak'
+        else 'Neutral'
+    end as away_team_streak,
+    gc.game_date
+  from {{ ref('int__game_context') }} gc
   {% if is_incremental() %}
-  where game_date > (select max(game_date) from {{ this }})
+    where gc.game_date > (select max(game_date) from {{ this }})
   {% endif %}
 ),
 
@@ -150,7 +170,7 @@ game_team_info as (
     go.opponent_id,
     go.season_year,
     go.game_date
-  from {{ ref('int__game_opponents') }} go
+  from {{ ref('int_opp__game_opponents') }} go
   
   {% if is_incremental() %}
   where go.game_date > (select max(game_date) from {{ this }})

@@ -1,3 +1,4 @@
+-- depends_on: {{ ref('stg__player_props') }}
 {{
     config(
         schema='features',
@@ -12,24 +13,79 @@
     )
 }}
 
-with player_props as (
+{%- call statement('get_sportsbooks', fetch_result=True) -%}
+    select distinct sportsbook from {{ ref('stg__player_props') }}
+    order by 1
+{%- endcall -%}
+
+{%- if execute -%}
+    {%- set distinct_sportsbooks_raw = load_result('get_sportsbooks')['data'] | map(attribute=0) | list -%}
+{%- else -%}
+    {%- set distinct_sportsbooks_raw = [] -%}
+{%- endif -%}
+
+with base_props as (
+    select * from {{ ref('int_betting__player_props_probabilities') }}
+    where game_date >= current_date - interval '365 days'
+),
+
+-- Unpivot step
+unpivoted_data as (
+    {% if distinct_sportsbooks_raw | length > 0 %}
+    {% for s_book_raw in distinct_sportsbooks_raw %}
+    {% set s_book_slug = (s_book_raw | lower | replace(' ', '_') | replace('.', '_') | replace('/', '_') | replace('(', '') | replace(')', '')) %}
+    select
+        player_prop_key,
+        player_id,
+        player_slug,
+        player_name,
+        game_date,
+        market_id as market_cleaned,
+        market,
+        line,
+
+        {{ "'" ~ s_book_raw | replace("'", "''") ~ "'" }} as sportsbook,
+        {{ s_book_slug ~ "_over_odds_decimal" }} as over_odds,
+        {{ s_book_slug ~ "_under_odds_decimal" }} as under_odds,
+        {{ s_book_slug ~ "_over_implied_prob" }} as over_implied_prob,
+        {{ s_book_slug ~ "_under_implied_prob" }} as under_implied_prob,
+        {{ s_book_slug ~ "_total_implied_prob" }} as total_implied_prob,
+        {{ s_book_slug ~ "_over_no_vig_prob" }} as no_vig_over_prob,
+        {{ s_book_slug ~ "_under_no_vig_prob" }} as no_vig_under_prob,
+        {{ s_book_slug ~ "_hold_percentage" }} as vig_percentage
+    from base_props
+    where {{ s_book_slug ~ "_over_odds_decimal" }} is not null or {{ s_book_slug ~ "_under_odds_decimal" }} is not null
+    {% if not loop.last %}union all{% endif %}
+    {% endfor %}
+    {% else %}
+    select
+        null::text as player_prop_key, null::text as player_id, null::text as player_slug, null::text as player_name,
+        null::date as game_date, null::text as market_cleaned, null::text as market, null::numeric as line,
+        null::text as sportsbook, null::decimal as over_odds, null::decimal as under_odds,
+        null::numeric as over_implied_prob, null::numeric as under_implied_prob,
+        null::numeric as total_implied_prob, null::numeric as no_vig_over_prob,
+        null::numeric as no_vig_under_prob, null::numeric as vig_percentage
+    where 1=0
+    {% endif %}
+),
+
+player_props as (
     select
         player_id,
         player_name,
-        market_id,
+        market_cleaned as market_id,
         market,
         line,
         over_odds,
         under_odds,
         over_implied_prob,
         under_implied_prob,
-        over_no_vig_prob as no_vig_over_prob,
-        under_no_vig_prob as no_vig_under_prob,
-        hold_percentage as vig_percentage,
+        no_vig_over_prob,
+        no_vig_under_prob,
+        vig_percentage,
         sportsbook,
         game_date
-    from {{ ref('int__player_props_normalized') }}
-    where game_date >= current_date - interval '365 days'
+    from unpivoted_data
 ),
 
 -- Get consensus data to compare against

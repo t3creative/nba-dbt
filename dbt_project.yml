@@ -29,6 +29,7 @@ vars:
   use_simple_schema_names: true
   training_start_season_year: 2017-18
   rolling_window_games: 10
+  feature_recalc_window_days: 7
 
 # Configuring models
 # Full documentation: https://docs.getdbt.com/docs/configuring-models
@@ -42,10 +43,10 @@ models:
       +schema: core
       +tags: ["core"]
 
-      dim__dates:
+      dim__game_dates:
         +materialized: table
         +schema: core
-        +tags: ["core", "dim__dates"]
+        +tags: ["core", "dim__game_dates"]
 
       dim__games:
         +materialized: table
@@ -142,21 +143,21 @@ models:
           +materialized: incremental
           +tags: ["betting", "features"]
 
-        game_context:
+        game:
           +materialized: incremental
-          +tags: ["game_context", "features"]
+          +tags: ["game", "features"]
 
-        play_by_play:
+        playbyplay:
           +materialized: incremental
-          +tags: ["play_by_play", "features"]
+          +tags: ["playbyplay", "features"]
         
-        player_level:
+        player:
           +materialized: incremental
-          +tags: ["player_level", "features"]
+          +tags: ["player", "features"]
 
-        player_pts_features:
+        team:
           +materialized: incremental
-          +tags: ["player_pts_features", "features"]
+          +tags: ["team_level", "features"]
 
     # Training models
     training:

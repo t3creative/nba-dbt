@@ -117,7 +117,16 @@ final AS (
             WHEN shot_distance < 23.75 THEN 'Long Mid Range'
             ELSE '3PT'
         END as shot_zone,
-        EXTRACT(EPOCH FROM CAST(clock AS TIME)) as seconds_remaining_in_period,
+        CASE
+    WHEN "clock" IS NULL THEN NULL
+    WHEN "clock" = '' THEN NULL
+    ELSE (
+        -- Extract minutes
+        NULLIF(REGEXP_REPLACE("clock", '^PT([0-9]{1,2})M.*$', '\1'), '')::int * 60 +
+        -- Extract seconds
+        NULLIF(REGEXP_REPLACE("clock", '^PT[0-9]{1,2}M([0-9]{1,2}\.[0-9]{1,2})S$', '\1'), '')::numeric
+    )
+END as seconds_remaining_in_period,
         
         -- Metadata
         current_timestamp as created_at,

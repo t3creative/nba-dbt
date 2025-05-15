@@ -6,7 +6,7 @@ SELECT
     blended_pts_projection,
     blended_reb_projection,
     blended_ast_projection
-FROM {{ ref('marts__player_game_prediction_features') }}
+FROM {{ ref('feat_opp___player_vs_opponent') }}
 WHERE 
     blended_pts_projection IS NULL OR
     blended_reb_projection IS NULL OR

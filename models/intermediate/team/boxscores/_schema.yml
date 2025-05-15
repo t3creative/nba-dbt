@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int__team_traditional_bxsc
+  - name: int__team_bxsc_traditional
     description: "Traditional team box score statistics including points, rebounds, assists, and shooting statistics"
     columns:
       - name: team_game_key
@@ -84,7 +84,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__team_advanced_bxsc
+  - name: int__team_bxsc_advanced
     description: "Advanced team box score statistics including offensive and defensive ratings, efficiency metrics, and pace"
     columns:
       - name: team_game_key
@@ -173,7 +173,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__team_hustle_bxsc
+  - name: int__team_bxsc_hustle
     description: "Hustle statistics for teams tracking effort plays like contested shots, deflections, and box outs"
     columns:
       - name: team_game_key
@@ -244,7 +244,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__team_misc_bxsc
+  - name: int__team_bxsc_misc
     description: "Miscellaneous team box score statistics including points by play type and opponent statistics"
     columns:
       - name: team_game_key
@@ -311,7 +311,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__team_scoring_bxsc
+  - name: int__team_bxsc_scoring
     description: "Detailed scoring breakdown for team box scores including shot distribution and points by type"
     columns:
       - name: team_game_key

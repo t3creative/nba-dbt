@@ -1,121 +1,47 @@
 version: 2
 
 models:
-  - name: int__player_props_normalized
-    description: >
-      Normalized player proposition bets with enriched player and team data.
-      Includes implied probability calculations and no-vig metrics.
-    config:
-      materialized: incremental
-      unique_key: prop_id
-      tags: ['betting', 'intermediate', 'player_props']
-    
+  - name: int__betting_pros__player_props_decimal_odds
+    description: "Intermediate model for player props that converts American odds to decimal odds. Sourced from betting_pros."
     columns:
-      - name: player_id
-        description: Unique identifier for the player
-        tests:
-          - not_null
-      
-      - name: player_slug
-        description: URL-friendly identifier for the player
-        tests:
-          - not_null
-      
-      - name: game_date
-        description: Date of the game
-        tests:
-          - not_null
-      
-      - name: game_id
-        description: Unique identifier for the game
-        tests:
-          - not_null
-      
-      - name: opponent_id
-        description: Identifier for the opponent team
-      
       - name: prop_id
-        description: Unique identifier for the proposition bet
+        description: "Unique identifier for each prop line, generated from player_slug, game_date, market_id, line, and sportsbook."
         tests:
           - unique
           - not_null
-      
       - name: offer_id
-        description: Identifier for the betting offer
-      
+        description: "Offer ID from Betting Pros."
       - name: bp_event_id
-        description: Event identifier from the data source
-      
+        description: "Event ID from Betting Pros."
       - name: player_name
-        description: Full name of the player
-        tests:
-          - not_null
-      
+        description: "Name of the player."
+      - name: player_slug
+        description: "URL-friendly slug for the player."
       - name: team_tricode
-        description: Three-letter team abbreviation
-      
-      - name: team_full_name
-        description: Full name of the player's team
-      
-      - name: team_id
-        description: Unique identifier for the player's team
-      
-      - name: market_id
-        description: Identifier for the betting market type
-        tests:
-          - not_null
-      
-      - name: market_original
-        description: Original market name from the data source (e.g., "Points O/U", "Rebounds O/U")
-        tests:
-          - not_null
-      
-      - name: market
-        description: Standardized market code (e.g., "PTS", "REB", "AST", "PTS+AST")
-        tests:
-          - not_null
-      
-      - name: is_combined_stat
-        description: Boolean flag indicating if this is a combined stat market (e.g., PTS+AST, PTS+REB+AST)
-      
-      - name: line
-        description: The betting line value
-        tests:
-          - not_null
-      
+        description: "Team tricode for the player."
       - name: sportsbook
-        description: Name of the sportsbook offering the bet
+        description: "The sportsbook offering the prop."
+      - name: market_id
+        description: "Identifier for the market type (e.g., player_points, player_assists)."
+      - name: market
+        description: "Description of the market (e.g., Player Points, Player Assists)."
+      - name: line
+        description: "The betting line for the prop (e.g., 25.5 for points)."
+      - name: over_odds_decimal
+        description: "The decimal odds for the 'over' bet."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_ Normalmente_positive: # Assuming odds should be positive
+              strictly: false 
+      - name: under_odds_decimal
+        description: "The decimal odds for the 'under' bet."
+        tests:
+          - dbt_expectations.expect_column_values_to_be_Normally_positive: # Assuming odds should be positive
+              strictly: false
+      - name: game_date
+        description: "Date of the game."
         tests:
           - not_null
-      
-      - name: over_odds
-        description: American odds for the over bet
-      
-      - name: under_odds
-        description: American odds for the under bet
-      
       - name: source_file
-        description: Source file where the data originated
-      
-      - name: prop_key
-        description: Surrogate key combining player, market, date and line
-        tests:
-          - not_null
-      
-      - name: over_implied_prob
-        description: Implied probability derived from over odds (0-1 scale)
-      
-      - name: under_implied_prob
-        description: Implied probability derived from under odds (0-1 scale)
-      
-      - name: total_implied_prob
-        description: Sum of over and under implied probabilities (>1 indicates vig)
-      
-      - name: over_no_vig_prob
-        description: Fair probability for over after removing bookmaker margin
-      
-      - name: under_no_vig_prob
-        description: Fair probability for under after removing bookmaker margin
-      
-      - name: hold_percentage
-        description: Bookmaker's margin (vig) as a percentage
+        description: "The source file from which the data was ingested."
+        
+  

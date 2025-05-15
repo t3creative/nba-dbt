@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int__player_advanced_bxsc
+  - name: int__player_bxsc_advanced
     description: "Advanced player box score statistics including offensive and defensive ratings, usage metrics, and efficiency statistics"
     columns:
       - name: player_game_key
@@ -90,7 +90,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_traditional_bxsc
+  - name: int__player_bxsc_traditional
     description: "Traditional player box score statistics including points, rebounds, assists, and shooting statistics"
     columns:
       - name: player_game_key
@@ -177,7 +177,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_scoring_bxsc
+  - name: int__player_bxsc_scoring
     description: "Detailed scoring breakdown for player box scores including shot distribution and points by type"
     columns:
       - name: player_game_key
@@ -252,7 +252,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_usage_bxsc
+  - name: int__player_bxsc_usage
     description: "Player usage statistics showing the percentage of team stats a player accounts for"
     columns:
       - name: player_game_key
@@ -331,7 +331,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_defensive_bxsc
+  - name: int__player_bxsc_defensive
     description: "Defensive statistics for players including matchup data and opponent shooting metrics"
     columns:
       - name: player_game_key
@@ -400,7 +400,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_hustle_bxsc
+  - name: int__player_bxsc_hustle
     description: "Hustle statistics for players tracking effort plays like contested shots, deflections, and box outs"
     columns:
       - name: player_game_key
@@ -475,7 +475,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_misc_bxsc
+  - name: int__player_bxsc_misc
     description: "Miscellaneous player box score statistics including points per various metrics"
     columns:
       - name: player_game_key
@@ -544,7 +544,7 @@ models:
       - name: updated_at
         description: "Record update timestamp"
 
-  - name: int__player_tracking_bxsc
+  - name: int__player_bxsc_tracking
     description: "Player tracking statistics from optical tracking data including speed, distance, touches, and shot quality"
     columns:
       - name: player_game_key

@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: int__active_players
+  - name: int_player__active_players
     description: "Active players for the 2024-25 NBA season with their current team information"
     config:
       tags: ['player', 'intermediate', 'roster']
@@ -42,7 +42,7 @@ models:
       - name: created_at
         description: "Timestamp when the record was created" 
   
-  - name: int__player_matchups_bxsc
+  - name: int__player_bxsc_matchups
     description: "Player-to-player matchup statistics showing how offensive players performed when matched against specific defenders"
     tests:
       - dbt_expectations.expect_table_row_count_to_be_between:
@@ -163,15 +163,7 @@ models:
         description: "Record creation timestamp"
       - name: updated_at
         description: "Record update timestamp"
-  - name: int__player_scoring_features
-    description: Final aggregated player scoring features table
-    columns:
-      - name: player_game_key
-        description: Unique identifier for player-game combination
-        tests:
-          - unique
-          - not_null
-  - name: int__player_career_stats
+  - name: int_player__career_to_date_stats
     description: Tracks running career statistics for players including points, games played, and career highs
     columns:
       - name: player_game_key
@@ -214,7 +206,7 @@ models:
       - name: is_new_career_high
         description: Flag indicating if this game set a new career high in points (1=yes, 0=no)
 
-  - name: int__player_milestone_games
+  - name: int_player__milestone_games
     description: Records milestone scoring games (30+, 40+ points) and related statistical aggregations
     columns:
       - name: player_game_key
@@ -258,42 +250,3 @@ models:
         description: Date of the player's most recent 30+ point game
       - name: latest_40_plus_date
         description: Date of the player's most recent 40+ point game
-
-  - name: int__player_usage_patterns
-    description: Aggregates player usage statistics across different scoring thresholds and patterns per game
-    columns:
-      - name: player_game_key
-        description: Unique identifier for player-game combination
-        tests:
-          - unique
-          - not_null
-      - name: player_id
-        description: NBA player ID
-        tests:
-          - not_null
-      - name: game_id
-        description: NBA game ID
-        tests:
-          - not_null
-      - name: avg_usage_in_30_plus_career
-        description: "Average usage rate in games where player scored 30+ points (Note: This model outputs per game, description might need update if aggregation intended)"
-      - name: avg_usage_in_40_plus_career
-        description: "Average usage rate in games where player scored 40+ points (Note: See above)"
-      - name: avg_usage_0_to_9_pts
-        description: "Average usage rate in games where player scored 0-9 points (Note: See above)"
-      - name: avg_usage_10_to_19_pts
-        description: "Average usage rate in games where player scored 10-19 points (Note: See above)"
-      - name: avg_usage_20_to_29_pts
-        description: "Average usage rate in games where player scored 20-29 points (Note: See above)"
-      - name: count_30_plus_games
-        description: "Indicator if this game had 30+ points (1 if yes, 0 if no) (Note: Model calculates counts, description needs check)"
-      - name: count_40_plus_games
-        description: "Indicator if this game had 40+ points (1 if yes, 0 if no) (Note: See above)"
-      - name: count_0_to_9_pt_games
-        description: "Indicator if this game had 0-9 points (1 if yes, 0 if no) (Note: See above)"
-      - name: count_10_to_19_pt_games
-        description: "Indicator if this game had 10-19 points (1 if yes, 0 if no) (Note: See above)"
-      - name: count_20_to_29_pt_games
-        description: "Indicator if this game had 20-29 points (1 if yes, 0 if no) (Note: See above)"
-      - name: total_games_with_usage
-        description: "Count of games with usage data (Always 1 in per-game output) (Note: See above)" 

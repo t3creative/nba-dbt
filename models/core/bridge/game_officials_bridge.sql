@@ -19,9 +19,7 @@ games_source AS (
     SELECT
         game_id,
         game_key,
-        game_date,
-        season,
-        season_type
+        game_date
     FROM {{ ref('dim__games') }}
 ),
 
@@ -40,8 +38,6 @@ joined_data AS (
         o.game_id,
         g.game_key,
         g.game_date,
-        g.season_year,
-        g.season_type,
         o.official_id,
         od.official_key,
         od.first_name,
@@ -62,8 +58,6 @@ SELECT
     game_id,
     game_key,
     game_date,
-    season_year,
-    season_type,
     official_id,
     official_key,
     first_name,

@@ -16,7 +16,7 @@
 {% macro days_since_milestone(game_date, milestone_date) %}
 case 
     when {{ milestone_date }} is not null and {{ game_date }} > {{ milestone_date }} 
-    then {{ game_date }} - {{ milestone_date }} 
+    then extract(day from ({{ game_date }}::timestamp - {{ milestone_date }}::timestamp))
     else null 
 end
 {% endmacro %}
@@ -49,7 +49,7 @@ end
             {% set max_date_query %}
                 select 
                 {% if lookback_days > 0 %}
-                    dateadd(day, -{{ lookback_days }}, max({{ date_column.split(".")[-1] }}))
+                    max({{ date_column.split(".")[-1] }}) - INTERVAL '{{ lookback_days }} days'
                 {% else %}
                     max({{ date_column.split(".")[-1] }})
                 {% endif %}

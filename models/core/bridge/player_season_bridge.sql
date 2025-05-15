@@ -25,7 +25,7 @@ player_seasons AS (
         player_id,
         season_year,
         'Regular Season' AS season_type
-    FROM {{ ref('int__combined_player_boxscore') }}
+    FROM {{ ref('int_player__combined_boxscore') }}
 ),
 
 -- Get player career range
@@ -53,8 +53,8 @@ player_season_data AS (
         EXTRACT(YEAR FROM s.start_date) - p.draft_year + 22 AS estimated_age, -- Rough estimate based on draft year
         -- Determine player status
         CASE
-            WHEN CAST(ps.season_year AS INTEGER) BETWEEN pc.from_year AND pc.to_year THEN 'Active'
-            WHEN CAST(ps.season_year AS INTEGER) > pc.to_year THEN 'Retired'
+            WHEN CAST(LEFT(ps.season_year, 4) AS INTEGER) BETWEEN pc.from_year AND pc.to_year THEN 'Active'
+            WHEN CAST(LEFT(ps.season_year, 4) AS INTEGER) > pc.to_year THEN 'Retired'
             ELSE 'Unknown'
         END AS player_status,
         current_timestamp AS valid_from,

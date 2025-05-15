@@ -4,11 +4,33 @@
     unique_key=['prop_market_key']
 ) }}
 
-WITH props_source AS (
+WITH stg_props AS (
     SELECT DISTINCT
-        market_cleaned,
-        max_market AS market_original
-    FROM {{ ref('int__player_props_normalized') }}
+        market -- This is the raw market name like "Player Points"
+    FROM {{ ref('stg__player_props') }}
+),
+
+derived_cleaned_market AS (
+    SELECT
+        market as market_original,
+        CASE
+            WHEN LOWER(market) LIKE '%points%' AND LOWER(market) LIKE '%assists%' AND LOWER(market) LIKE '%rebounds%' THEN 'PTS+AST+REB'
+            WHEN LOWER(market) LIKE '%points%' AND LOWER(market) LIKE '%assists%' THEN 'PTS+AST'
+            WHEN LOWER(market) LIKE '%points%' AND LOWER(market) LIKE '%rebounds%' THEN 'PTS+REB'
+            WHEN LOWER(market) LIKE '%rebounds%' AND LOWER(market) LIKE '%assists%' THEN 'REB+AST'
+            WHEN LOWER(market) LIKE '%points%' THEN 'PTS'
+            WHEN LOWER(market) LIKE '%rebounds%' THEN 'REB'
+            WHEN LOWER(market) LIKE '%assists%' THEN 'AST'
+            WHEN LOWER(market) LIKE '%three pointers%' OR LOWER(market) LIKE '%threes made%' OR LOWER(market) LIKE '%fg3m%' THEN 'FG3M'
+            WHEN LOWER(market) LIKE '%blocks%' THEN 'BLK'
+            WHEN LOWER(market) LIKE '%steals%' THEN 'STL'
+            WHEN LOWER(market) LIKE '%double-double%' THEN 'DBL_DBL'
+            WHEN LOWER(market) LIKE '%triple-double%' THEN 'TRP_DBL'
+            WHEN LOWER(market) LIKE '%first basket%' THEN 'FIRST_BASKET'
+            -- Add more specific mappings as needed based on your raw `market` values
+            ELSE REPLACE(UPPER(market), ' ', '_') -- Fallback, attempt to create a slug-like version
+        END AS market_cleaned
+    FROM stg_props
 ),
 
 categorized AS (
@@ -33,15 +55,15 @@ categorized AS (
             WHEN market_cleaned = 'AST' THEN 'Assists'
             WHEN market_cleaned = 'BLK' THEN 'Blocks'
             WHEN market_cleaned = 'STL' THEN 'Steals'
-            WHEN market_cleaned = 'FG3M' THEN 'Three Pointers'
+            WHEN market_cleaned = 'FG3M' THEN 'Three Pointers Made'
             WHEN market_cleaned = 'PTS+AST' THEN 'Points + Assists'
             WHEN market_cleaned = 'PTS+REB' THEN 'Points + Rebounds'
             WHEN market_cleaned = 'REB+AST' THEN 'Rebounds + Assists'
             WHEN market_cleaned = 'PTS+AST+REB' THEN 'Points + Assists + Rebounds'
             WHEN market_cleaned = 'DBL_DBL' THEN 'Double-Double'
             WHEN market_cleaned = 'TRP_DBL' THEN 'Triple-Double'
-            WHEN market_cleaned = 'FIRST_BASKET' THEN 'First Basket'
-            ELSE market_cleaned
+            WHEN market_cleaned = 'FIRST_BASKET' THEN 'First Basket Scorer'
+            ELSE market_cleaned -- Use the cleaned version if no specific override
         END AS stat_type,
         
         -- Is it a combined stat?
@@ -94,7 +116,7 @@ categorized AS (
         current_timestamp AS valid_from,
         NULL AS valid_to,
         TRUE AS is_current
-    FROM props_source
+    FROM derived_cleaned_market -- Changed source CTE
 ),
 
 final AS (

@@ -1,9 +1,9 @@
 {{ config(
     materialized='table',
     tags=['core', 'bridge', 'teams', 'seasons'],
-    unique_key=['team_id', 'season', 'season_type'],
+    unique_key=['team_id', 'season_year', 'season_type'],
     partition_by={
-        'field': 'season',
+        'field': 'season_year',
         'data_type': 'string',
         'granularity': 'all'
     }
@@ -18,34 +18,33 @@ season_source AS (
     SELECT * FROM {{ ref('dim__seasons') }}
 ),
 
--- Get the distinct seasons from game data to ensure accurate team season records
-game_seasons AS (
+-- Get all unique (team_id, season_year, season_type) pairs from games
+game_team_seasons AS (
     SELECT DISTINCT
-        season_year,
-        season_type,
-        home_team_id AS team_id
+        home_team_id AS team_id,
+        game_date,
+        game_id
     FROM {{ ref('dim__games') }}
-    
     UNION
-    
     SELECT DISTINCT
-        season_year,
-        season_type,
-        away_team_id AS team_id
+        away_team_id AS team_id,
+        game_date,
+        game_id
     FROM {{ ref('dim__games') }}
 ),
 
--- Join teams with the seasons they participated in
 team_seasons AS (
     SELECT
-        ts.team_id,
+        gts.team_id,
         t.team_key,
         t.team_tricode,
         t.team_nickname,
         t.team_city,
         t.team_state,
-        ts.season_year,
-        ts.season_type,
+        gts.game_date,
+        gts.game_id,
+        s.season_year,
+        s.season_type,
         s.season_key,
         s.season_type_sort,
         s.start_date,
@@ -53,12 +52,11 @@ team_seasons AS (
         current_timestamp AS valid_from,
         NULL AS valid_to,
         TRUE AS is_current
-    FROM game_seasons ts
+    FROM game_team_seasons gts
     INNER JOIN team_source t
-        ON ts.team_id = t.team_id
+        ON gts.team_id = t.team_id
     INNER JOIN season_source s
-        ON ts.season = s.season
-        AND ts.season_type = s.season_type
+        ON gts.game_date BETWEEN s.start_date AND s.end_date
 )
 
 SELECT
@@ -69,12 +67,12 @@ SELECT
     team_nickname,
     team_city,
     team_state,
+    game_date,
+    game_id,
     season_year,
     season_type,
     season_key,
     season_type_sort,
-    conference,
-    division,
     start_date,
     end_date,
     valid_from,
