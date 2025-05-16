@@ -2,13 +2,14 @@
     config(
         schema='training',
         materialized='table',
+        unique_key= 'player_prop_key',
         tags=['betting', 'player_props', 'ml', 'training'],
         partition_by={
             "field": "game_date",
             "data_type": "date",
             "granularity": "month"
         },
-        cluster_by=['player_id', 'market_cleaned']
+        cluster_by=['player_id', 'market']
     )
 }}
 

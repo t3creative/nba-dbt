@@ -1,0 +1,38 @@
+models:
+  - name: feat_opp__opponent_pregame_profile
+    description: >
+      The 'feat_opp__opponent_pregame_profile' model provides a comprehensive profile of an NBA team's
+      opponent before a game. It includes various statistics such as the opponent's defensive rating, offensive rating,
+      pace, points per game, allowed points in the paint, rebound percentage, offensive rebound percentage, defensive
+      rebound percentage, blocks per game, steals per game, field goal percentage, three-point field goal percentage,
+      free throw percentage, and turnover ratio. The model also calculates the opponent's average statistics over the
+      last 5 and 10 games, as well as for the entire season up to the current game. Additionally, it provides an adjusted
+      defensive rating and pace, which default to the season average if the last 5 games' data is not available. Finally,
+      the model calculates z-scores for the opponent's defensive rating and pace over the last 10 games, providing a
+      measure of how these statistics compare to the season average.
+  - name: feat_opp__position_defense_profile
+    description: >
+      The 'feat_opp__position_defense_profile' model provides position-specific defensive metrics by 
+      opponent team. It includes columns for opponent_id, position, season_year, game_date, average points, rebounds,
+      assists, steals, blocks, field goal percentage, and three-point field goal percentage allowed to a position.
+      It also includes the last 10 games' average points allowed to a position, league average points, rebounds,
+      assists, steals, blocks, field goal percentage, and three-point field goal percentage by position. The model
+      also calculates the difference between the average points, rebounds, and assists allowed to a position and the
+      league average, and categorizes the matchup quality for points, rebounds, and assists as 'HIGH', 'LOW', or 'AVERAGE'.
+  - name: feat_opp__player_vs_opponent
+    description: >
+      The 'feat_opp__player_vs_opponent' model is a comprehensive dataset that provides detailed 
+      information about NBA players' performance against specific opponents. It includes data from various sources,
+      including player box scores, game opponents, player vs opponent history, player recent form, and team context.
+      The model contains a wide range of columns, including player and game identifiers, player and team statistics,
+      opponent statistics, and calculated metrics such as blended projections for points, rebounds, and assists. The
+      model is updated with the current timestamp each time it is run.
+  - name: feat_opp__player_vs_opponent_history
+    description: >
+      The 'feat_opp__player_vs_opponent_history' model provides a comprehensive history of NBA players'
+      performance against specific opponents. It includes data from various sources, including player box scores, game
+      opponents, player vs opponent history, player recent form, and team context. The model contains a wide range of
+      columns, including player and game identifiers, player and team statistics, opponent statistics, and calculated
+      metrics such as blended projections for points, rebounds, and assists. The model is updated with the current
+      timestamp each time it is run.
+

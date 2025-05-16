@@ -14,9 +14,9 @@ alwaysApply: true
 - **features**: Final output models optimized for analytics and ML use cases
 
 ### Naming Conventions
-- Staging models: `stg__<source>__<entity>_<type>`
-- Intermediate models: `int__<source>__<entity>_<type>`
-- Feature models: `<entity>_<level>_features`
+- Staging models: `stg_<entity>__<type>`
+- Intermediate models: `int__<entity>__<type>`
+- Feature models: `feat_<entity>__<level>_features`
 - File structure must align with model naming (consistent directories)
 
 ### File Organization
