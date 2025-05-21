@@ -42,7 +42,7 @@ game_team_lu as (
         game_id,
         team_id,
         home_away as type -- 'home' or 'away'
-    from {{ ref('int_opp__game_opponents') }}
+    from {{ ref('feat_opp__game_opponents') }}
 ),
 
 -- Get shot values from synthesized events

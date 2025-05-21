@@ -6,7 +6,7 @@ WITH arena_source AS (
         arena_city,
         arena_state,
         arena_country
-    FROM {{ ref('int__game_context') }}
+    FROM {{ ref('int_game__schedules') }}
 ),
 
 final AS (

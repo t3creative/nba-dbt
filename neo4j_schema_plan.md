@@ -37,7 +37,7 @@
    - Represents player vs player defensive matchups
 
 5. **Game Context**:
-   - Home/away team relationships in `int__game_context` and similar tables
+   - Home/away team relationships in `int_game__schedules` and similar tables
    - Includes information about game location, season, etc.
 
 6. **Key Composite Identifiers**:

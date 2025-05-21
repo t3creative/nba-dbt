@@ -8,7 +8,7 @@
 ) }}
 
 WITH game_source AS (
-    SELECT * FROM {{ ref('int__game_summary') }}
+    SELECT * FROM {{ ref('int_game__summary') }}
 ),
 
 arena_source AS (
@@ -18,7 +18,7 @@ arena_source AS (
         arena_city,
         arena_state,
         arena_country
-    FROM {{ ref('int__game_context') }}
+    FROM {{ ref('int_game__schedules') }}
 ),
 
 joined_data AS (

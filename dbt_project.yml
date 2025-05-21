@@ -28,7 +28,6 @@ vars:
   dbt_date_time_zone: 'America/New_York'
   use_simple_schema_names: true
   training_start_season_year: 2017-18
-  rolling_window_games: 10
   feature_recalc_window_days: 7
 
 # Configuring models
@@ -36,6 +35,11 @@ vars:
 
 models:
   nba_data_app:
+
+    analysis:
+      +materialized: view
+      +schema: analysis
+      +tags: ["analysis"]
 
     # Core models
     core:
@@ -117,10 +121,6 @@ models:
         +materialized: incremental
         +tags: ["game", "intermediate"]
 
-      opponent:
-        +materialized: incremental
-        +tags: ["opponent", "intermediate"]
-
       playbyplay:
         +materialized: incremental
         +tags: ["playbyplay", "intermediate"]
@@ -139,25 +139,9 @@ models:
         +schema: features
         +tags: ["features"]
 
-        betting:
+        player_game:
           +materialized: incremental
-          +tags: ["betting", "features"]
-
-        game:
-          +materialized: incremental
-          +tags: ["game", "features"]
-
-        playbyplay:
-          +materialized: incremental
-          +tags: ["playbyplay", "features"]
-        
-        player:
-          +materialized: incremental
-          +tags: ["player", "features"]
-
-        team:
-          +materialized: incremental
-          +tags: ["team_level", "features"]
+          +tags: ["player_game", "features"]
 
     # Training models
     training:

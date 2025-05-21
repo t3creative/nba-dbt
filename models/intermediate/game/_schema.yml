@@ -1,51 +1,287 @@
 version: 2
 
 models:
-  - name: int__game_matchups
-    description: "Intermediate model that parses matchup strings to identify home and away teams for each game"
+
+  - name: int_game__summary
+    description: "Intermediate model consolidating comprehensive game-level details, including scores, stats, historical context, inactive players, and officials."
     config:
-      tags: ['game_context', 'intermediate']
+      tags: ['game', 'intermediate']
     columns:
       - name: game_id
-        description: "Unique identifier for each game"
+        description: "Unique identifier for each game."
         tests:
           - unique
           - not_null
-      
-      - name: season_year
-        description: "Season identifier"
-        tests:
-          - not_null
-      
-      - name: game_date
-        description: "Date of the game"
-        tests:
-          - not_null
-      
-      - name: home_team_id
-        description: "Identifier for the home team"
-        tests:
-          - not_null
-      
-      - name: home_team_tricode
-        description: "Three-letter code for the home team"
-        tests:
-          - not_null
-      
-      - name: away_team_id
-        description: "Identifier for the away team"
-        tests:
-          - not_null
-      
-      - name: away_team_tricode
-        description: "Three-letter code for the away team"
-        tests:
-          - not_null
-      
-      - name: created_at
-        description: "Timestamp of when the record was created"
 
-  - name: int__game_context
+      - name: game_date_est
+        description: "Game date in Eastern Standard Time."
+        tests:
+          - not_null
+
+      - name: game_sequence
+        description: "Sequence number for the game within a day."
+
+      - name: game_status_id
+        description: "Identifier for the game status (e.g., Final, Scheduled)."
+
+      - name: game_status_text
+        description: "Text description of the game status."
+
+      - name: gamecode
+        description: "Unique code for the game."
+
+      - name: home_team_id
+        description: "Identifier for the home team."
+        tests:
+          - not_null
+
+      - name: away_team_id
+        description: "Identifier for the away team."
+        tests:
+          - not_null
+
+      - name: season
+        description: "Season identifier (e.g., '2023-24')."
+
+      - name: live_period
+        description: "Current live period of the game (if in progress)."
+
+      - name: live_pc_time
+        description: "Time remaining in the current live period (if in progress)."
+
+      - name: natl_tv_broadcaster_abbreviation
+        description: "Abbreviation of the national TV broadcaster."
+
+      - name: live_period_time_bcast
+        description: "Formatted time and period for live broadcast."
+
+      - name: wh_status
+        description: "Status related to the game's data availability."
+
+      - name: game_date
+        description: "Actual game date (may differ slightly from EST)."
+
+      - name: attendance
+        description: "Game attendance."
+
+      - name: game_time
+        description: "Game start time."
+
+      - name: official_ids
+        description: "Array of official IDs for the game."
+
+      - name: official_names
+        description: "Array of official names for the game."
+
+      - name: last_game_id
+        description: "ID of the last meeting between the two teams."
+
+      - name: last_game_date_est
+        description: "Date of the last meeting between the two teams."
+
+      - name: last_game_home_team_id
+        description: "Home team ID in the last meeting."
+
+      - name: last_game_home_team_points
+        description: "Home team points in the last meeting."
+
+      - name: last_game_away_team_id
+        description: "Away team ID in the last meeting."
+
+      - name: last_game_away_team_points
+        description: "Away team points in the last meeting."
+
+      - name: series_home_wins
+        description: "Number of wins for the home team in the season series."
+
+      - name: series_home_losses
+        description: "Number of losses for the home team in the season series."
+
+      - name: series_leader
+        description: "Team leading the season series."
+
+      - name: home_team_tricode
+        description: "Tricode for the home team."
+
+      - name: home_team_city_name
+        description: "City name for the home team."
+
+      - name: home_team_nickname
+        description: "Nickname for the home team."
+
+      - name: home_team_wins_losses
+        description: "Wins-losses record for the home team."
+
+      - name: home_pts_qtr1
+        description: "Home team points in the 1st quarter."
+
+      - name: home_pts_qtr2
+        description: "Home team points in the 2nd quarter."
+
+      - name: home_pts_qtr3
+        description: "Home team points in the 3rd quarter."
+
+      - name: home_pts_qtr4
+        description: "Home team points in the 4th quarter."
+
+      - name: home_pts_ot1
+        description: "Home team points in the 1st overtime."
+
+      - name: home_pts_ot2
+        description: "Home team points in the 2nd overtime."
+
+      - name: home_pts_ot3
+        description: "Home team points in the 3rd overtime."
+
+      - name: home_pts_ot4
+        description: "Home team points in the 4th overtime."
+
+      - name: home_pts_ot5
+        description: "Home team points in the 5th overtime."
+
+      - name: home_pts_ot6
+        description: "Home team points in the 6th overtime."
+
+      - name: home_pts_ot7
+        description: "Home team points in the 7th overtime."
+
+      - name: home_pts_ot8
+        description: "Home team points in the 8th overtime."
+
+      - name: home_pts_ot9
+        description: "Home team points in the 9th overtime."
+
+      - name: home_pts_ot10
+        description: "Home team points in the 10th overtime."
+
+      - name: home_pts
+        description: "Total home team points."
+
+      - name: away_team_tricode
+        description: "Tricode for the away team."
+
+      - name: away_team_city_name
+        description: "City name for the away team."
+
+      - name: away_team_nickname
+        description: "Nickname for the away team."
+
+      - name: away_team_wins_losses
+        description: "Wins-losses record for the away team."
+
+      - name: away_pts_qtr1
+        description: "Away team points in the 1st quarter."
+
+      - name: away_pts_qtr2
+        description: "Away team points in the 2nd quarter."
+
+      - name: away_pts_qtr3
+        description: "Away team points in the 3rd quarter."
+
+      - name: away_pts_qtr4
+        description: "Away team points in the 4th quarter."
+
+      - name: away_pts_ot1
+        description: "Away team points in the 1st overtime."
+
+      - name: away_pts_ot2
+        description: "Away team points in the 2nd overtime."
+
+      - name: away_pts_ot3
+        description: "Away team points in the 3rd overtime."
+
+      - name: away_pts_ot4
+        description: "Away team points in the 4th overtime."
+
+      - name: away_pts_ot5
+        description: "Away team points in the 5th overtime."
+
+      - name: away_pts_ot6
+        description: "Away team points in the 6th overtime."
+
+      - name: away_pts_ot7
+        description: "Away team points in the 7th overtime."
+
+      - name: away_pts_ot8
+        description: "Away team points in the 8th overtime."
+
+      - name: away_pts_ot9
+        description: "Away team points in the 9th overtime."
+
+      - name: away_pts_ot10
+        description: "Away team points in the 10th overtime."
+
+      - name: away_pts
+        description: "Total away team points."
+
+      - name: home_pts_in_paint
+        description: "Home team points in the paint."
+
+      - name: home_second_chance_pts
+        description: "Home team second chance points."
+
+      - name: home_fastbreak_pts
+        description: "Home team fastbreak points."
+
+      - name: home_largest_lead
+        description: "Home team largest lead."
+
+      - name: home_team_turnovers
+        description: "Home team turnovers."
+
+      - name: home_total_turnovers
+        description: "Home team total turnovers (including team turnovers)."
+
+      - name: home_team_rebounds
+        description: "Home team total rebounds."
+
+      - name: home_pts_off_to
+        description: "Home team points off turnovers."
+
+      - name: away_pts_in_paint
+        description: "Away team points in the paint."
+
+      - name: away_second_chance_pts
+        description: "Away team second chance points."
+
+      - name: away_fastbreak_pts
+        description: "Away team fastbreak points."
+
+      - name: away_largest_lead
+        description: "Away team largest lead."
+
+      - name: away_team_turnovers
+        description: "Away team turnovers."
+
+      - name: away_total_turnovers
+        description: "Away team total turnovers (including team turnovers)."
+
+      - name: away_team_rebounds
+        description: "Away team total rebounds."
+
+      - name: away_pts_off_to
+        description: "Away team points off turnovers."
+
+      - name: lead_changes
+        description: "Total lead changes in the game."
+
+      - name: times_tied
+        description: "Number of times the game was tied."
+
+      - name: home_inactive_player_ids
+        description: "Array of inactive player IDs for the home team."
+
+      - name: home_inactive_player_names
+        description: "Array of inactive player names for the home team."
+
+      - name: away_inactive_player_ids
+        description: "Array of inactive player IDs for the away team."
+
+      - name: away_inactive_player_names
+        description: "Array of inactive player names for the away team."
+
+
+  - name: int_game__schedules
     description: "Intermediate model providing game context information including rest days and team performance"
     config:
       tags: ['game_context', 'intermediate']
@@ -55,125 +291,123 @@ models:
         tests:
           - unique
           - not_null
-      
+
       - name: game_date
         description: "Date of the game"
         tests:
           - not_null
-      
+
       - name: season_year
         description: "Season identifier"
         tests:
           - not_null
-      
+
       - name: season_type
         description: "Type of season (e.g., Regular Season, Playoffs)"
-        
+
       - name: home_team_id
         description: "Identifier for the home team"
         tests:
           - not_null
-      
+
       - name: away_team_id
         description: "Identifier for the away team"
         tests:
           - not_null
-      
+
       - name: arena_id
         description: "Identifier for the arena"
-      
+
       - name: arena_name
         description: "Name of the arena"
-      
+
       - name: arena_city
         description: "City where the arena is located"
-      
+
       - name: arena_state
         description: "State where the arena is located"
-      
+
       - name: arena_country
         description: "Country where the arena is located"
-      
+
       - name: home_prev_game_id
         description: "ID of the previous game for the home team"
-      
+
       - name: home_prev_game_date
         description: "Date of the previous game for the home team"
-      
+
       - name: home_rest_days
         description: "Number of rest days for the home team"
-      
+
       - name: home_first_game_of_season
         description: "Flag indicating if this is the first game of the season for the home team"
-      
+
       - name: home_back_to_back
         description: "Flag indicating if this is a back-to-back game for the home team"
-      
+
       - name: home_short_rest
         description: "Flag indicating if the home team is on short rest (2-3 days)"
-      
+
       - name: home_long_rest
         description: "Flag indicating if the home team is on long rest (4+ days)"
-      
+
       - name: home_team_game_num
         description: "Game number for the home team in the season"
-      
+
       - name: home_wins_last_10
         description: "Number of wins in the last 10 games for the home team"
-      
+
       - name: home_losses_last_10
         description: "Number of losses in the last 10 games for the home team"
-      
+
       - name: home_games_played_last_10
         description: "Number of games played in the last 10 for the home team"
-      
+
       - name: home_win_pct_last_10
         description: "Win percentage in the last 10 games for the home team"
-      
+
       - name: away_prev_game_id
         description: "ID of the previous game for the away team"
-      
+
       - name: away_prev_game_date
         description: "Date of the previous game for the away team"
-      
+
       - name: away_rest_days
         description: "Number of rest days for the away team"
-      
+
       - name: away_first_game_of_season
         description: "Flag indicating if this is the first game of the season for the away team"
-      
+
       - name: away_back_to_back
         description: "Flag indicating if this is a back-to-back game for the away team"
-      
+
       - name: away_short_rest
         description: "Flag indicating if the away team is on short rest (2-3 days)"
-      
+
       - name: away_long_rest
         description: "Flag indicating if the away team is on long rest (4+ days)"
-      
+
       - name: away_team_game_num
         description: "Game number for the away team in the season"
-      
+
       - name: away_wins_last_10
         description: "Number of wins in the last 10 games for the away team"
-      
+
       - name: away_losses_last_10
         description: "Number of losses in the last 10 games for the away team"
-      
+
       - name: away_games_played_last_10
         description: "Number of games played in the last 10 for the away team"
-      
+
       - name: away_win_pct_last_10
         description: "Win percentage in the last 10 games for the away team"
-      
+
       - name: is_playoff_game
         description: "Flag indicating if this is a playoff game"
-      
+
       - name: is_late_season
         description: "Flag indicating if this is a late-season game (game 70+ in regular season)"
-        
+
       - name: created_at
         description: "Timestamp of when the record was created"
 
- 
- 

@@ -29,6 +29,7 @@ milestone_flags as (
         game_id,
         game_date,
         season_id,
+        season_year,
         pts,
         -- Scoring threshold flags using macro
         {{ calculate_milestone_flags('pts') }}
@@ -56,6 +57,38 @@ previous_milestone_dates as (
     group by player_id
 ),
 {% endif %}
+
+-- Season aggregations for previous season totals - REMAINS THE SAME for `_prev_season` lag
+season_aggs_for_lag as (
+    select
+        player_id,
+        season_id,
+        sum(is_30_plus_game) as total_30_plus_games_in_season, -- Renamed for clarity
+        sum(is_40_plus_game) as total_40_plus_games_in_season  -- Renamed for clarity
+    from milestone_flags
+    group by player_id, season_id
+),
+
+-- Latest milestone dates from PREVIOUS games within the current batch (for incremental part)
+-- This CTE is no longer the primary source for latest_date in the final select for current game,
+-- but helps in correctly determining the running max when combining with {{this}}
+current_batch_prior_milestone_dates as (
+    select
+        player_id,
+        game_date,
+        game_id,
+        max(case when is_30_plus_game = 1 then game_date end) over (
+            partition by player_id 
+            order by game_date, game_id 
+            rows between unbounded preceding and 1 preceding
+        ) as batch_latest_30_plus_date_prior,
+        max(case when is_40_plus_game = 1 then game_date end) over (
+            partition by player_id 
+            order by game_date, game_id 
+            rows between unbounded preceding and 1 preceding
+        ) as batch_latest_40_plus_date_prior
+    from milestone_flags
+),
 
 -- Season aggregations
 season_aggs as (
@@ -87,6 +120,7 @@ base_values as (
         mf.game_id,
         mf.game_date,
         mf.season_id,
+        mf.season_year,
         mf.pts,
         mf.is_30_plus_game,
         mf.is_40_plus_game,
@@ -104,6 +138,7 @@ base_values as (
         game_id,
         game_date,
         season_id,
+        season_year,
         pts,
         is_30_plus_game,
         is_40_plus_game,
@@ -119,59 +154,82 @@ select
     bv.game_id,
     bv.game_date,
     bv.season_id,
+    bv.season_year,
     bv.pts,
     bv.is_30_plus_game,
     bv.is_40_plus_game,
     
-    -- Career counts of previous 30+ and 40+ point games (not including current game)
+    -- Career counts of 30+ and 40+ point games PRIOR to current game
     bv.base_thirty_plus_games + coalesce(sum(bv.is_30_plus_game) over (
         partition by bv.player_id 
         order by bv.game_date, bv.game_id
         rows between unbounded preceding and 1 preceding
-    ), 0) as thirty_plus_games_career,
+    ), 0) as thirty_plus_games_career_prior,
     
     bv.base_forty_plus_games + coalesce(sum(bv.is_40_plus_game) over (
         partition by bv.player_id 
         order by bv.game_date, bv.game_id
         rows between unbounded preceding and 1 preceding
-    ), 0) as forty_plus_games_career,
+    ), 0) as forty_plus_games_career_prior,
     
-    -- Season totals
-    sa.thirty_plus_games_season,
-    sa.forty_plus_games_season,
+    -- Season totals of 30+ and 40+ games PRIOR to current game in THIS season
+    coalesce(sum(bv.is_30_plus_game) over (
+        partition by bv.player_id, bv.season_id 
+        order by bv.game_date, bv.game_id
+        rows between unbounded preceding and 1 preceding
+    ), 0) as thirty_plus_games_this_season_prior,
+
+    coalesce(sum(bv.is_40_plus_game) over (
+        partition by bv.player_id, bv.season_id 
+        order by bv.game_date, bv.game_id
+        rows between unbounded preceding and 1 preceding
+    ), 0) as forty_plus_games_this_season_prior,
     
-    -- Previous season totals (using lag)
-    lag(sa.thirty_plus_games_season, 1, 0) over (
-        partition by bv.player_id order by bv.season_id
+    -- Previous season totals (using lag on full season aggregates)
+    lag(sa_lag.total_30_plus_games_in_season, 1, 0) over (
+        partition by bv.player_id order by bv.season_id -- season_id must be comparable/sortable
     ) as thirty_plus_games_prev_season,
     
-    lag(sa.forty_plus_games_season, 1, 0) over (
+    lag(sa_lag.total_40_plus_games_in_season, 1, 0) over (
         partition by bv.player_id order by bv.season_id
     ) as forty_plus_games_prev_season,
     
-    -- Latest milestone dates - optimized for incremental processing
+    -- Latest milestone dates PRIOR to current game
     {% if is_incremental() %}
-        -- Use the most recent date between previous stored date and current batch
-        case 
-            when cmd.current_latest_30_plus_date is not null and pmd.prev_latest_30_plus_date is not null 
-            then greatest(cmd.current_latest_30_plus_date, pmd.prev_latest_30_plus_date)
-            else coalesce(cmd.current_latest_30_plus_date, pmd.prev_latest_30_plus_date)
-        end as latest_30_plus_date,
+        greatest(
+            max(case when bv.is_30_plus_game = 1 then bv.game_date end) over (
+                partition by bv.player_id 
+                order by bv.game_date, bv.game_id
+                rows between unbounded preceding and 1 preceding
+            ),
+            pmd.prev_latest_30_plus_date
+        ) as latest_30_plus_date_prior,
         
-        case 
-            when cmd.current_latest_40_plus_date is not null and pmd.prev_latest_40_plus_date is not null 
-            then greatest(cmd.current_latest_40_plus_date, pmd.prev_latest_40_plus_date)
-            else coalesce(cmd.current_latest_40_plus_date, pmd.prev_latest_40_plus_date)
-        end as latest_40_plus_date
+        greatest(
+            max(case when bv.is_40_plus_game = 1 then bv.game_date end) over (
+                partition by bv.player_id 
+                order by bv.game_date, bv.game_id
+                rows between unbounded preceding and 1 preceding
+            ),
+            pmd.prev_latest_40_plus_date
+        ) as latest_40_plus_date_prior
     {% else %}
-        cmd.current_latest_30_plus_date as latest_30_plus_date,
-        cmd.current_latest_40_plus_date as latest_40_plus_date
+        max(case when bv.is_30_plus_game = 1 then bv.game_date end) over (
+            partition by bv.player_id 
+            order by bv.game_date, bv.game_id
+            rows between unbounded preceding and 1 preceding
+        ) as latest_30_plus_date_prior,
+        
+        max(case when bv.is_40_plus_game = 1 then bv.game_date end) over (
+            partition by bv.player_id 
+            order by bv.game_date, bv.game_id
+            rows between unbounded preceding and 1 preceding
+        ) as latest_40_plus_date_prior
     {% endif %}
 from base_values bv
-left join season_aggs sa 
-    on bv.player_id = sa.player_id and bv.season_id = sa.season_id
-left join current_milestone_dates cmd
-    on bv.player_id = cmd.player_id
+-- Join for previous season's totals
+left join season_aggs_for_lag sa_lag
+    on bv.player_id = sa_lag.player_id and bv.season_id = sa_lag.season_id
 {% if is_incremental() %}
 left join previous_milestone_dates pmd
     on bv.player_id = pmd.player_id
