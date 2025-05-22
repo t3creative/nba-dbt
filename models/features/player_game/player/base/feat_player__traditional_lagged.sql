@@ -22,6 +22,7 @@ with traditional_boxscore as (
         player_game_key,
         game_id,
         player_id,
+        player_name,
         team_id,
         opponent_id,
         game_date,
@@ -65,23 +66,46 @@ with traditional_boxscore as (
     {% endif %}
 ),
 
-final as (
+lagged_stats as (
     select
         -- Identifiers & Metadata
         player_game_key,
         game_id,
         player_id,
+        player_name,
         team_id,
         opponent_id,
         game_date,
         season_year,
+
+        -- Traditional Boxscore Stats (current game)
+        min,
+        pts,
+        fgm,
+        fga,
+        fg_pct,
+        fg3m,
+        fg3a,
+        fg3_pct,
+        ftm,
+        fta,
+        ft_pct,
+        reb,
+        off_reb,
+        def_reb,
+        ast,
+        stl,
+        blk,
+        tov,
+        pf,
+        plus_minus,
 
         -- Lagged Traditional Boxscore Stats
         {{ calculate_lag('min', 'player_id', 'game_date', 1) }} as min_lag_1g,
         {{ calculate_lag('min', 'player_id', 'game_date', 3) }} as min_lag_3g,
         {{ calculate_lag('min', 'player_id', 'game_date', 5) }} as min_lag_5g,
         {{ calculate_lag('min', 'player_id', 'game_date', 7) }} as min_lag_7g,
-        
+
         {{ calculate_lag('pts', 'player_id', 'game_date', 1) }} as pts_lag_1g,
         {{ calculate_lag('pts', 'player_id', 'game_date', 3) }} as pts_lag_3g,
         {{ calculate_lag('pts', 'player_id', 'game_date', 5) }} as pts_lag_5g,
@@ -180,6 +204,114 @@ final as (
         traditional_boxscore.updated_at
 
     from traditional_boxscore
+),
+
+final as (
+    select
+        *, -- Select all columns from lagged_stats
+
+        -- Lagged Delta Calculations (Current Stat - Lagged Stat)
+        min - min_lag_1g as min_delta_lag_1g,
+        min - min_lag_3g as min_delta_lag_3g,
+        min - min_lag_5g as min_delta_lag_5g,
+        min - min_lag_7g as min_delta_lag_7g,
+
+        pts - pts_lag_1g as pts_delta_lag_1g,
+        pts - pts_lag_3g as pts_delta_lag_3g,
+        pts - pts_lag_5g as pts_delta_lag_5g,
+        pts - pts_lag_7g as pts_delta_lag_7g,
+
+        fgm - fgm_lag_1g as fgm_delta_lag_1g,
+        fgm - fgm_lag_3g as fgm_delta_lag_3g,
+        fgm - fgm_lag_5g as fgm_delta_lag_5g,
+        fgm - fgm_lag_7g as fgm_delta_lag_7g,
+
+        fga - fga_lag_1g as fga_delta_lag_1g,
+        fga - fga_lag_3g as fga_delta_lag_3g,
+        fga - fga_lag_5g as fga_delta_lag_5g,
+        fga - fga_lag_7g as fga_delta_lag_7g,
+
+        fg_pct - fg_pct_lag_1g as fg_pct_delta_lag_1g,
+        fg_pct - fg_pct_lag_3g as fg_pct_delta_lag_3g,
+        fg_pct - fg_pct_lag_5g as fg_pct_delta_lag_5g,
+        fg_pct - fg_pct_lag_7g as fg_pct_delta_lag_7g,
+
+        reb - reb_lag_1g as reb_delta_lag_1g,
+        reb - reb_lag_3g as reb_delta_lag_3g,
+        reb - reb_lag_5g as reb_delta_lag_5g,
+        reb - reb_lag_7g as reb_delta_lag_7g,
+
+        off_reb - off_reb_lag_1g as off_reb_delta_lag_1g,
+        off_reb - off_reb_lag_3g as off_reb_delta_lag_3g,
+        off_reb - off_reb_lag_5g as off_reb_delta_lag_5g,
+        off_reb - off_reb_lag_7g as off_reb_delta_lag_7g,
+
+        def_reb - def_reb_lag_1g as def_reb_delta_lag_1g,
+        def_reb - def_reb_lag_3g as def_reb_delta_lag_3g,
+        def_reb - def_reb_lag_5g as def_reb_delta_lag_5g,
+        def_reb - def_reb_lag_7g as def_reb_delta_lag_7g,
+
+        ast - ast_lag_1g as ast_delta_lag_1g,
+        ast - ast_lag_3g as ast_delta_lag_3g,
+        ast - ast_lag_5g as ast_delta_lag_5g,
+        ast - ast_lag_7g as ast_delta_lag_7g,
+
+        fg3m - fg3m_lag_1g as fg3m_delta_lag_1g,
+        fg3m - fg3m_lag_3g as fg3m_delta_lag_3g,
+        fg3m - fg3m_lag_5g as fg3m_delta_lag_5g,
+        fg3m - fg3m_lag_7g as fg3m_delta_lag_7g,
+
+        fg3a - fg3a_lag_1g as fg3a_delta_lag_1g,
+        fg3a - fg3a_lag_3g as fg3a_delta_lag_3g,
+        fg3a - fg3a_lag_5g as fg3a_delta_lag_5g,
+        fg3a - fg3a_lag_7g as fg3a_delta_lag_7g,
+
+        fg3_pct - fg3_pct_lag_1g as fg3_pct_delta_lag_1g,
+        fg3_pct - fg3_pct_lag_3g as fg3_pct_delta_lag_3g,
+        fg3_pct - fg3_pct_lag_5g as fg3_pct_delta_lag_5g,
+        fg3_pct - fg3_pct_lag_7g as fg3_pct_delta_lag_7g,
+
+        ftm - ftm_lag_1g as ftm_delta_lag_1g,
+        ftm - ftm_lag_3g as ftm_delta_lag_3g,
+        ftm - ftm_lag_5g as ftm_delta_lag_5g,
+        ftm - ftm_lag_7g as ftm_delta_lag_7g,
+
+        fta - fta_lag_1g as fta_delta_lag_1g,
+        fta - fta_lag_3g as fta_delta_lag_3g,
+        fta - fta_lag_5g as fta_delta_lag_5g,
+        fta - fta_lag_7g as fta_delta_lag_7g,
+
+        ft_pct - ft_pct_lag_1g as ft_pct_delta_lag_1g,
+        ft_pct - ft_pct_lag_3g as ft_pct_delta_lag_3g,
+        ft_pct - ft_pct_lag_5g as ft_pct_delta_lag_5g,
+        ft_pct - ft_pct_lag_7g as ft_pct_delta_lag_7g,
+
+        stl - stl_lag_1g as stl_delta_lag_1g,
+        stl - stl_lag_3g as stl_delta_lag_3g,
+        stl - stl_lag_5g as stl_delta_lag_5g,
+        stl - stl_lag_7g as stl_delta_lag_7g,
+
+        blk - blk_lag_1g as blk_delta_lag_1g,
+        blk - blk_lag_3g as blk_delta_lag_3g,
+        blk - blk_lag_5g as blk_delta_lag_5g,
+        blk - blk_lag_7g as blk_delta_lag_7g,
+
+        tov - tov_lag_1g as tov_delta_lag_1g,
+        tov - tov_lag_3g as tov_delta_lag_3g,
+        tov - tov_lag_5g as tov_delta_lag_5g,
+        tov - tov_lag_7g as tov_delta_lag_7g,
+
+        pf - pf_lag_1g as pf_delta_lag_1g,
+        pf - pf_lag_3g as pf_delta_lag_3g,
+        pf - pf_lag_5g as pf_delta_lag_5g,
+        pf - pf_lag_7g as pf_delta_lag_7g,
+
+        plus_minus - plus_minus_lag_1g as plus_minus_delta_lag_1g,
+        plus_minus - plus_minus_lag_3g as plus_minus_delta_lag_3g,
+        plus_minus - plus_minus_lag_5g as plus_minus_delta_lag_5g,
+        plus_minus - plus_minus_lag_7g as plus_minus_delta_lag_7g
+
+    from lagged_stats
 )
 
 select *

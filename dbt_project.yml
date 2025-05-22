@@ -14,7 +14,7 @@ profile: 'nba_data_app'
 model-paths: ["models/"]
 analysis-paths: ["analyses/"]
 test-paths: ["tests/"]
-seed-paths: ["seeds/"]
+seed-paths: ["data/"]
 macro-paths: ["macros/"]
 snapshot-paths: ["snapshots/"]
 
@@ -22,6 +22,11 @@ clean-targets:         # directories to be removed by `dbt clean`
   - "target"
   - "dbt_packages"
   - "logs"
+
+seeds:
+  nba_data_app:
+    feature_set_registry:
+      quote_columns: true
 
 # Time zone configuration
 vars:

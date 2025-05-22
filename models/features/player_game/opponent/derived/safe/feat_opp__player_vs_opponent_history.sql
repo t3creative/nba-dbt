@@ -1,7 +1,8 @@
 {{ config(
-    materialized='table',
+    materialized='incremental',
+    schema='features',
     unique_key='player_game_opponent_key',
-    tags=['features', 'opponent', 'history', 'point_in_time']
+    tags=['derived', 'features', 'opponent', 'history', 'point_in_time']
 ) }}
 
 WITH player_games AS (

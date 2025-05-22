@@ -28,7 +28,7 @@
 {{ log("Iterating with slugs: " ~ iterate_slugs, info=True) }}
 
 with source_probabilities as (
-    select * from {{ ref('int_betting__player_props_probabilities') }}
+    select * from {{ ref('feat_betting__player_props_probabilities') }}
     -- No incremental logic here as we usually want to analyze the current state of all props
 ),
 
@@ -40,8 +40,8 @@ market_calculations as (
         player_name,
         market,
         line,
-        over_odds_decimal as consensus_over_odds_decimal, -- from int_betting__player_props_probabilities
-        under_odds_decimal as consensus_under_odds_decimal, -- from int_betting__player_props_probabilities
+        over_odds_decimal as consensus_over_odds_decimal, -- from feat_betting__player_props_probabilities
+        under_odds_decimal as consensus_under_odds_decimal, -- from feat_betting__player_props_probabilities
         over_implied_prob as consensus_over_implied_prob,
         under_implied_prob as consensus_under_implied_prob,
         total_implied_prob as consensus_total_implied_prob,
@@ -107,7 +107,7 @@ market_calculations as (
         -- Columns for individual sportsbook odds and their calculated probabilities can be selected too if needed
         -- For example:
         -- {% for slug in distinct_sportsbook_slugs %}
-        --    {%- if slug != consensus_slug_var and slug != placeholder_slug and ('over_odds_' ~ slug ~ '_decimal') in adapter.get_columns_in_relation(ref('int_betting__player_props_probabilities')) %}
+        --    {%- if slug != consensus_slug_var and slug != placeholder_slug and ('over_odds_' ~ slug ~ '_decimal') in adapter.get_columns_in_relation(ref('feat_betting__player_props_probabilities')) %}
         -- , {{ 'over_odds_' ~ slug ~ '_decimal' }}
         -- , {{ slug ~ '_over_implied_prob' }} 
         --    {% endif %}

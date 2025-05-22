@@ -1,7 +1,8 @@
 {{ config(
     materialized='incremental',
-    unique_key='team_game_key',
-    tags=['intermediate', 'position', 'matchup', 'prediction']
+    schema='features',
+    unique_key='player_game_opponent_key',
+    tags=['derived', 'features', 'opponent', 'position', 'matchup', 'prediction']
 ) }}
 
 WITH upcoming_games AS (
@@ -34,7 +35,7 @@ player_data AS (
 position_defense_data AS (
     SELECT
         pd.*
-    FROM {{ ref('feat_opp__position_defense_profile') }} pd
+    FROM {{ ref('opponent_position_defense_features_v1') }} pd
 ),
 
 final AS (
@@ -47,7 +48,7 @@ final AS (
         ug.game_date,
         ug.season_year,
         ug.home_away,
-        MD5(CONCAT(ug.team_game_key, '-', pd.player_id)) AS player_game_key,
+        {{ dbt_utils.generate_surrogate_key(['ug.game_id', 'pd.player_id', 'ug.opponent_id']) }} AS player_game_opponent_key,
         
         -- Player details
         pd.player_name,

@@ -3,7 +3,7 @@
     unique_key='team_game_key', 
     tags=['intermediate', 'opponent', 'prediction'],
     indexes=[
-        {'columns': ['game_team_key'], 'unique': True},
+        {'columns': ['team_game_key'], 'unique': True},
         {'columns': ['game_id']},
         {'columns': ['team_id']},
         {'columns': ['opponent_id']},
@@ -104,7 +104,7 @@ seasonal_baselines_for_zscore AS (
 SELECT
     ors.game_id,
     ors.game_date,
-    ors.team_game_key AS game_team_key, -- Aliased to match unique_key in config
+    ors.team_game_key,
     ors.team_id, 
     ors.opponent_id, 
     ors.season_year,

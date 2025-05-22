@@ -12,7 +12,7 @@ with source_data as (
         -- Track match rate
         max(case when player_id::text like 'p_%' then 0 else 1 end) as has_real_player_id,
         max(case when team_id = -1 then 0 else 1 end) as has_real_team_id
-    from {{ ref('int_betting__player_props_probabilities') }}
+    from {{ ref('feat_betting__player_props_probabilities') }}
     group by
         player_name_raw,
         player_id,

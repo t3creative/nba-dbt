@@ -33,7 +33,7 @@ with player_props as (
         pp.consensus_under_no_vig_prob as no_vig_under_prob,
         pp.consensus_hold_percentage as vig_percentage,
         pp.game_date
-    from {{ ref('int_betting__player_props_probabilities') }} pp
+    from {{ ref('feat_betting__player_props_probabilities') }} pp
     where pp.player_id = '{{ var("player_id_filter", "2544") }}' -- "LeBron James" is a default
     and pp.game_date >= '{{ var("start_date_filter", "2017-10-01") }}'
     and pp.market = 'Rebounds O/U' -- Filter for REB market only
@@ -365,7 +365,7 @@ combined_features as (
         pfa.ts_pct_roll_10g_stddev,
         pfa.ts_pct_roll_20g_stddev,
 
-        -- Opponent pregame profile features (from feat_opp__opponent_pregame_profile)
+        -- Opponent pregame profile features (from opponent_pregame_profile_features_v1)
         opp.opp_adjusted_def_rating as opponent_adjusted_def_rating,
         opp.opp_adjusted_pace as opponent_adjusted_pace,
         -- opp.opp_allowed_pts_in_paint as opponent_allowed_pts_in_paint, -- Removed
@@ -373,7 +373,7 @@ combined_features as (
         -- opp.opp_fg_pct as opponent_fg_pct, -- Removed
         -- opp.opp_fg3_pct as opponent_fg3_pct, -- Removed
 
-        -- Opponent position defense features (from feat_opp__position_defense_profile)
+        -- Opponent position defense features (from opponent_position_defense_features_v1)
         -- opd.avg_pts_allowed_to_position, -- Removed
         opd.avg_reb_allowed_to_position, -- Kept for REB
         -- opd.avg_ast_allowed_to_position, -- Removed
@@ -424,10 +424,10 @@ combined_features as (
     left join {{ ref('feat_player__usage_rolling') }} pfu
         on jd.player_id = pfu.player_id
         and jd.game_id = pfu.game_id
-    left join {{ ref('feat_opp__opponent_pregame_profile') }} opp
+    left join {{ ref('opponent_pregame_profile_features_v1') }} opp
         on jd.opponent_id = opp.opponent_id
         and jd.game_id = opp.game_id
-    left join {{ ref('feat_opp__position_defense_profile') }} opd
+    left join {{ ref('opponent_position_defense_features_v1') }} opd
         on jd.opponent_id = opd.opponent_id
         and jd.game_date::date = opd.game_date
         and jd.position = opd.position

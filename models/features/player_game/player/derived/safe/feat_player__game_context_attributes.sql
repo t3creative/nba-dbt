@@ -110,14 +110,12 @@ lagged_team_usage_features AS (
     WHERE tgd.previous_game_date IS NOT NULL
 ),
 
--- Calculate 75th percentile of usage_pct per team and game (based on current game player stats)
-player_game_percentiles AS (
+-- Add a CTE for lagged player rolling stats (usage_pct_roll_5g_avg)
+lagged_player_rolling_stats AS (
     SELECT
-        team_id,
-        game_id,
-        PERCENTILE_DISC(0.75) WITHIN GROUP (ORDER BY usage_pct) AS p75_usage_pct
-    FROM player_boxscores
-    GROUP BY team_id, game_id
+        player_game_key,
+        usage_pct_roll_5g_avg
+    FROM {{ ref('feat_player__advanced_rolling') }}
 ),
 
 -- Calculate player's deviation from team averages, using lagged team context
@@ -163,6 +161,9 @@ player_team_deviations AS (
         ltuf.team_l5_max_usage_lagged,
         ltuf.team_offensive_structure_lagged,
         
+        -- Lagged player usage (from feat_player__advanced_rolling)
+        lprs.usage_pct_roll_5g_avg AS player_l5_usage_pct,
+        
         -- Calculate production vs team averages (efficiency uses current game player average)
         CASE 
             WHEN pb.ts_pct > 
@@ -174,16 +175,14 @@ player_team_deviations AS (
             ELSE 'NEAR_TEAM_AVG'
         END AS efficiency_vs_team_avg,
         
-        -- Identify if player is in top 3 usage (uses current game player usage, lagged team max usage, current game team usage percentile)
+        -- Identify if player is in top 3 usage (now using lagged player and team usage)
         CASE 
-            WHEN pb.usage_pct >= ltuf.team_l5_max_usage_lagged * 0.9 -- Using lagged team max usage
-            THEN 'PRIMARY_OPTION'
-            WHEN pgp.p75_usage_pct IS NOT NULL AND pb.usage_pct >= pgp.p75_usage_pct -- Using current game p75 usage
-            THEN 'SECONDARY_OPTION'
+            WHEN lprs.usage_pct_roll_5g_avg >= ltuf.team_l5_max_usage_lagged * 0.9 THEN 'PRIMARY_OPTION'
+            WHEN lprs.usage_pct_roll_5g_avg >= ltuf.team_l5_max_usage_lagged * 0.7 THEN 'SECONDARY_OPTION'
             ELSE 'SUPPORTING_ROLE'
         END AS player_offensive_role,
         
-        -- Player-team style fit score (higher = better fit, uses lagged team playstyle)
+        -- Player-team style fit score (unchanged, already uses lagged team playstyle)
         CASE
             WHEN pb.position = 'G' AND ltsdf.team_playstyle_lagged = 'FAST_PACED' THEN 5
             WHEN pb.position = 'G' AND ltsdf.team_playstyle_lagged = 'BALL_MOVEMENT' THEN 5
@@ -206,8 +205,8 @@ player_team_deviations AS (
         ON pb.team_id = ltsdf.team_id AND pb.game_date = ltsdf.game_date
     LEFT JOIN lagged_team_usage_features ltuf
         ON pb.team_id = ltuf.team_id AND pb.game_date = ltuf.game_date
-    LEFT JOIN player_game_percentiles pgp
-        ON pb.team_id = pgp.team_id AND pb.game_id = pgp.game_id
+    LEFT JOIN lagged_player_rolling_stats lprs
+        ON pb.player_game_key = lprs.player_game_key
 )
 
 SELECT

@@ -61,17 +61,43 @@ parsed_matchups as (
 select distinct on (bs.player_matchup_key)
     -- Identity and Context
     bs.player_matchup_key,
-    pgl.season_year,
+           COALESCE(
+            pgl.season_year,
+            CASE
+                -- Ensure game_id is in the expected format '002YYNNNNN'
+                WHEN bs.game_id IS NOT NULL AND length(bs.game_id) = 10 AND substring(bs.game_id, 1, 3) = '002' THEN
+                    (
+                        CASE
+                            -- Heuristic for 2-digit year: YY >= 70 implies 19YY (e.g., 98 -> 1998)
+                            -- Otherwise, implies 20YY (e.g., 01 -> 2001, 12 -> 2012)
+                            -- This covers seasons like 1970-71 through 2069-70.
+                            WHEN substring(bs.game_id, 4, 2)::integer >= 70 AND substring(bs.game_id, 4, 2)::integer <= 99
+                            THEN '19' || substring(bs.game_id, 4, 2)
+                            ELSE '20' || substring(bs.game_id, 4, 2)
+                        END
+                    ) || '-' || lpad(((substring(bs.game_id, 4, 2)::integer + 1) % 100)::text, 2, '0')
+                ELSE NULL -- Fallback if game_id is not in the expected '002YYNNNNN' format
+            END
+        ) as season_year,
     bs.off_first_name,
     bs.off_family_name,
     concat(bs.off_first_name, ' ', bs.off_family_name) as off_player_name,
     bs.def_first_name,
     bs.def_family_name,
+    bs.team_tricode,
     concat(bs.def_first_name, ' ', bs.def_family_name) as def_player_name,
-    pm.team_tricode,
-    gl.game_date,
-    pm.home_away,
-    pm.opponent,
+        gl.game_date, -- This will be NULL for older games if gopp doesn't have them
+        CASE -- game_sort_key: YYYY_S_NNNNN (e.g., 1998_2_00412)
+            WHEN bs.game_id IS NOT NULL AND length(bs.game_id) = 10 AND substring(bs.game_id, 1, 2) = '00' THEN
+                (CASE
+                    WHEN substring(bs.game_id, 4, 2)::integer >= 70 AND substring(bs.game_id, 4, 2)::integer <= 99
+                    THEN '19' || substring(bs.game_id, 4, 2)
+                    ELSE '20' || substring(bs.game_id, 4, 2)
+                END) || '_' || substring(bs.game_id, 3, 1) || '_' || substring(bs.game_id, 6, 5)
+            ELSE bs.game_id -- Fallback to game_id itself if it doesn't match pattern
+        END as game_sort_key,
+        pm.home_away,
+        pm.opponent,
     
     -- Matchup Time Stats
     bs.matchup_min,

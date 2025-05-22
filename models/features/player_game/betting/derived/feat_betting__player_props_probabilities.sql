@@ -1,11 +1,11 @@
 -- depends_on: {{ ref('dim__sportsbooks') }}
 {{
     config(
-        schema='intermediate',
+        schema='features',
         materialized='incremental',
         unique_key='player_prop_key',
         on_schema_change='sync_all_columns',
-        tags=['betting', 'intermediate', 'probabilities']
+        tags=['betting', 'features', 'player_props', 'probabilities']
     )
 }}
 

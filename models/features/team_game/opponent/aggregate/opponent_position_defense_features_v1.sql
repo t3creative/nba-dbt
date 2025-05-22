@@ -1,6 +1,8 @@
 {{ config(
-    materialized='table',
-    tags=['intermediate', 'position', 'defense', 'prediction']
+    materialized='incremental',
+    schema='features',
+    unique_key='team_game_key',
+    tags=['derived', 'features', 'opponent', 'position', 'defense', 'prediction']
 ) }}
 
 WITH player_boxscores AS (
@@ -65,29 +67,29 @@ position_defense AS (
         season_year,
         game_date,
         
-        -- Rolling averages for individual stats
-        AVG(avg_daily_pts_allowed) OVER w AS avg_pts_allowed_to_position,
-        AVG(avg_daily_reb_allowed) OVER w AS avg_reb_allowed_to_position,
-        AVG(avg_daily_ast_allowed) OVER w AS avg_ast_allowed_to_position,
-        AVG(avg_daily_stl_allowed) OVER w AS avg_stl_allowed_to_position,
-        AVG(avg_daily_blk_allowed) OVER w AS avg_blk_allowed_to_position,
-        AVG(avg_daily_fg3m_allowed) OVER w AS avg_fg3m_allowed_to_position,
-        AVG(avg_daily_fg_pct_allowed) OVER w AS avg_fg_pct_allowed_to_position,
-        AVG(avg_daily_fg3_pct_allowed) OVER w AS avg_fg3_pct_allowed_to_position,
+        -- Rolling averages for individual stats (PRIOR games)
+        AVG(avg_daily_pts_allowed) OVER w_prior AS avg_pts_allowed_to_position,
+        AVG(avg_daily_reb_allowed) OVER w_prior AS avg_reb_allowed_to_position,
+        AVG(avg_daily_ast_allowed) OVER w_prior AS avg_ast_allowed_to_position,
+        AVG(avg_daily_stl_allowed) OVER w_prior AS avg_stl_allowed_to_position,
+        AVG(avg_daily_blk_allowed) OVER w_prior AS avg_blk_allowed_to_position,
+        AVG(avg_daily_fg3m_allowed) OVER w_prior AS avg_fg3m_allowed_to_position,
+        AVG(avg_daily_fg_pct_allowed) OVER w_prior AS avg_fg_pct_allowed_to_position,
+        AVG(avg_daily_fg3_pct_allowed) OVER w_prior AS avg_fg3_pct_allowed_to_position,
         
-        -- Rolling averages for combined stats
-        AVG(avg_daily_pts_ast_allowed) OVER w AS avg_pts_ast_allowed_to_position,
-        AVG(avg_daily_pts_reb_allowed) OVER w AS avg_pts_reb_allowed_to_position,
-        AVG(avg_daily_pts_reb_ast_allowed) OVER w AS avg_pts_reb_ast_allowed_to_position,
-        AVG(avg_daily_ast_reb_allowed) OVER w AS avg_ast_reb_allowed_to_position,
+        -- Rolling averages for combined stats (PRIOR games)
+        AVG(avg_daily_pts_ast_allowed) OVER w_prior AS avg_pts_ast_allowed_to_position,
+        AVG(avg_daily_pts_reb_allowed) OVER w_prior AS avg_pts_reb_allowed_to_position,
+        AVG(avg_daily_pts_reb_ast_allowed) OVER w_prior AS avg_pts_reb_ast_allowed_to_position,
+        AVG(avg_daily_ast_reb_allowed) OVER w_prior AS avg_ast_reb_allowed_to_position,
 
-        -- Last 10 games for points (can be expanded for other stats if needed)
+        -- Last 10 games for points (PRIOR games)
         AVG(avg_daily_pts_allowed) OVER (
-            PARTITION BY opponent_id, position, season_year ORDER BY game_date ROWS BETWEEN 10 PRECEDING AND CURRENT ROW
+            PARTITION BY opponent_id, position, season_year ORDER BY game_date ROWS BETWEEN 10 PRECEDING AND 1 PRECEDING
         ) AS l10_pts_allowed_to_position
 
     FROM game_level_position_stats_allowed
-    WINDOW w AS (PARTITION BY opponent_id, position, season_year ORDER BY game_date ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW)
+    WINDOW w_prior AS (PARTITION BY opponent_id, position, season_year ORDER BY game_date ROWS BETWEEN UNBOUNDED PRECEDING AND 1 PRECEDING)
 ),
 
 league_position_avgs AS (

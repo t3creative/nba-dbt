@@ -21,6 +21,7 @@ with traditional_boxscore as (
         -- Identifiers & Metadata
         player_game_key,
         game_id,
+        player_name,
         player_id,
         team_id,
         opponent_id,
@@ -71,6 +72,7 @@ final as (
         player_game_key,
         game_id,
         player_id,
+        player_name,
         team_id,
         opponent_id,
         game_date,

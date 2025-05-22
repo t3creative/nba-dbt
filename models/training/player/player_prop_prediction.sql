@@ -45,7 +45,7 @@ with player_props as (
         pp.consensus_under_no_vig_prob as no_vig_under_prob,
         pp.consensus_hold_percentage as vig_percentage,
         pp.game_date
-    from {{ ref('int_betting__player_props_probabilities') }} pp
+    from {{ ref('feat_betting__player_props_probabilities') }} pp
     where pp.player_id = '{{ var("player_id_filter", "2544") }}' -- "LeBron James" is a default
     and pp.game_date >= '{{ var("start_date_filter", "2017-10-01") }}'
 ),
@@ -513,7 +513,7 @@ combined_features as (
     from joined_data jd
     left join stat_features sf
         on jd.player_prop_key = sf.player_prop_key
-    left join {{ ref('feat_opp__opponent_pregame_profile') }} opp
+    left join {{ ref('opponent_pregame_profile_features_v1') }} opp
         on jd.opponent_id = opp.opponent_id
         and jd.game_id = opp.game_id
 )

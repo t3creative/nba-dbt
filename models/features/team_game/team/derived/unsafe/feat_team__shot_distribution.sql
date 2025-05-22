@@ -1,5 +1,5 @@
 {{ config(
-    schema='intermediate',
+    schema='features',
     materialized='incremental',
     unique_key='team_game_key',
     incremental_strategy='delete+insert',
@@ -13,7 +13,7 @@
         {'columns': ['team_game_key'], 'unique': true},
         {'columns': ['team_id', 'game_date']}
     ],
-    tags=['team', 'shooting', 'style', 'intermediate']
+    tags=['derived', 'features', 'team_derived_metrics', 'shooting_style']
 ) }}
 
 WITH team_boxscores AS (

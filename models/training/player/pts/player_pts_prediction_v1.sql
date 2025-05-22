@@ -35,7 +35,7 @@ with player_props as (
         pp.consensus_under_no_vig_prob as no_vig_under_prob,
         pp.consensus_hold_percentage as vig_percentage,
         pp.game_date
-    from {{ ref('int_betting__player_props_probabilities') }} pp
+    from {{ ref('feat_betting__player_props_probabilities') }} pp
     where pp.game_date >= '{{ var("start_date_filter", "2017-10-01") }}'
     and pp.market = 'Points O/U' -- Filter for PTS market only
 ),
@@ -279,7 +279,7 @@ player_vs_opponent_features as (
         fpo.hist_recent_pts_vs_opp,
         -- Blended prediction features
         fpo.blended_pts_projection,
-        -- Opponent team features (subset from feat_opp__opponent_pregame_profile)
+        -- Opponent team features (subset from opponent_pregame_profile_features_v1)
         fpo.opponent_defensive_rating, -- This is opp_l10_def_rating_prior
         fpo.opponent_pace, -- This is opp_l10_pace_prior
         fpo.opponent_adjusted_def_rating, -- This is opp_adjusted_def_rating_prior
@@ -519,17 +519,6 @@ combined_features as (
         fpvof.team_recent_off_rating,
         fpvof.is_missing_teammate,
 
-        -- Re-added Opponent position defense features (from opd)
-        opd.avg_pts_allowed_to_position as opd_avg_pts_allowed_to_position, -- Aliased to distinguish from fpvof
-        opd.avg_fg3m_allowed_to_position,
-        opd.avg_fg_pct_allowed_to_position,
-        opd.avg_fg3_pct_allowed_to_position,
-        opd.l10_pts_allowed_to_position,
-        opd.pts_vs_league_avg as opd_pts_vs_league_avg, -- Aliased to distinguish from fpvof
-        opd.fg3m_vs_league_avg,
-        opd.fg_pct_vs_league_avg,
-        opd.fg3_pct_vs_league_avg,
-
         psf.career_high_pts_to_date,
         psf.career_ppg_to_date,
         psf.career_games_to_date,
@@ -619,7 +608,7 @@ combined_features as (
     left join player_form_tracking pftk
         on jd.player_id = pftk.player_id
         and jd.game_id = pftk.game_id
-    left join {{ ref('feat_opp__position_defense_profile') }} opd -- RE-ADDED join
+    left join {{ ref('opponent_position_defense_features_v1') }} opd -- RE-ADDED join
         ON jd.opponent_id = opd.opponent_id
         AND jd.game_date::date = opd.game_date 
         AND jd.position = opd.position
@@ -709,42 +698,6 @@ select
     round(opponent_pace::numeric, 3) as opponent_l10_pace,
     round(opponent_adjusted_def_rating::numeric, 3) as opponent_adjusted_def_rating,
     
-    round(avg_pts_allowed_to_position::numeric, 3) as opp_avg_pts_allowed_to_position_综合,
-    round(pts_vs_league_avg::numeric, 3) as opp_pts_vs_league_avg_综合,
-    pts_matchup_label as opp_pts_matchup_label_综合,
-
-    round(opd_avg_pts_allowed_to_position::numeric, 3) as opp_avg_pts_allowed_to_pos_detail,
-    round(avg_fg3m_allowed_to_position::numeric, 3) as opp_avg_fg3m_allowed_to_pos_detail,
-    round(avg_fg_pct_allowed_to_position::numeric, 3) as opp_avg_fg_pct_allowed_to_pos_detail,
-    round(avg_fg3_pct_allowed_to_position::numeric, 3) as opp_avg_fg3_pct_allowed_to_pos_detail,
-    round(l10_pts_allowed_to_position::numeric, 3) as opp_l10_pts_allowed_to_pos_detail,
-    round(opd_pts_vs_league_avg::numeric, 3) as opp_pts_vs_league_avg_detail,
-    round(fg3m_vs_league_avg::numeric, 3) as opp_fg3m_vs_league_avg_detail,
-    round(fg_pct_vs_league_avg::numeric, 3) as opp_fg_pct_vs_league_avg_detail,
-    round(fg3_pct_vs_league_avg::numeric, 3) as opp_fg3_pct_vs_league_avg_detail,
-
-    CASE
-        WHEN COALESCE(fg3m_vs_league_avg, 0.0) > 1.0 THEN 'Great'
-        WHEN COALESCE(fg3m_vs_league_avg, 0.0) > 0.4 THEN 'Good'
-        WHEN COALESCE(fg3m_vs_league_avg, 0.0) >= -0.4 THEN 'Average'
-        WHEN COALESCE(fg3m_vs_league_avg, 0.0) >= -1.0 THEN 'Poor'
-        ELSE 'Bad'
-    END AS opp_fg3m_matchup_label_detail,
-    CASE
-        WHEN COALESCE(fg_pct_vs_league_avg, 0.0) > 0.025 THEN 'Great'
-        WHEN COALESCE(fg_pct_vs_league_avg, 0.0) > 0.01 THEN 'Good'
-        WHEN COALESCE(fg_pct_vs_league_avg, 0.0) >= -0.01 THEN 'Average'
-        WHEN COALESCE(fg_pct_vs_league_avg, 0.0) >= -0.025 THEN 'Poor'
-        ELSE 'Bad'
-    END AS opp_fg_pct_matchup_label_detail,
-    CASE
-        WHEN COALESCE(fg3_pct_vs_league_avg, 0.0) > 0.025 THEN 'Great'
-        WHEN COALESCE(fg3_pct_vs_league_avg, 0.0) > 0.01 THEN 'Good'
-        WHEN COALESCE(fg3_pct_vs_league_avg, 0.0) >= -0.01 THEN 'Average'
-        WHEN COALESCE(fg3_pct_vs_league_avg, 0.0) >= -0.025 THEN 'Poor'
-        ELSE 'Bad'
-    END AS opp_fg3_pct_matchup_label_detail,
-    
     round(career_high_pts_to_date::numeric, 3) as career_high_pts_to_date,
     round(career_ppg_to_date::numeric, 3) as career_ppg_to_date,
     career_games_to_date,
@@ -821,7 +774,6 @@ select
     hist_performance_flag as hist_pts_performance_flag_vs_opp,
     hist_confidence as hist_sample_confidence_vs_opp,
     round(blended_pts_projection::numeric, 3) as blended_pts_projection,
-    round(team_recent_off_rating::numeric, 3) as team_l5_off_rating,
     is_missing_teammate as is_missing_key_teammate,
 
     round(line_vs_last_5_avg::numeric, 3) as line_vs_last_5_avg,
@@ -842,4 +794,3 @@ from combined_features
 where player_id is not null
 and game_id is not null
 and market_cleaned != 'UNKNOWN'
-

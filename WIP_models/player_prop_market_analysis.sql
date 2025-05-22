@@ -1,6 +1,6 @@
 -- WORK IN PROGRESS MODEL
 -- depends_on: {{ ref('dim__sportsbooks') }}
--- depends_on: {{ ref('int_betting__player_props_probabilities') }} 
+-- depends_on: {{ ref('feat_betting__player_props_probabilities') }} 
 {{
     config(
         schema='features',
@@ -23,7 +23,7 @@
   'partycasino','pinnacle','sugarhouse'
 ] %}
 
-{% set upstream_relation = ref('int_betting__player_props_probabilities') %}
+{% set upstream_relation = ref('feat_betting__player_props_probabilities') %}
 {% set upstream_cols = [] %}
 {% set upstream_col_names = [] %}
 

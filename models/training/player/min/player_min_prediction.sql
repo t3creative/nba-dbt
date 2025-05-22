@@ -35,7 +35,7 @@ with player_props as (
         pp.consensus_under_no_vig_prob as no_vig_under_prob,
         pp.consensus_hold_percentage as vig_percentage,
         pp.game_date
-    from {{ ref('int_betting__player_props_probabilities') }} pp
+    from {{ ref('feat_betting__player_props_probabilities') }} pp
     where pp.game_date >= '{{ var("start_date_filter", "2017-10-01") }}'
     and pp.market = 'Points O/U' -- Filter for PTS market only
 ),
@@ -279,7 +279,7 @@ player_vs_opponent_features as (
         fpo.hist_recent_pts_vs_opp,
         -- Blended prediction features
         fpo.blended_pts_projection,
-        -- Opponent team features (subset from feat_opp__opponent_pregame_profile)
+        -- Opponent team features (subset from opponent_pregame_profile_features_v1)
         fpo.opponent_defensive_rating, -- This is opp_l10_def_rating_prior
         fpo.opponent_pace, -- This is opp_l10_pace_prior
         fpo.opponent_adjusted_def_rating, -- This is opp_adjusted_def_rating_prior
@@ -619,7 +619,7 @@ combined_features as (
     left join player_form_tracking pftk
         on jd.player_id = pftk.player_id
         and jd.game_id = pftk.game_id
-    left join {{ ref('feat_opp__position_defense_profile') }} opd -- RE-ADDED join
+    left join {{ ref('opponent_position_defense_features_v1') }} opd -- RE-ADDED join
         ON jd.opponent_id = opd.opponent_id
         AND jd.game_date::date = opd.game_date 
         AND jd.position = opd.position

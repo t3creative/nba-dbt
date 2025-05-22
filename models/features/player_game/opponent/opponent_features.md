@@ -10,8 +10,8 @@ The architecture follows this hierarchy:
 
 1. `feat_opp__game_opponents` - Base model establishing team-opponent relationships
 2. `feat_opp__opponent_stats` - Enriched opponent stats from boxscores
-3. `feat_opp__opponent_pregame_profile` - Rolling window statistics for opponents
-4. `feat_opp__position_defense_profile` - Position-specific defensive metrics
+3. `opponent_pregame_profile_features_v1` - Rolling window statistics for opponents
+4. `opponent_position_defense_features_v1` - Position-specific defensive metrics
 5. `feat_opp__player_vs_opponent_history` - Historical player performance vs specific opponents
 6. `feat_opp__player_position_matchup` - Combines position and opponent defense profiles
 7. `feat_opp___player_vs_opponent` - Consolidated prediction-ready features
