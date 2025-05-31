@@ -38,9 +38,6 @@ source_data as (
     from {{ ref('int_team__combined_boxscore') }} tbs -- Using a combined team boxscore model
     inner join game_logs gl on tbs.game_id = gl.game_id
 
-    -- Filter based on the starting year extracted from tbs.season_year
-    where cast(substring(tbs.season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
-
     -- Incremental logic
     {% if is_incremental() %}
     and gl.game_date > (select coalesce(max(game_date), '1900-01-01') from {{ this }}) -- Safety coalesce

@@ -23,6 +23,17 @@ with traditional as (
     {% endif %}
 ),
 
+game_context as (
+    select
+        game_id,
+        team_id,
+        opponent_id,
+        game_date,
+        season_year,
+        home_away
+    from {{ ref('feat_opp__game_opponents_v2') }}
+),
+
 advanced as (
     select *
     from {{ ref('stg__player_advanced_bxsc') }}
@@ -83,7 +94,7 @@ player_bio as (
     select 
         player_id,
         position
-    from {{ ref('stg__league_dash_player_bio') }}
+    from {{ ref('dim__players') }}
 ),
 
 final as (
@@ -95,10 +106,10 @@ final as (
         t.game_id,
         t.player_id,
         t.team_id,
-        t.opponent_id,
+        gc.opponent_id,
         t.game_date,
         t.season_year,
-        t.home_away,
+        gc.home_away,
         t.first_name,
         t.family_name,
         t.player_name,
@@ -296,7 +307,8 @@ final as (
     left join usage u on t.player_game_key = u.player_game_key
     left join defensive d on t.player_game_key = d.player_game_key
     left join player_bio pb on t.player_id = pb.player_id
-    where t.season_year >= '2017-18'
+    left join game_context gc on t.game_id = gc.game_id and t.team_id = gc.team_id
+
 )
 
 select *

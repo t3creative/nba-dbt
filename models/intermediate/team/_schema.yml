@@ -1,7 +1,7 @@
 version: 2
 
 models:
-  - name: feat_team__performance_metrics
+  - name: feat_team__performance_metrics_v2
     description: "Core team performance metrics model combining team boxscores and outcomes"
     columns:
       - name: team_game_key

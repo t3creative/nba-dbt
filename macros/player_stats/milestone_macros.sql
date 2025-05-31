@@ -1,4 +1,4 @@
-{% macro calculate_milestone_flags(points_column, thresholds=[30, 40]) %}
+{% macro calculate_milestone_flags(points_column, thresholds=[30, 40, 50, 60, 70, 80]) %}
   {% for threshold in thresholds %}
     case when {{ points_column }} >= {{ threshold }} then 1 else 0 end as is_{{ threshold }}_plus_game
     {% if not loop.last %},{% endif %}

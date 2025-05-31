@@ -20,7 +20,7 @@ with team_traditional as (
     {% if is_incremental() %}
     where game_id in (
         select distinct game_id 
-        from {{ ref('feat_opp__game_opponents') }} 
+        from {{ ref('feat_opp__game_opponents_v2') }} 
         where game_date > (select max(game_date) from {{ this }}) 
     )
     {% endif %}
@@ -34,7 +34,7 @@ game_opponents as (
         game_date, 
         season_year,
         home_away
-    from {{ ref('feat_opp__game_opponents') }}
+    from {{ ref('feat_opp__game_opponents_v2') }}
 ),
 
 final as (

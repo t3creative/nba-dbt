@@ -17,8 +17,8 @@ with game_opponent_base_info as (
     select
         game_id,
         team_id,
-        home_away as type -- 'home_away' field from feat_opp__game_opponents renamed to 'type'
-    from {{ ref('feat_opp__game_opponents') }}
+        home_away as type -- 'home_away' field from feat_opp__game_opponents_v2 renamed to 'type'
+    from {{ ref('feat_opp__game_opponents_v2') }}
 ),
 
 team_tricodes_for_game as (

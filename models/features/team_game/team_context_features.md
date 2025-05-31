@@ -8,12 +8,12 @@ This documentation explains the architecture of team-related features for player
 
 The architecture follows this hierarchy:
 
-1. `feat_team__performance_metrics` - Base model for team performance and outcomes
+1. `feat_team__performance_metrics_v2` - Base model for team performance and outcomes
 2. `feat_team__rolling_stats` - Rolling window statistics for team metrics
-3. `feat_team__shot_distribution` - Shot distribution and playing style analysis
-4. `feat_team__usage_distribution` - Usage distribution across team players
+3. `feat_team__shot_distribution_v2` - Shot distribution and playing style analysis
+4. `feat_team__usage_distribution_v2` - Usage distribution across team players
 5. `feat_player__team_interaction` - Player performance in team context
-6. `feat_player__contextual_projections` - Impact of team factors on player stats
+6. `feat_player__team_context_projections_v2` - Impact of team factors on player stats
 7. `marts__team_context_features` - Consolidated team context features for prediction
 
 ## Feature Categories

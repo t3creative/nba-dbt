@@ -41,8 +41,6 @@ source_data as (
     from {{ ref('int__player_bxsc_traditional') }} pbs
     inner join game_logs gl on pbs.game_id = gl.game_id
 
-    -- Filter based on the starting year extracted from pbs.season_year
-    where cast(substring(pbs.season_year from 1 for 4) as integer) >= {{ var('training_start_season_year') }}
 
     -- Incremental logic
     {% if is_incremental() %}

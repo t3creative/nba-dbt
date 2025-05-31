@@ -22,7 +22,7 @@ DATA TEMPORALITY & FEATURE TYPE
 TECHNICAL DETAILS
 --------------------------------------------------
 - Primary Key(s): game_team_key
-- Key Source Models: ref('int_team__combined_boxscore'), ref('feat_opp__game_opponents')
+- Key Source Models: ref('int_team__combined_boxscore'), ref('feat_opp__game_opponents_v2')
 - Last Modified: 2025-05-20
 - Modified By: Tyler Tubridy
 */
@@ -31,7 +31,7 @@ TECHNICAL DETAILS
     materialized='incremental',
     unique_key='team_game_key',
     tags=['features', 'game_context', 'home_away'],
-    depends_on=['int_team__combined_boxscore', 'feat_opp__game_opponents']
+    depends_on=['int_team__combined_boxscore', 'feat_opp__game_opponents_v2']
 ) }}
 
 WITH team_home_away_performance AS (
@@ -197,7 +197,7 @@ game_home_away_factors AS (
             WHEN go.home_away = 'AWAY' AND tds.win_pct_home_away_differential < 0.05 THEN 'facing_weak_home_team'
             ELSE 'average_home_advantage'
         END AS home_advantage_factor
-    FROM {{ ref('feat_opp__game_opponents') }} go
+    FROM {{ ref('feat_opp__game_opponents_v2') }} go
     LEFT JOIN team_home_away_differentials tds
         ON go.team_id = tds.team_id AND go.season_year = tds.season_year
     LEFT JOIN team_home_away_differentials opp_tds

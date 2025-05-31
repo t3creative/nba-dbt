@@ -32,7 +32,6 @@ seeds:
 vars:
   dbt_date_time_zone: 'America/New_York'
   use_simple_schema_names: true
-  training_start_season_year: 2017-18
   feature_recalc_window_days: 7
 
 # Configuring models

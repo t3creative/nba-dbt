@@ -87,7 +87,7 @@ The Aggregates/Profiles Layer is the final stage within the `features` schema. M
 
 **Examples of Models/Features:**
 *   **Comprehensive Player vs. Opponent Profile:**
-    *   `feat_opp__player_vs_opponent.sql` (as currently designed): Combines a player's historical performance against an opponent, the opponent's defensive profile against the player's position, recent team context, and the player's own recent form.
+    *   `player_game_matchup_features_v1.sql` (as currently designed): Combines a player's historical performance against an opponent, the opponent's defensive profile against the player's position, recent team context, and the player's own recent form.
 *   **Player Pregame Profile for Prediction:**
     *   A model that joins player rolling stats (Base), derived efficiency metrics (Derived), team context (Derived), and opponent profile (Derived/Aggregates) into a single row per player per game, ready for a prediction model.
 *   **Team Strength Profile:**

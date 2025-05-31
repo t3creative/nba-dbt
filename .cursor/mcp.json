@@ -2,7 +2,8 @@
   "mcpServers": {
     "datapilot": {
       "url": "http://localhost:7700/sse",
-      "type": "sse"
+      "type": "sse",
+      "updatedAt": "2025-05-31T02:33:05.299Z"
     }
   }
 }

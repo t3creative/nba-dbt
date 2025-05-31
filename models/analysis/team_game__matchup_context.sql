@@ -22,7 +22,7 @@ DATA TEMPORALITY & FEATURE TYPE
 TECHNICAL DETAILS
 --------------------------------------------------
 - Primary Key(s): game_team_key
-- Key Source Models: ref('int_team__combined_boxscore'), ref('feat_opp__game_opponents')
+- Key Source Models: ref('int_team__combined_boxscore'), ref('feat_opp__game_opponents_v2')
 - Last Modified: 2025-05-20
 - Modified By: Tyler Tubridy
 */
@@ -31,7 +31,7 @@ TECHNICAL DETAILS
     materialized='incremental',
     unique_key='game_team_key',
     tags=['features', 'game_context', 'matchups'],
-    depends_on=['int_team__combined_boxscore', 'int_game__summary', 'feat_opp__game_opponents']
+    depends_on=['int_team__combined_boxscore', 'int_game__summary', 'feat_opp__game_opponents_v2']
 ) }}
 
 WITH season_team_stats AS (
@@ -78,7 +78,7 @@ previous_matchups AS (
         CASE WHEN tb.pts > opp_tb.pts THEN 1 ELSE 0 END AS won_previous,
         ROW_NUMBER() OVER(PARTITION BY go.team_id, go.opponent_id, go.season_year 
                          ORDER BY go.game_date DESC) AS matchup_num_reverse
-    FROM {{ ref('feat_opp__game_opponents') }} go
+    FROM {{ ref('feat_opp__game_opponents_v2') }} go
     JOIN {{ ref('int_team__combined_boxscore') }} tb 
         ON go.game_id = tb.game_id AND go.team_id = tb.team_id
     JOIN {{ ref('int_team__combined_boxscore') }} opp_tb 
@@ -152,7 +152,7 @@ game_matchup_context AS (
             WHEN tr.ast_rank >= 20 AND opp_tr.stl_rank <= 10 THEN 'passing_disadvantage'
             ELSE 'neutral_passing_matchup'
         END AS passing_matchup
-    FROM {{ ref('feat_opp__game_opponents') }} go
+    FROM {{ ref('feat_opp__game_opponents_v2') }} go
     JOIN season_ranking tr 
         ON go.team_id = tr.team_id AND go.season_year = tr.season_year
     JOIN season_ranking opp_tr 

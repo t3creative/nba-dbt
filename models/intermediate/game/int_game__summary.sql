@@ -271,7 +271,6 @@ final AS (
     LEFT JOIN other_stats os_away ON gs.game_id = os_away.game_id AND gs.away_team_id = os_away.team_id
     LEFT JOIN inactive_players_agg ip_home ON gs.game_id = ip_home.game_id AND gs.home_team_id = ip_home.team_id
     LEFT JOIN inactive_players_agg ip_away ON gs.game_id = ip_away.game_id AND gs.away_team_id = ip_away.team_id
-    WHERE gs.season >= '2017-18'
 )
 
 SELECT *

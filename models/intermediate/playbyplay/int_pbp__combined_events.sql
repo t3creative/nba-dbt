@@ -24,7 +24,7 @@ game_dates as (
     select distinct
         game_id,
         game_date
-    from {{ ref('feat_opp__game_opponents') }}
+    from {{ ref('feat_opp__game_opponents_v2') }}
 ),
 
 final as (

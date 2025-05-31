@@ -31,11 +31,8 @@ advanced as (
 ),
 
 hustle as (
-    select *
-    from {{ ref('stg__team_hustle_bxsc') }}
-    {% if is_incremental() %}
-    where updated_at > (select max(updated_at) from {{ this }})
-    {% endif %}
+    select * from {{ ref('stg__team_hustle_bxsc') }}
+    {% if is_incremental() %} where updated_at > (select max(updated_at) from {{ this }}) {% endif %}
 ),
 
 misc as (
@@ -47,11 +44,8 @@ misc as (
 ),
 
 scoring as (
-    select *
-    from {{ ref('stg__team_scoring_bxsc') }}
-    {% if is_incremental() %}
-    where updated_at > (select max(updated_at) from {{ this }})
-    {% endif %}
+    select * from {{ ref('stg__team_scoring_bxsc') }}
+    {% if is_incremental() %} where updated_at > (select max(updated_at) from {{ this }}) {% endif %}
 ),
 
 final as (
@@ -63,7 +57,7 @@ final as (
         t.game_id,
         t.team_id,
         t.opponent_id,
-        t.game_date,
+        t.game_date as game_date,
         t.season_year,
         t.home_away,
         t.team_city,
@@ -196,7 +190,6 @@ final as (
     left join hustle h on t.team_game_key = h.team_game_key
     left join misc m on t.team_game_key = m.team_game_key
     left join scoring s on t.team_game_key = s.team_game_key
-    where t.season_year >= '2017-18'
 )
 
 select *

@@ -163,7 +163,7 @@ models:
         description: "Record creation timestamp"
       - name: updated_at
         description: "Record update timestamp"
-  - name: int_player__career_to_date_stats
+  - name: int_player__career_to_date_stats_v1
     description: Tracks running career statistics for players including points, games played, and career highs
     columns:
       - name: player_game_key
@@ -205,48 +205,3 @@ models:
         description: Career high points in a single game up to this game
       - name: is_new_career_high
         description: Flag indicating if this game set a new career high in points (1=yes, 0=no)
-
-  - name: int_player__milestone_games
-    description: Records milestone scoring games (30+, 40+ points) and related statistical aggregations
-    columns:
-      - name: player_game_key
-        description: Unique identifier for player-game combination
-        tests:
-          - unique
-          - not_null
-      - name: player_id
-        description: NBA player ID
-        tests:
-          - not_null
-      - name: game_id
-        description: NBA game ID
-        tests:
-          - not_null
-      - name: game_date
-        description: Date the game was played
-        tests:
-          - not_null
-      - name: season_id
-        description: Identifier for the NBA season
-      - name: pts
-        description: Points scored by the player in the game
-      - name: is_30_plus_game
-        description: Flag indicating if player scored 30 or more points (1=yes, 0=no)
-      - name: is_40_plus_game
-        description: Flag indicating if player scored 40 or more points (1=yes, 0=no)
-      - name: thirty_plus_games_career
-        description: Running count of 30+ point games in player's career
-      - name: forty_plus_games_career
-        description: Running count of 40+ point games in player's career
-      - name: thirty_plus_games_season
-        description: Count of 30+ point games in the current season
-      - name: forty_plus_games_season
-        description: Count of 40+ point games in the current season
-      - name: thirty_plus_games_prev_season
-        description: Count of 30+ point games in the previous season
-      - name: forty_plus_games_prev_season
-        description: Count of 40+ point games in the previous season
-      - name: latest_30_plus_date
-        description: Date of the player's most recent 30+ point game
-      - name: latest_40_plus_date
-        description: Date of the player's most recent 40+ point game
